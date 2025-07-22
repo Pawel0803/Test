@@ -1,0 +1,53 @@
+1753194448.09622300053194448.087403000
+    frame_number= 445253 /marker_set_count= 5 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 8 /timecode= 0 /timecode_sub= 0 /timestamp= 4452.53 /is_recording= False /tracked_models_changed= False /offset= 1218 /mocap_data= <MoCapData.MoCapData object at 0x000002B9256A7430> /
+1
+2
+3
+4
+5
+1753194448.10834400053194448.096223000
+    frame_number= 445254 /marker_set_count= 5 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 8 /timecode= 0 /timecode_sub= 0 /timestamp= 4452.54 /is_recording= False /tracked_models_changed= False /offset= 1218 /mocap_data= <MoCapData.MoCapData object at 0x000002B9256A7430> /
+1
+2
+3
+4
+5
+1753194448.11666000053194448.108344000
+    frame_number= 445255 /marker_set_count= 5 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 8 /timecode= 0 /timecode_sub= 0 /timestamp= 4452.55 /is_recording= False /tracked_models_changed= False /offset= 1218 /mocap_data= <MoCapData.MoCapData object at 0x000002B9256A7430> /
+1
+2
+3
+4
+5
+1753194448.12593700053194448.116660000
+    frame_number= 445256 /marker_set_count= 5 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 8 /timecode= 0 /timecode_sub= 0 /timestamp= 4452.56 /is_recording= False /tracked_models_changed= False /offset= 1218 /mocap_data= <MoCapData.MoCapData object at 0x000002B9256A7430> /
+1
+2
+3
+4
+5
+1753194448.13720900053194448.125937000
+    frame_number= 445257 /marker_set_count= 5 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 8 /timecode= 0 /timecode_sub= 0 /timestamp= 4452.57 /is_recording= False /tracked_models_changed= False /offset= 1218 /mocap_data= <MoCapData.MoCapData object at 0x000002B9256A7430> /
+1
+2
+3
+4
+5
+1753194448.14728300053194448.137209000
+    frame_number= 445258 /marker_set_count= 5 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 8 /timecode= 0 /timecode_sub= 0 /timestamp= 4452.58 /is_recording= False /tracked_models_changed= False /offset= 1218 /mocap_data= <MoCapData.MoCapData object at 0x000002B9256A7430> /
+1
+2
+3
+4
+5
+1753194448.15565800053194448.147283000
+    frame_number= 445259 /marker_set_count= 5 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 8 /timecode= 0 /timecode_sub= 0 /timestamp= 4452.59 /is_recording= False /tracked_models_changed= False /offset= 1218 /mocap_data= <MoCapData.MoCapData object at 0x000002B9256A7430> /
+1
+2
+3
+4
+5
+Writing socket data to: Z:\Test100HzGPO_VH11_S000_SW54_HW33_20250722142721#p722142721df003dK\Test100HzGPO_VH11_S000_SW54_HW33_20250722142721_sme1_001_EthOutput_OptiTrack.json
+shutdown called
+shutting down
+exiting
