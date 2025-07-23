@@ -2065,11 +2065,19 @@ class NatNetClient:
 
         return 0
     
-    def __getjson(self, inpstr):
+        def __getjson(self, inpstr):
         data = {}
         for item in inpstr.split("\n"):
             if re.match(r'^(\s\s)\w', item) is not None:  # match 2 space identation or no space identation - root items
-                itemkey, itemvalue = [_.strip() for _ in item.strip().split(":")]
+                #itemkey, itemvalue = [_.strip() for _ in item.strip().split(":")]
+                parts = item.strip().split(":", 1)  # Podziel tylko na pierwsze wystąpienie ":"
+                if len(parts) == 2:
+                    itemkey = parts[0].strip()
+                    itemvalue = parts[1].strip()
+                else:
+                    # Obsługa błędu - nieprawidłowy format
+                    self.logger.warning(f"Invalid format in JSON parsing: {item}")
+                    continue  # Przejdź do następnego elementu
                 if "Frame" in itemkey:
                     itemkey = "Frame"
                 data[itemkey] = itemvalue
@@ -2081,6 +2089,7 @@ class NatNetClient:
             else:
                 print(item, "Unk. level")
         print(data)
+        #MoCapData.jsondata.update(data) pawel
 
     def write_to_file(self):
         ''' Write jsondata to json logfile'''
