@@ -145,7 +145,7 @@ def stringify_timecode(timecode, timecode_sub):
     timecode_string = f'{hour:02}:{minute:02}:{second:02}:{frame:02}:{subframe:02}' #type: ignore  # noqa E501
     return timecode_string
 
-jsondata = {"Time": "0.0"}
+#jsondata = {"Time": "0.0"}
 
 # MoCap Frame Classes
 class FramePrefixData:
@@ -331,6 +331,14 @@ class RigidBody:
         out_str += "%sTracking Valid: %s\n" % (out_tab_str, tf_string)
 
         return out_str
+    def to_dict(self):
+        return{
+            "id": self.id_num,
+            "position": self.pos,
+            "rotation": self.rot,
+            "mean_error": self.error,
+            "tracking_valid": self.tracking_valid
+        }
 
 
 class RigidBodyData:
@@ -356,7 +364,11 @@ class RigidBodyData:
             out_str += rigid_body.get_as_string(tab_str, level+1)
             rb_num += 1
         return out_str
-
+    
+    def to_dict(self):
+        return{
+            "rigid_bodies": [rb.to_dict() for rb in self.rigid_body_list]
+        }
 
 class Skeleton:
     def __init__(self, new_id=0):
@@ -421,8 +433,7 @@ class AssetMarkerData:
         if (False):
             out_str += "%sID       : %s\n " % (out_tab_str, get_as_string(
                 self.marker_id))
-            out_str += "%sPos      : %3.2f %3.2f %3.2f\n" % (
-                out_tab_str, self.pos[0], self.pos[1], self.pos[2])
+            out_str += "%sPos      : %3.2f %3.2f %3.2f\n" % (out_tab_str, self.pos[0], self.pos[1], self.pos[2])
             out_str += "%sSize     : %3.2f\n" % (out_tab_str, self.marker_size)
             out_str += "%sParams   : %s\n" % (out_tab_str, self.marker_params)
             out_str += "%sResidual : %3.2f\n" % (out_tab_str, self.residual)
@@ -439,7 +450,6 @@ class AssetMarkerData:
             out_str += "       err=%3.2f" % (self.residual)
             out_str += "        params=%d" % (self.marker_params)
             out_str += "\n"
-
         return out_str
 
 
@@ -467,7 +477,6 @@ class AssetRigidBodyData:
             out_tab_str, self.rot[0], self.rot[1], self.rot[2], self.rot[3])
         out_str += "%sMean Error  : %3.2f\n" % (out_tab_str, self.mean_error)
         out_str += "%sParams      : %3.1d\n" % (out_tab_str, self.param)
-
         return out_str
 
 
@@ -496,18 +505,15 @@ class Asset:
 
     def get_as_string(self, tab_str="  ", level=0):
         out_tab_str = get_tab_str(tab_str, level)
-
         out_str = ""
         out_str += "%sAsset ID        : %d\n" % (out_tab_str, self.asset_id)
         rigid_body_count = len(self.rigid_body_list)
-        out_str += "%sRigid Body Count: %3.1d\n" % (out_tab_str,
-                                                    rigid_body_count)
+        out_str += "%sRigid Body Count: %3.1d\n" % (out_tab_str,rigid_body_count)
         rb_num = 0
         for rigid_body in self.rigid_body_list:
             rigid_body.rb_num = rb_num
             out_str += rigid_body.get_as_string(tab_str, level+1)
             rb_num += 1
-
         marker_count = len(self.marker_list)
         out_str += "%sMarker Count: %3.1d\n" % (out_tab_str, marker_count)
         marker_num = 0
@@ -531,7 +537,6 @@ class AssetData:
     def get_as_string(self, tab_str="  ", level=0):
         out_tab_str = get_tab_str(tab_str, level)
         out_tab_str2 = get_tab_str(tab_str, level+1)
-
         out_str = ""
         asset_count = self.get_asset_count()
         out_str += "%sAsset Count: %3.1d\n" % (out_tab_str, asset_count)
@@ -580,14 +585,12 @@ class LabeledMarker:
                                                          self.size)
         out_str += "%serr                : [%3.2f]\n" % (out_tab_str,
                                                          self.residual)
-
         occluded, point_cloud_solved, model_solved = self.__decode_param()
         out_str += "%soccluded           : [%3.1d]\n" % (out_tab_str, occluded)
         out_str += "%spoint_cloud_solved : [%3.1d]\n" % (out_tab_str,
                                                          point_cloud_solved)
         out_str += "%smodel_solved       : [%3.1d]\n" % (out_tab_str,
                                                          model_solved)
-
         return out_str
 
 
@@ -605,10 +608,8 @@ class LabeledMarkerData:
     def get_as_string(self, tab_str="  ", level=0):
         out_tab_str = get_tab_str(tab_str, level)
         out_str = ""
-
         labeled_marker_count = len(self.labeled_marker_list)
-        out_str += "%sLabeled Marker Count:%3.1d\n" % (out_tab_str,
-                                                       labeled_marker_count)
+        out_str += "%sLabeled Marker Count:%3.1d\n" % (out_tab_str,labeled_marker_count)
         for i in range(0, labeled_marker_count):
             labeled_marker = self.labeled_marker_list[i]
             labeled_marker.marker_num = i
@@ -628,7 +629,6 @@ class ForcePlateChannelData:
     def get_as_string(self, tab_str, level, channel_num=-1):
         fc_max = 4
         out_tab_str = get_tab_str(tab_str, level)
-
         out_str = ""
         frame_count = len(self.frame_list)
         fc_show = min(frame_count, fc_max)
@@ -639,8 +639,7 @@ class ForcePlateChannelData:
         for i in range(fc_show):
             out_str += "%3.2f " % (self.frame_list[i])
         if fc_show < frame_count:
-            out_str += " - Showing %3.1d of %3.1d frames" % (fc_show,
-                                                             frame_count)
+            out_str += " - Showing %3.1d of %3.1d frames" % (fc_show, frame_count)
         out_str += "\n"
         return out_str
 
@@ -657,13 +656,11 @@ class ForcePlate:
     def get_as_string(self, tab_str, level):
         out_tab_str = get_tab_str(tab_str, level)
         out_str = ""
-
         out_str += "%sID           : %3.1d" % (out_tab_str, self.id_num)
         num_channels = len(self.channel_data_list)
         out_str += "  Channel Count: %3.1d\n" % (num_channels)
         for i in range(num_channels):
-            out_str += self.channel_data_list[i].get_as_string(
-                tab_str, level+1, i)
+            out_str += self.channel_data_list[i].get_as_string(tab_str, level+1, i)
         return out_str
 
 
@@ -682,10 +679,8 @@ class ForcePlateData:
         out_tab_str = get_tab_str(tab_str, level)
         out_tab_str2 = get_tab_str(tab_str, level+1)
         out_str = ""
-
         force_plate_count = len(self.force_plate_list)
-        out_str += "%sForce Plate Count: %3.1d\n" % (
-            out_tab_str, force_plate_count)
+        out_str += "%sForce Plate Count: %3.1d\n" % (out_tab_str, force_plate_count)
         for i in range(force_plate_count):
             out_str += "%sForce Plate %3.1d\n" % (out_tab_str2, i)
             out_str += self.force_plate_list[i].get_as_string(tab_str, level+2)
@@ -705,7 +700,6 @@ class DeviceChannelData:
     def get_as_string(self, tab_str, level, channel_num=-1):
         fc_max = 4
         out_tab_str = get_tab_str(tab_str, level)
-
         out_str = ""
         frame_count = len(self.frame_list)
         fc_show = min(frame_count, fc_max)
@@ -716,8 +710,7 @@ class DeviceChannelData:
         for i in range(fc_show):
             out_str += "%3.2f " % (self.frame_list[i])
         if fc_show < frame_count:
-            out_str += " - Showing %3.1d of %3.1d frames" % (fc_show,
-                                                             frame_count)
+            out_str += " - Showing %3.1d of %3.1d frames" % (fc_show, frame_count)
         out_str += "\n"
         return out_str
 
@@ -733,16 +726,12 @@ class Device:
 
     def get_as_string(self, tab_str, level, device_num):
         out_tab_str = get_tab_str(tab_str, level)
-
         out_str = ""
-
         num_channels = len(self.channel_data_list)
         out_str += "%sDevice %3.1d      ID: %3.1d Num Channels: %3.1d\n" % (
             out_tab_str, device_num, self.id_num, num_channels)
         for i in range(num_channels):
-            out_str += self.channel_data_list[i].get_as_string(
-                tab_str, level+1, i)
-
+            out_str += self.channel_data_list[i].get_as_string(tab_str, level+1, i)
         return out_str
 
 
@@ -759,9 +748,7 @@ class DeviceData:
 
     def get_as_string(self, tab_str="  ", level=0):
         out_tab_str = get_tab_str(tab_str, level)
-
         out_str = ""
-
         device_count = len(self.device_list)
         out_str += "%sDevice Count: %3.1d\n" % (out_tab_str, device_count)
         for i in range(device_count):
@@ -785,11 +772,8 @@ class FrameSuffixData:
 
     def get_as_string(self, tab_str="  ", level=0):
         out_tab_str = get_tab_str(tab_str, level)
-
         if not self.timecode == -1 and not self.timecode_sub == -1:
-            self.timecode = stringify_timecode(self.timecode,
-                                               self.timecode_sub)
-
+            self.timecode = stringify_timecode(self.timecode, self.timecode_sub)
         out_str = ""
         if not self.timecode == -1:
             out_str += "%sTimecode: %s\n" % (
@@ -807,24 +791,16 @@ class FrameSuffixData:
             out_str += "%sTransmit timestamp             : %3.1d\n" % (
                 out_tab_str, self.stamp_transmit)
         if not self.prec_timestamp_secs == -1:
-            # hours = int(self.prec_timestamp_secs/3600)
-            # minutes=int(self.prec_timestamp_secs/60)%60
-            # seconds=self.prec_timestamp_secs%60
-            # hms_string = """%sPrecision timestamp (hh:mm:ss) : %2.1d:%2.2d:
-            # %2.2d\n""" % (out_tab_str, hours, minutes, seconds)
-            # out_str += hms_string
             out_str += "%sPrecision timestamp (seconds)  : %3.1d\n" % (
                 out_tab_str, self.prec_timestamp_secs)
             if not self.prec_timestamp_frac_secs == -1:
                 out_str += """%sPrecision timestamp (fractional seconds) :
                  %3.1d\n""" % (out_tab_str, self.prec_timestamp_frac_secs)
-
         return out_str
 
 
 class MoCapData:
     def __init__(self):
-        # Packet Parts
         self.prefix_data = None
         self.marker_set_data = None
         self.legacy_other_markers = None
@@ -868,7 +844,6 @@ class MoCapData:
 
     def get_as_string(self, tab_str="  ", level=0):
         out_tab_str = get_tab_str(tab_str, level)
-
         out_str = ""
         out_str += "%sMoCap Frame Begin\n%s-----------------\n" % (
             out_tab_str, out_tab_str)
@@ -876,64 +851,48 @@ class MoCapData:
             out_str += self.prefix_data.get_as_string()
         else:
             out_str += "%sNo Prefix Data Set\n" % (out_tab_str)
-
         if self.marker_set_data is not None:
             out_str += self.marker_set_data.get_as_string(tab_str, level+1)
         else:
             out_str += "%sNo Markerset Data Set\n" % (out_tab_str)
-
         if self.rigid_body_data is not None:
             out_str += self.rigid_body_data.get_as_string(tab_str, level+1)
         else:
             out_str += "%sNo Rigid Body Data Set\n" % (out_tab_str)
-
         if self.skeleton_data is not None:
             out_str += self.skeleton_data.get_as_string(tab_str, level+1)
         else:
             out_str += "%sNo Skeleton Data Set\n" % (out_tab_str)
-
         if self.asset_data is not None:
             out_str += self.asset_data.get_as_string(tab_str, level+1)
         else:
             out_str += "%sNo Asset Data Set\n" % (out_tab_str)
-
         if self.labeled_marker_data is not None:
             out_str += self.labeled_marker_data.get_as_string(tab_str, level+1)
         else:
             out_str += "%sNo Labeled Marker Data Set\n" % (out_tab_str)
-
         if self.force_plate_data is not None:
             out_str += self.force_plate_data.get_as_string(tab_str, level+1)
         else:
             out_str += "%sNo Force Plate Data Set\n" % (out_tab_str)
-
         if self.device_data is not None:
             out_str += self.device_data.get_as_string(tab_str, level+1)
         else:
             out_str += "%sNo Device Data Set\n" % (out_tab_str)
-
         if self.suffix_data is not None:
             out_str += self.suffix_data.get_as_string(tab_str, level+1)
         else:
             out_str += "%sNo Suffix Data Set\n" % (out_tab_str)
-
-        out_str += "%sMoCap Frame End\n%s-----------------\n" % (out_tab_str,
-                                                                 out_tab_str)
-
+        out_str += "%sMoCap Frame End\n%s-----------------\n" % (out_tab_str, out_tab_str)
         return out_str
-
-# test program
-
 
 def generate_prefix_data(frame_num=0):
     frame_prefix_data = FramePrefixData(frame_num)
     return frame_prefix_data
 
-
 def generate_label(label_base="label", label_num=0):
     out_label = "%s_%3.3d" % (label_base, label_num)
     return out_label
-
 
 def generate_position_srand(pos_num=0, frame_num=0):
     random.seed(pos_num + (frame_num*1000))
@@ -941,7 +900,6 @@ def generate_position_srand(pos_num=0, frame_num=0):
                 (random.random()*100),
                 (random.random() * 100)]
     return position
-
 
 def generate_marker_data(label_base, label_num, num_points=1):
     label = generate_label(label_base, label_num)
@@ -954,17 +912,13 @@ def generate_marker_data(label_base, label_num, num_points=1):
     for point_num in range(start_num, end_num):
         position = generate_position_srand(point_num)
         marker_data.add_pos(position)
-
     return marker_data
-
 
 def generate_marker_set_data(frame_num=0, marker_set_num=0):
     marker_set_data = MarkerSetData()
-    # add labeled markers
     marker_set_data.add_marker_data(generate_marker_data("marker", 0, 3))
     marker_set_data.add_marker_data(generate_marker_data("marker", 1, 6))
     marker_set_data.add_marker_data(generate_marker_data("marker", 2, 5))
-    # add unlabeled markers
     num_points = 5
     start_num = (frame_num * 100000) + (10000 + marker_set_num)
     end_num = start_num+num_points
@@ -972,7 +926,6 @@ def generate_marker_set_data(frame_num=0, marker_set_num=0):
         position = generate_position_srand(point_num)
         marker_set_data.add_unlabeled_marker(position)
     return marker_set_data
-
 
 def generate_rigid_body_marker_srand(marker_num=0, frame_num=0):
     rigid_body_marker = RigidBodyMarker()
@@ -982,9 +935,7 @@ def generate_rigid_body_marker_srand(marker_num=0, frame_num=0):
     rigid_body_marker.id_num = marker_num
     rigid_body_marker.size = 1
     rigid_body_marker.error = random.random()
-
     return rigid_body_marker
-
 
 def generate_rigid_body(body_num=0, frame_num=0):
     pos = generate_position_srand(10000+body_num, frame_num)
@@ -997,7 +948,6 @@ def generate_rigid_body(body_num=0, frame_num=0):
     rigid_body.add_rigid_body_marker(generate_rigid_body_marker_srand(2))
     return rigid_body
 
-
 def generate_rigid_body_data(frame_num=0):
     rigid_body_data = RigidBodyData()
     # add rigid bodies
@@ -1006,16 +956,13 @@ def generate_rigid_body_data(frame_num=0):
     rigid_body_data.add_rigid_body(generate_rigid_body(2, frame_num))
     return rigid_body_data
 
-
 def generate_skeleton(frame_num=0, skeleton_num=0, num_rbs=1):
     skeleton = Skeleton(skeleton_num)
-    # add rigid bodies
     rb_seed_start = skeleton_num * 165
     rb_seed_end = rb_seed_start + num_rbs
     for rb_num in range(rb_seed_start, rb_seed_end):
         skeleton.add_rigid_body(generate_rigid_body(rb_num, frame_num))
     return skeleton
-
 
 def generate_skeleton_data(frame_num=0):
     skeleton_data = SkeletonData()
@@ -1023,7 +970,6 @@ def generate_skeleton_data(frame_num=0):
     skeleton_data.add_skeleton(generate_skeleton(frame_num, 1, 6))
     skeleton_data.add_skeleton(generate_skeleton(frame_num, 2, 3))
     return skeleton_data
-
 
 def generate_labeled_marker(frame_num=0, marker_num=0):
     point_num = (frame_num * 2000) + marker_num
@@ -1039,7 +985,6 @@ def generate_labeled_marker(frame_num=0, marker_num=0):
     residual = 0.01
     return LabeledMarker(marker_num, pos, size, param, residual)
 
-
 def generate_labeled_marker_data(frame_num=0):
     labeled_marker_data = LabeledMarkerData()
     # add labeled marker
@@ -1049,12 +994,9 @@ def generate_labeled_marker_data(frame_num=0):
         generate_labeled_marker(frame_num, 1))
     labeled_marker_data.add_labeled_marker(
         generate_labeled_marker(frame_num, 2))
-
     return labeled_marker_data
 
-
-def generate_fp_channel_data(
-        frame_num=0, fp_num=0, channel_num=0, num_frames=1):
+def generate_fp_channel_data(frame_num=0, fp_num=0, channel_num=0, num_frames=1):
     rseed = (frame_num*100000) + (fp_num*10000) + (channel_num * 1000)
     random.seed(rseed)
     fp_channel_data = ForcePlateChannelData()
@@ -1065,31 +1007,25 @@ def generate_fp_channel_data(
 
 def generate_force_plate(frame_num=0, fp_num=0, num_channels=1):
     force_plate = ForcePlate(fp_num)
-    # add channel_data
     for i in range(num_channels):
         force_plate.add_channel_data(generate_fp_channel_data(
             frame_num, fp_num, i, 10))
     return force_plate
 
-
 def generate_force_plate_data(frame_num=0):
     force_plate_data = ForcePlateData()
-    # add force plates
     force_plate_data.add_force_plate(generate_force_plate(frame_num, 0, 3))
     force_plate_data.add_force_plate(generate_force_plate(frame_num, 1, 4))
     force_plate_data.add_force_plate(generate_force_plate(frame_num, 2, 2))
     return force_plate_data
 
-
-def generate_device_channel_data(frame_num=0, device_num=0, channel_num=0,
-                                 num_frames=1):
+def generate_device_channel_data(frame_num=0, device_num=0, channel_num=0, num_frames=1):
     rseed = (frame_num*100000)+(device_num*10000)+(channel_num * 1000)
     random.seed(rseed)
     device_channel_data = DeviceChannelData()
     for _ in range(num_frames):
         device_channel_data.add_frame_entry(100.0*random.random())
     return device_channel_data
-
 
 def generate_device(frame_num=0, device_num=0):
     device = Device(device_num)
@@ -1101,13 +1037,11 @@ def generate_device(frame_num=0, device_num=0):
         frame_num, device_num, 7, 6))
     return device
 
-
 def generate_device_data(frame_num=0):
     device_data = DeviceData()
     device_data.add_device(generate_device(frame_num, 0))
     device_data.add_device(generate_device(frame_num, 2))
     return device_data
-
 
 def generate_suffix_data(frame_num=0):
     frame_suffix_data = FrameSuffixData()
@@ -1121,10 +1055,8 @@ def generate_suffix_data(frame_num=0):
     frame_suffix_data.timestamp = 762.63
     return frame_suffix_data
 
-
 def generate_mocap_data(frame_num=0):
     mocap_data = MoCapData()
-
     mocap_data.set_prefix_data(generate_prefix_data(frame_num))
     mocap_data.set_marker_set_data(generate_marker_set_data(frame_num))
     mocap_data.set_rigid_body_data(generate_rigid_body_data(frame_num))
@@ -1133,9 +1065,7 @@ def generate_mocap_data(frame_num=0):
     mocap_data.set_force_plate_data(generate_force_plate_data(frame_num))
     mocap_data.set_device_data(generate_device_data(frame_num))
     mocap_data.set_suffix_data(generate_suffix_data(frame_num))
-
     return mocap_data
-
 
 def test_all(run_test=True):
     totals = [0, 0, 0]
@@ -1171,15 +1101,12 @@ def test_all(run_test=True):
         num_tests = len(test_cases)
         for i in range(num_tests):
             data = eval(test_cases[i][2])
-            totals_tmp = test_hash2(test_cases[i][0], test_cases[i][1],
-                                    data, test_cases[i][2], test_cases[i][3])
+            totals_tmp = test_hash2(test_cases[i][0], test_cases[i][1], data, test_cases[i][2], test_cases[i][3])
             totals = add_lists(totals, totals_tmp)
-
     print("--------------------")
     print("[PASS] Count = %3.1d" % totals[0])
     print("[FAIL] Count = %3.1d" % totals[1])
     print("[SKIP] Count = %3.1d" % totals[2])
-
     return totals
 
 
