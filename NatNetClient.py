@@ -37,26 +37,16 @@ def trace(*args):
     # print("".join(map(str,args)))
     pass
 
-
 # Used for Data Description functions
 def trace_dd(*args):
-    # uncomment the one you want to use
-
-    # print("".join(map(str,args)))
     pass
 
-
-# Used for MoCap Frame Data functions
 def trace_mf(*args):
-    # uncomment the one you want to use
-    # print("".join(map(str,args)))
     pass
-
 
 def get_message_id(data):
     message_id = int.from_bytes(data[0:2], byteorder='little',  signed=True)
     return message_id
-
 
 # Create structs for reading various object types to speed up parsing.
 Vector2 = struct.Struct('<ff')
@@ -67,7 +57,6 @@ DoubleValue = struct.Struct('<d')
 NNIntValue = struct.Struct('<I')
 FPCalMatrixRow = struct.Struct('<ffffffffffff')
 FPCorners = struct.Struct('<ffffffffffff')
-
 
 class NatNetClient:
     # print_level = 0 off
@@ -126,6 +115,7 @@ class NatNetClient:
         self.data_socket = None
 
         self.stop_threads = False
+        self.alljsondata = []
 
     # Client/server message ids
     NAT_CONNECT = 0
@@ -173,8 +163,6 @@ class NatNetClient:
         return self.__can_change_bitstream_version
 
     def set_nat_net_version(self, major, minor):
-        """checks to see if stream version can change, then
-        changes it with position reset"""
         return_code = -1
         if self.__can_change_bitstream_version and \
             ((major != self.__nat_net_requested_version[0]) or
@@ -187,13 +175,6 @@ class NatNetClient:
                 self.__nat_net_requested_version[2] = 0
                 self.__nat_net_requested_version[3] = 0
                 print("changing bitstream MAIN")
-                # get original output state
-                # print_results = self.get_print_results()
-
-                # turn off output
-                # self.set_print_results(False)
-
-                # force frame send and play reset
                 self.send_command("TimelinePlay")
                 time.sleep(0.1)
                 tmpCommands = ["TimelinePlay",
@@ -202,10 +183,6 @@ class NatNetClient:
                                "TimelineStop"]
                 self.send_commands(tmpCommands, False)
                 time.sleep(2)
-
-                # reset to original output state
-                # self.set_print_results(print_results)
-
             else:
                 print("Bitstream change request failed")
         return return_code
@@ -241,7 +218,6 @@ class NatNetClient:
             ret_value = False
         return ret_value
 
-    # Create a command socket to attach to the NatNet stream
     def __create_command_socket(self):
         result = None
         if self.use_multicast:
@@ -249,16 +225,12 @@ class NatNetClient:
             result.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             try:
                 if self.server_ip_address == self.local_ip_address:
-                    # used, as ip/port issues arise when using the same
-                    # address as server and client
                     result.bind(('', 0))
                 else:
                     result.bind((self.local_ip_address, self.command_port))
             except socket.error as e:
                 print(f'Socket error: {e}')
-            # set to broadcast mode
             result.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-            # set timeout to allow for keep alive messages
             result.settimeout(2.0)
         else:
             result = socket.socket(socket.AF_INET, socket.SOCK_DGRAM,
@@ -269,30 +241,22 @@ class NatNetClient:
                 print(f'Socket error: {e}')
         return result
 
-    # Create a data socket to attach to the NatNet stream
     def __create_data_socket(self):
         result = None
         if self.use_multicast:
-            # Multicast case
-            result = socket.socket(socket.AF_INET,     # Internet
-                                   socket.SOCK_DGRAM,
-                                   0)    # UDP
+            result = socket.socket(socket.AF_INET, socket.SOCK_DGRAM,0)
             result.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             result.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP,
                               socket.inet_aton(self.multicast_address) +
                               socket.inet_aton(self.local_ip_address))
             try:
-                # Use bind in data socket due to the nature of UDP
                 result.bind((self.local_ip_address, self.data_port))
             except socket.error as e:
                 print(f'Multicast Error: {e}')
                 sys.exit(1)
         else:
-            # Unicast case
             self.use_multicast = False
-            result = socket.socket(socket.AF_INET,     # Internet
-                                   socket.SOCK_DGRAM,
-                                   socket.IPPROTO_UDP)
+            result = socket.socket(socket.AF_INET,socket.SOCK_DGRAM,socket.IPPROTO_UDP)
             result.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             try:
                 result.bind((self.local_ip_address, 0))
@@ -302,36 +266,26 @@ class NatNetClient:
         return result
 
     def __unpack_rigid_body_3_and_above(self, data, rb_num):
-        """Calculates offset for NatNet 3 and above for rigid body
-        unpacking"""
         offset = 0
-
         # ID (4 bytes)
         new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
-
         trace_mf("RB: %3.1d ID: %3.1d" % (rb_num, new_id))
-
         # Position and orientation
         pos = Vector3.unpack(data[offset:offset+12])
+        # print(pos)
         offset += 12
         trace_mf("\tPosition   : [%3.2f, %3.2f, %3.2f]" % (pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
-
         rot = Quaternion.unpack(data[offset:offset+16])
         offset += 16
         trace_mf("\tOrientation: [%3.2f, %3.2f, %3.2f, %3.2f]" % (rot[0], rot[1], rot[2], rot[3])) #type: ignore  # noqa E501
-
         rigid_body = MoCapData.RigidBody(new_id, pos, rot)
-
-        # Send information to any listener.
         if self.rigid_body_listener is not None:
             self.rigid_body_listener(new_id, pos, rot)
-
         marker_error, = FloatValue.unpack(data[offset:offset+4])
         offset += 4
         trace_mf("\tMean Marker Error: %3.2f" % marker_error)
         rigid_body.error = marker_error
-
         param, = struct.unpack('h', data[offset:offset+2])
         tracking_valid = (param & 0x01) != 0
         offset += 2
@@ -343,173 +297,22 @@ class NatNetClient:
             rigid_body.tracking_valid = True
         else:
             rigid_body.tracking_valid = False
-
-        return offset, rigid_body
-
-    def __unpack_rigid_body_2_6_to_3(self, data, rb_num):
-        """Calculates offset starting at NatNet 2.6 and going
-        to (but not inclusive of 3)"""
-        offset = 0
-
-        # ID (4 bytes)
-        new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
-        offset += 4
-
-        trace_mf("RB: %3.1d ID: %3.1d" % (rb_num, new_id))
-
-        # Position and orientation
-        pos = Vector3.unpack(data[offset:offset+12])
-        offset += 12
-        trace_mf("\tPosition   : [%3.2f, %3.2f, %3.2f]" % (pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
-
-        rot = Quaternion.unpack(data[offset:offset+16])
-        offset += 16
-        trace_mf("\tOrientation: [%3.2f, %3.2f, %3.2f, %3.2f]" % (rot[0], rot[1], rot[2], rot[3])) #type: ignore  # noqa E501
-
-        rigid_body = MoCapData.RigidBody(new_id, pos, rot)
-
-        # Send information to any listener.
-        if self.rigid_body_listener is not None:
-            self.rigid_body_listener(new_id, pos, rot)
-
-        marker_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
-        offset += 4
-        marker_count_range = range(0, marker_count)
-        trace_mf("\tMarker Count:", marker_count)
-
-        rb_marker_list = []
-        for i in marker_count_range:
-            rb_marker_list.append(MoCapData.RigidBodyMarker())
-
-        # Marker positions
-        for i in marker_count_range:
-            pos = Vector3.unpack(data[offset:offset+12])
-            offset += 12
-            trace_mf("\tMarker", i, ":", pos[0], ",", pos[1], ",", pos[2])
-            rb_marker_list[i].pos = pos
-
-        for i in marker_count_range:
-            new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
-            offset += 4
-            trace_mf("\tMarker ID", i, ":", new_id)
-            rb_marker_list[i].id = new_id
-
-        # Marker sizes
-        for i in marker_count_range:
-            size = FloatValue.unpack(data[offset:offset+4])
-            offset += 4
-            trace_mf("\tMarker Size", i, ":", size[0])
-            rb_marker_list[i].size = size
-
-        for i in marker_count_range:
-            rigid_body.add_rigid_body_marker(rb_marker_list[i])
-
-        marker_error, = FloatValue.unpack(data[offset:offset+4])
-        offset += 4
-        trace_mf("\tMean Marker Error: %3.2f" % marker_error)
-        rigid_body.error = marker_error
-
-        param, = struct.unpack('h', data[offset:offset+2])
-        tracking_valid = (param & 0x01) != 0
-        offset += 2
-        is_valid_str = 'False'
-        if tracking_valid:
-            is_valid_str = 'True'
-        trace_mf("\tTracking Valid: %s" % is_valid_str)
-        if tracking_valid:
-            rigid_body.tracking_valid = True
-        else:
-            rigid_body.tracking_valid = False
-        return offset, rigid_body
-
-    def __unpack_rigid_body_pre_2_6(self, data, major, rb_num):
-        """Calculates offset for anything below NatNet 2.6"""
-        offset = 0
-
-        # ID (4 bytes)
-        new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
-        offset += 4
-
-        trace_mf("RB: %3.1d ID: %3.1d" % (rb_num, new_id))
-
-        # Position and orientation
-        pos = Vector3.unpack(data[offset:offset+12])
-        offset += 12
-        trace_mf("\tPosition   : [%3.2f, %3.2f, %3.2f]" % (pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
-
-        rot = Quaternion.unpack(data[offset:offset+16])
-        offset += 16
-        trace_mf("\tOrientation: [%3.2f, %3.2f, %3.2f, %3.2f]" % (rot[0], rot[1], rot[2], rot[3])) #type: ignore  # noqa E501
-
-        rigid_body = MoCapData.RigidBody(new_id, pos, rot)
-
-        # Send information to any listener.
-        if self.rigid_body_listener is not None:
-            self.rigid_body_listener(new_id, pos, rot)
-
-        marker_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
-        offset += 4
-        marker_count_range = range(0, marker_count)
-        trace_mf("\tMarker Count:", marker_count)
-
-        rb_marker_list = []
-        for i in marker_count_range:
-            rb_marker_list.append(MoCapData.RigidBodyMarker())
-
-        # Marker positions
-        for i in marker_count_range:
-            pos = Vector3.unpack(data[offset:offset+12])
-            offset += 12
-            trace_mf("\tMarker", i, ":", pos[0], ",", pos[1], ",", pos[2])
-            rb_marker_list[i].pos = pos
-
-        if major >= 2:
-            # Marker ID's
-            for i in marker_count_range:
-                new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
-                offset += 4
-                trace_mf("\tMarker ID", i, ":", new_id)
-                rb_marker_list[i].id = new_id
-
-            # Marker sizes
-            for i in marker_count_range:
-                size = FloatValue.unpack(data[offset:offset+4])
-                offset += 4
-                trace_mf("\tMarker Size", i, ":", size[0])
-                rb_marker_list[i].size = size
-
-            for i in marker_count_range:
-                rigid_body.add_rigid_body_marker(rb_marker_list[i])
-
-            if major >= 2:
-                marker_error, = FloatValue.unpack(data[offset:offset+4])
-                offset += 4
-                trace_mf("\tMean Marker Error: %3.2f" % marker_error)
-                rigid_body.error = marker_error
+        print(rigid_body.pos)
         return offset, rigid_body
 
     def __unpack_rigid_body_0_case(self, data, rb_num):
         """Calculates offset for case where major version is 0"""
         offset = 0
-
-        # ID (4 bytes)
         new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
-
         trace_mf("RB: %3.1d ID: %3.1d" % (rb_num, new_id))
-
-        # Position and orientation
         pos = Vector3.unpack(data[offset:offset+12])
         offset += 12
         trace_mf("\tPosition   : [%3.2f, %3.2f, %3.2f]" % (pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
-
         rot = Quaternion.unpack(data[offset:offset+16])
         offset += 16
         trace_mf("\tOrientation: [%3.2f, %3.2f, %3.2f, %3.2f]" % (rot[0], rot[1], rot[2], rot[3])) #type: ignore  # noqa E501
-
         rigid_body = MoCapData.RigidBody(new_id, pos, rot)
-
-        # Send information to any listener.
         if self.rigid_body_listener is not None:
             self.rigid_body_listener(new_id, pos, rot)
         return offset, rigid_body
@@ -527,65 +330,53 @@ class NatNetClient:
             pass
         return offset, rigid_body
 
-    # Unpack a skeleton object from a data packet
     def __unpack_skeleton(self, data, major, minor, skeleton_num=0):
         offset = 0
         new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         trace_mf("Skeleton %3.1d ID: %3.1d" % (skeleton_num, new_id))
         skeleton = MoCapData.Skeleton(new_id)
-
         rigid_body_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         trace_mf("Rigid Body Count: %3.1d" % rigid_body_count)
         if (rigid_body_count > 0):
             for rb_num in range(0, rigid_body_count):
+                print("QWER")
                 offset_tmp, rigid_body = self.__unpack_rigid_body(data[offset:], major, minor, rb_num) #type: ignore  # noqa E501
                 skeleton.add_rigid_body(rigid_body)
                 offset += offset_tmp
-
         return offset, skeleton
 
     def __unpack_asset(self, data, major, minor, asset_num=0):
         offset = 0
         trace_dd("\tAsset       : %d" % (asset_num))
-        # Asset ID 4 bytes
         new_id = int.from_bytes(data[offset:offset+4], 'little',  signed=True)
         offset += 4
         asset = MoCapData.Asset()
         trace_dd("\tAsset ID    : %d" % (new_id))
         asset.set_id(new_id)
-        # # of RigidBodies
         numRBs = int.from_bytes(data[offset:offset+4], 'little',  signed=True)
         offset += 4
         trace_dd("\tRigid Bodies: %d" % (numRBs))
         offset1 = 0
         for rb_num in range(numRBs):
-            # # of RigidBodies
             offset1, rigid_body = self.__unpack_asset_rigid_body_data(data[offset:], major, minor) #type: ignore  # noqa E501
             offset += offset1
             rigid_body.rb_num = rb_num
             asset.add_rigid_body(rigid_body)
-
-        # # of Markers
         numMarkers = int.from_bytes(data[offset:offset+4], 'little', signed=True) #type: ignore  # noqa E501
         offset += 4
         trace_dd("\tMarkers     : %d" % (numMarkers))
-
         for marker_num in range(numMarkers):
             # # of Markers
             offset1, marker = self.__unpack_asset_marker_data(data[offset:], major, minor) #type: ignore  # noqa E501
             offset += offset1
             marker.marker_num = marker_num
             asset.add_marker(marker)
-
         return offset, asset
-
-# Unpack Mocap Data Functions
 
     def __unpack_frame_prefix_data(self, data):
         offset = 0
-        # Frame number (4 bytes)
         frame_number = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         trace_mf("Frame #: %3.1d" % frame_number)
@@ -595,30 +386,21 @@ class NatNetClient:
     def __unpack_data_size(self, data, major, minor):
         sizeInBytes = 0
         offset = 0
-
         if (((major == 4) and (minor > 0)) or (major > 4)):
             sizeInBytes = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
             offset += 4
             trace_mf("Byte Count: %3.1d" % sizeInBytes)
-
         return offset, sizeInBytes
 
     def __unpack_legacy_other_markers(self, data, packet_size, major, minor):
         offset = 0
-
-        # Markerset count (4 bytes)
         other_marker_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         trace_mf("Other Marker Count:", other_marker_count)
-
-        # get data size (4 bytes)
         offset_tmp, unpackedDataSize = self.__unpack_data_size(data[offset:], major, minor) #type: ignore  # noqa E501
         offset += offset_tmp
-
         other_marker_data = MoCapData.LegacyMarkerData()
         if (other_marker_count > 0):
-            # get legacy_marker positions
-            # legacy_marker_data
             for j in range(0, other_marker_count):
                 pos = Vector3.unpack(data[offset:offset+12])
                 offset += 12
@@ -629,23 +411,18 @@ class NatNetClient:
     def __unpack_marker_set_data(self, data, packet_size, major, minor):
         marker_set_data = MoCapData.MarkerSetData()
         offset = 0
-        # Markerset count (4 bytes)
         marker_set_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501s
         offset += 4
         trace_mf("Markerset Count:", marker_set_count)
-
-        # get data size (4 bytes)
         offset_tmp, unpackedDataSize = self.__unpack_data_size(data[offset:], major, minor) #type: ignore  # noqa E501
         offset += offset_tmp
 
         for i in range(0, marker_set_count):
             marker_data = MoCapData.MarkerData()
-            # Model name
             model_name, separator, remainder = bytes(data[offset:]).partition(b'\0') #type: ignore  # noqa E501
             offset += len(model_name) + 1
             trace_mf("Model Name     : ", model_name.decode('utf-8'))
             marker_data.set_model_name(model_name)
-            # Marker count (4 bytes)
             marker_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
             offset += 4
             if (marker_count < 0):
@@ -656,7 +433,6 @@ class NatNetClient:
                 print("WARNING: Early return.  Marker count too high")
                 offset = len(data)
                 return offset, marker_set_data
-
             trace_mf("Marker Count   : ", marker_count)
             for j in range(0, marker_count):
                 if (len(data) < (offset+12)):
@@ -669,49 +445,31 @@ class NatNetClient:
                 trace_mf("\tMarker %3.1d: [x=%3.2f,y=%3.2f,z=%3.2f]" % (j, pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
                 marker_data.add_pos(pos)
             marker_set_data.add_marker_data(marker_data)
-
-        # Unlabeled markers count (4 bytes)
-        # unlabeled_markers_count = int.from_bytes(data[offset:offset+4], byteorder='little',  signed=True) #type: ignore  # noqa E501
-        # offset += 4
-        # trace_mf("Unlabeled Marker Count:", unlabeled_markers_count)
-
-        # for i in range(0, unlabeled_markers_count):
-        #    pos = Vector3.unpack(data[offset:offset+12])
-        #    offset += 12
-        #    trace_mf("\tMarker %3.1d: [%3.2f,%3.2f,%3.2f]" % (i, pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
-        #    marker_set_data.add_unlabeled_marker(pos)
         return offset, marker_set_data
 
     def __unpack_rigid_body_data(self, data, packet_size, major, minor):
         rigid_body_data = MoCapData.RigidBodyData()
         offset = 0
-        # Rigid body count (4 bytes)
         rigid_body_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         trace_mf("Rigid Body Count:", rigid_body_count)
-
-        # get data size (4 bytes)
         offset_tmp, unpackedDataSize = self.__unpack_data_size(data[offset:], major, minor) #type: ignore  # noqa E501
         offset += offset_tmp
-
         for i in range(0, rigid_body_count):
+            print("ASDF")
             offset_tmp, rigid_body = self.__unpack_rigid_body(data[offset:], major, minor, i) #type: ignore  # noqa E501
             offset += offset_tmp
             rigid_body_data.add_rigid_body(rigid_body)
-
         return offset, rigid_body_data
 
     def __unpack_skeleton_data(self, data, packet_size, major, minor):
         skeleton_data = MoCapData.SkeletonData()
-
         offset = 0
-        # Version 2.1 and later
         skeleton_count = 0
         if ((major == 2 and minor > 0) or major > 2):
             skeleton_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501v
             offset += 4
             trace_mf("Skeleton Count:", skeleton_count)
-            # Get data size (4 bytes)
             offset_tmp, unpackedDataSize = self.__unpack_data_size(data[offset:], major, minor) #type: ignore  # noqa E501
             offset += offset_tmp
             if (skeleton_count > 0):
@@ -719,7 +477,6 @@ class NatNetClient:
                     rel_offset, skeleton = self.__unpack_skeleton(data[offset:], major, minor, skeleton_num) #type: ignore  # noqa E501
                     offset += rel_offset
                     skeleton_data.add_skeleton(skeleton)
-
         return offset, skeleton_data
 
     def __decode_marker_id(self, new_id):
@@ -732,17 +489,14 @@ class NatNetClient:
     def __unpack_labeled_marker_data(self, data, packet_size, major, minor):
         labeled_marker_data = MoCapData.LabeledMarkerData()
         offset = 0
-        # Labeled markers (Version 2.3 and later)
         labeled_marker_count = 0
         if ((major == 2 and minor > 3) or major > 2):
             labeled_marker_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
             offset += 4
             trace_mf("Labeled Marker Count:", labeled_marker_count)
-
             # get data size (4 bytes)
             offset_tmp, unpackedDataSize = self.__unpack_data_size(data[offset:], major, minor) #type: ignore  # noqa E501
             offset += offset_tmp
-
             for lm_num in range(0, labeled_marker_count):
                 model_id = 0
                 marker_id = 0
@@ -756,71 +510,49 @@ class NatNetClient:
                 trace_mf(" %3.1d ID    : [MarkerID: %3.1d] [ModelID: %3.1d]" % (lm_num, marker_id,model_id)) #type: ignore  # noqa E501
                 trace_mf("    pos : [%3.2f, %3.2f, %3.2f]" % (pos[0],pos[1],pos[2])) #type: ignore  # noqa E501
                 trace_mf("    size: [%3.2f]" % size)
-
-                # Version 2.6 and later
                 param = 0
                 if ((major == 2 and minor >= 6) or major > 2):
                     param, = struct.unpack('h', data[offset:offset+2])
                     offset += 2
-                    # occluded = (param & 0x01) != 0
-                    # point_cloud_solved = (param & 0x02) != 0
-                    # model_solved = (param & 0x04) != 0
-
-                # Version 3.0 and later
                 residual = 0.0
                 if major >= 3:
                     residual, = FloatValue.unpack(data[offset:offset+4])
                     offset += 4
                     residual = residual * 1000.0
                     trace_mf("    err : [%3.2f]" % residual)
-
                 labeled_marker = MoCapData.LabeledMarker(tmp_id, pos, size, param, residual) #type: ignore  # noqa E501
                 labeled_marker_data.add_labeled_marker(labeled_marker)
-
         return offset, labeled_marker_data
 
     def __unpack_force_plate_data(self, data, packet_size, major, minor):
         force_plate_data = MoCapData.ForcePlateData()
         n_frames_show_max = 4
         offset = 0
-        # Force Plate data (version 2.9 and later)
         force_plate_count = 0
         if ((major == 2 and minor >= 9) or major > 2):
             force_plate_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
             offset += 4
             trace_mf("Force Plate Count:", force_plate_count)
-
-            # get data size (4 bytes)
             offset_tmp, unpackedDataSize = self.__unpack_data_size(data[offset:], major, minor) #type: ignore  # noqa E501
             offset += offset_tmp
-
             for i in range(0, force_plate_count):
-                # ID
                 force_plate_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
                 offset += 4
                 force_plate = MoCapData.ForcePlate(force_plate_id)
-
-                # Channel Count
                 force_plate_channel_count = int.from_bytes(data[offset:offset+4], byteorder='little',  signed=True) #type: ignore  # noqa E501
                 offset += 4
-
                 trace_mf("\tForce Plate %3.1d ID: %3.1d Num Channels: %3.1d" % (i, force_plate_id, force_plate_channel_count)) #type: ignore  # noqa E501
-
-                # Channel Data
                 for j in range(force_plate_channel_count):
                     fp_channel_data = MoCapData.ForcePlateChannelData()
                     force_plate_channel_frame_count = int.from_bytes(data[offset:offset+4], byteorder='little',  signed=True) #type: ignore  # noqa E501
                     offset += 4
                     out_string = "\tChannel %3.1d: " % (j)
                     out_string += "  %3.1d Frames - Frame Data: " % (force_plate_channel_frame_count) #type: ignore  # noqa E501
-
-                    # Force plate frames
                     n_frames_show = min(force_plate_channel_frame_count, n_frames_show_max) #type: ignore  # noqa E501
                     for k in range(force_plate_channel_frame_count):
                         force_plate_channel_val = FloatValue.unpack(data[offset:offset+4]) #type: ignore  # noqa E501
                         offset += 4
                         fp_channel_data.add_frame_entry(force_plate_channel_val) #type: ignore  # noqa E501
-
                         if k < n_frames_show:
                             out_string += " %3.2f " % (force_plate_channel_val)
                     if n_frames_show < force_plate_channel_frame_count:
@@ -833,38 +565,26 @@ class NatNetClient:
         device_data = MoCapData.DeviceData()
         n_frames_show_max = 4
         offset = 0
-        # Device data (version 2.11 and later)
         device_count = 0
         if (major == 2 and minor >= 11) or (major > 2):
             device_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
             offset += 4
-            trace_mf("Device Count:", device_count)
-
-            # get data size (4 bytes)
             offset_tmp, unpackedDataSize = self.__unpack_data_size(data[offset:], major, minor) #type: ignore  # noqa E501
             offset += offset_tmp
 
             for i in range(0, device_count):
-
-                # ID
                 device_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
                 offset += 4
                 device = MoCapData.Device(device_id)
-                # Channel Count
                 device_channel_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
                 offset += 4
-
                 trace_mf("\tDevice %3.1d      ID: %3.1d Num Channels: %3.1d" % (i, device_id, device_channel_count)) #type: ignore  # noqa E501
-
-                # Channel Data
                 for j in range(0, device_channel_count):
                     device_channel_data = MoCapData.DeviceChannelData()
                     device_channel_frame_count = int.from_bytes(data[offset:offset+4], byteorder='little',  signed=True) #type: ignore  # noqa E501
                     offset += 4
                     out_string = "\tChannel %3.1d " % (j)
                     out_string += "  %3.1d Frames - Frame Data: " % (device_channel_frame_count) #type: ignore  # noqa E501
-
-                    # Device Frame Data
                     n_frames_show = min(device_channel_frame_count, n_frames_show_max) #type: ignore  # noqa E501
                     for k in range(0, device_channel_frame_count):
                         device_channel_val = int.from_bytes(data[offset:offset+4], byteorder='little',  signed=True) #type: ignore  # noqa E501
@@ -872,7 +592,6 @@ class NatNetClient:
                         offset += 4
                         if k < n_frames_show:
                             out_string += " %3.2f " % (device_channel_val)
-
                         device_channel_data.add_frame_entry(device_channel_val)
                     if n_frames_show < device_channel_frame_count:
                         out_string += " showing %3.1d of %3.1d frames" % (n_frames_show, device_channel_frame_count) #type: ignore  # noqa E501
@@ -890,34 +609,24 @@ class NatNetClient:
         trace_mf("Mid-exposure timestamp        : %3.1d" % stamp_camera_mid_exposure) #type: ignore  # noqa E501
         offset += 8
         frame_suffix_data.stamp_camera_mid_exposure = stamp_camera_mid_exposure #type: ignore  # noqa E501
-
         stamp_data_received = int.from_bytes(data[offset:offset+8], byteorder='little',  signed=True) #type: ignore  # noqa E501
         offset += 8
         frame_suffix_data.stamp_data_received = stamp_data_received
         trace_mf("Camera data received timestamp: %3.1d" %stamp_data_received) #type: ignore  # noqa E501
-
         stamp_transmit = int.from_bytes(data[offset:offset+8], byteorder='little',  signed=True) #type: ignore  # noqa E501
         offset += 8
         trace_mf("Transmit timestamp            : %3.1d" % stamp_transmit)  #type: ignore  # noqa E501
         frame_suffix_data.stamp_transmit = stamp_transmit
-
         prec_timestamp_secs = int.from_bytes(data[offset:offset+4], byteorder='little',  signed=True) #type: ignore  # noqa E501
-        # hours = int(prec_timestamp_secs/3600)
-        # minutes=int(prec_timestamp_secs/60)%60
-        # seconds=prec_timestamp_secs%60
-        # out_string= "Precision timestamp (h:m:s) - %4.1d:%2.2d:%2.2d" % (hours, minutes, seconds) #type: ignore  # noqa E501
-        # trace_mf(" %s" %out_string)
         trace_mf("Precision timestamp (sec)     : %3.1d" % prec_timestamp_secs) #type: ignore  # noqa E501
         offset += 4
         frame_suffix_data.prec_timestamp_secs = prec_timestamp_secs
-
         prec_timestamp_frac_secs = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         trace_mf("Precision timestamp (frac sec): %3.1d" % prec_timestamp_frac_secs) #type: ignore  # noqa E501
         offset += 4
         frame_suffix_data.prec_timestamp_frac_secs = prec_timestamp_frac_secs #type: ignore  # noqa E501
         param, = struct.unpack('h', data[offset:offset+2])
         offset += 2
-
         return data, offset, frame_suffix_data, param
 
     def __unpack_frame_suffix_data_3_to_4(self, data, offset, frame_suffix_data, param):  #type: ignore  # noqa E501
@@ -930,12 +639,10 @@ class NatNetClient:
         trace_mf("Mid-exposure timestamp        : %3.1d" % stamp_camera_mid_exposure) #type: ignore  # noqa E501
         offset += 8
         frame_suffix_data.stamp_camera_mid_exposure = stamp_camera_mid_exposure #type: ignore  # noqa E501
-
         stamp_data_received = int.from_bytes(data[offset:offset+8], byteorder='little',  signed=True) #type: ignore  # noqa E501
         offset += 8
         frame_suffix_data.stamp_data_received = stamp_data_received
         trace_mf("Camera data received timestamp: %3.1d" %stamp_data_received) #type: ignore  # noqa E501
-
         stamp_transmit = int.from_bytes(data[offset:offset+8], byteorder='little',  signed=True) #type: ignore  # noqa E501
         offset += 8
         trace_mf("Transmit timestamp            : %3.1d" % stamp_transmit)  #type: ignore  # noqa E501
@@ -952,7 +659,6 @@ class NatNetClient:
         frame_suffix_data.timestamp = timestamp
         param, = struct.unpack('h', data[offset:offset+2])
         offset += 2
-
         return data, offset, frame_suffix_data, param
 
     def __unpack_frame_suffix_data_pre_2_7(self, data, offset, frame_suffix_data, param): #type: ignore  # noqa E501
@@ -964,7 +670,6 @@ class NatNetClient:
         frame_suffix_data.timestamp = timestamp
         param, = struct.unpack('h', data[offset:offset+2])
         offset += 2
-
         return data, offset, frame_suffix_data, param
 
     def __unpack_frame_suffix_data_0_case(self, data, offset, frame_suffix_data, param): #type: ignore  # noqa E501
@@ -980,18 +685,13 @@ class NatNetClient:
     def __unpack_frame_suffix_data(self, data, packet_size, major, minor):
         frame_suffix_data = MoCapData.FrameSuffixData()
         offset = 0
-
-        # Timecode
         timecode = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         frame_suffix_data.timecode = timecode
-
         timecode_sub = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         frame_suffix_data.timecode_sub = timecode_sub
-
         param = 0
-        # check to see if there is enough data
         if ((packet_size-offset) <= 0):
             print("ERROR: Early End of Data Frame Suffix Data")
             print("\tNo time stamp info available")
@@ -1006,13 +706,11 @@ class NatNetClient:
                 data, offset, frame_suffix_data, param = self.__unpack_frame_suffix_data_3_to_4(data, offset, frame_suffix_data, param) #type: ignore  # noqa E501
             elif (major >= 4 and minor != 0):
                 data, offset, frame_suffix_data, param = self.__unpack_frame_suffix_data_4_1_to_present(data, offset, frame_suffix_data, param) #type: ignore  # noqa E501
-
         is_recording = (param & 0x01) != 0
         tracked_models_changed = (param & 0x02) != 0
         frame_suffix_data.param = param
         frame_suffix_data.is_recording = is_recording
         frame_suffix_data.tracked_models_changed = tracked_models_changed
-
         return offset, frame_suffix_data
 
     # Unpack data from a motion capture frame message
@@ -1021,38 +719,32 @@ class NatNetClient:
         data = memoryview(data)
         offset = 0
         rel_offset = 0
-        # Frame Prefix Data
         rel_offset, frame_prefix_data = self.__unpack_frame_prefix_data(data[offset:]) #type: ignore  # noqa E501
         offset += rel_offset
         mocap_data.set_prefix_data(frame_prefix_data)
         frame_number = frame_prefix_data.frame_number
-
         # Markerset Data
         rel_offset, marker_set_data = self.__unpack_marker_set_data(data[offset:], (packet_size - offset), major, minor) #type: ignore  # noqa E501
         offset += rel_offset
         mocap_data.set_marker_set_data(marker_set_data)
         marker_set_count = marker_set_data.get_marker_set_count()
         unlabeled_markers_count = marker_set_data.get_unlabeled_marker_count()
-
         # Legacy Other Markers
         rel_offset, legacy_other_markers = self.__unpack_legacy_other_markers(data[offset:], (packet_size - offset),major, minor) #type: ignore  # noqa E501
         offset += rel_offset
         mocap_data.set_legacy_other_markers(legacy_other_markers)
         marker_set_count = legacy_other_markers.get_marker_count()
         legacy_other_markers_count = marker_set_data.get_unlabeled_marker_count() #type: ignore  # noqa F401
-
         # Rigid Body Data
         rel_offset, rigid_body_data = self.__unpack_rigid_body_data(data[offset:], (packet_size - offset), major, minor) #type: ignore  # noqa E501
         offset += rel_offset
         mocap_data.set_rigid_body_data(rigid_body_data)
         rigid_body_count = rigid_body_data.get_rigid_body_count()
-
         # Skeleton Data
         rel_offset, skeleton_data = self.__unpack_skeleton_data(data[offset:], (packet_size - offset), major, minor) #type: ignore  # noqa E501
         offset += rel_offset
         mocap_data.set_skeleton_data(skeleton_data)
         skeleton_count = skeleton_data.get_skeleton_count()
-
         # Assets (Motive 3.1/NatNet 4.1 and greater)
         asset_count = 0
         if (((major >= 4) and (minor >= 1)) or (major > 4)):
@@ -1060,36 +752,28 @@ class NatNetClient:
             offset += rel_offset
             mocap_data.set_asset_data(asset_data)
             asset_count = asset_data.get_asset_count()
-
         # Labeled Marker Data
         rel_offset, labeled_marker_data = self.__unpack_labeled_marker_data(data[offset:], (packet_size - offset), major, minor) #type: ignore  # noqa E501
         offset += rel_offset
         mocap_data.set_labeled_marker_data(labeled_marker_data)
         labeled_marker_count = labeled_marker_data.get_labeled_marker_count()
-
         # Force Plate Data
         rel_offset, force_plate_data = self.__unpack_force_plate_data(data[offset:], (packet_size - offset), major, minor) #type: ignore  # noqa E501
         offset += rel_offset
         mocap_data.set_force_plate_data(force_plate_data)
-
         # Device Data
         rel_offset, device_data = self.__unpack_device_data(data[offset:], (packet_size - offset), major, minor) #type: ignore  # noqa E501
         offset += rel_offset
         mocap_data.set_device_data(device_data)
-
         # Frame Suffix Data
-        # rel_offset, timecode, timecode_sub, timestamp, is_recording, tracked_models_changed = #type: ignore  # noqa E501
         rel_offset, frame_suffix_data = self.__unpack_frame_suffix_data(data[offset:], (packet_size - offset), major, minor) #type: ignore  # noqa E501
         offset += rel_offset
         mocap_data.set_suffix_data(frame_suffix_data)
-
         timecode = frame_suffix_data.timecode
         timecode_sub = frame_suffix_data.timecode_sub
         timestamp = frame_suffix_data.timestamp
         is_recording = frame_suffix_data.is_recording
         tracked_models_changed = frame_suffix_data.tracked_models_changed
-
-        # Send information to any listener.
         if self.new_frame_listener is not None:
             data_dict = {}
             data_dict["frame_number"] = frame_number
@@ -1104,9 +788,7 @@ class NatNetClient:
             data_dict["timestamp"] = timestamp
             data_dict["is_recording"] = is_recording
             data_dict["tracked_models_changed"] = tracked_models_changed
-
             self.new_frame_listener(data_dict)
-
         if self.new_frame_with_data_listener is not None:
             data_dict = {}
             data_dict["frame_number"] = frame_number
@@ -1124,20 +806,16 @@ class NatNetClient:
             data_dict["offset"] = offset
             data_dict["mocap_data"] = mocap_data
             self.new_frame_with_data_listener(data_dict)
-
         return offset, mocap_data
 
     def __unpack_marker_set_description(self, data, major, minor):
         """Unpack marker description packet"""
         ms_desc = DataDescriptions.MarkerSetDescription()
-
         offset = 0
-
         name, separator, remainder = bytes(data[offset:]).partition(b'\0')
         offset += len(name) + 1
         trace_dd("Markerset Name: %s" % (name.decode('utf-8')))
         ms_desc.set_name(name)
-
         marker_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         trace_dd("Marker Count: %3.1d" % marker_count)
@@ -1147,42 +825,34 @@ class NatNetClient:
                 offset += len(name) + 1
                 trace_dd("\t%2.1d Marker Name: %s" % (i, name.decode('utf-8')))
                 ms_desc.add_marker_name(name)
-
         return offset, ms_desc
 
     def __unpack_rigid_body_descript_4_2_to_current(self, data):
         """Unpack rigid body helper function for NatNet 4.2"""
         rb_desc = DataDescriptions.RigidBodyDescription()
         offset = 0
-
         name, separator, remainder = bytes(data[offset:]).partition(b'\0')
         offset += len(name) + 1
         rb_desc.set_name(name)
         trace_dd("\tRigid Body Name  : ", name.decode('utf-8'))
-
         # ID
         new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         rb_desc.set_id(new_id)
         trace_dd("\tRigid Body ID      : ", str(new_id))
-
         # Parent ID
         parent_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         rb_desc.set_parent_id(parent_id)
         trace_dd("\tParent ID        : ", parent_id)
-
         # Position Offsets
         pos = Vector3.unpack(data[offset:offset+12])
         offset += 12
         rb_desc.set_pos(pos[0], pos[1], pos[2])
-
         trace_dd("\tPosition         : [%3.2f, %3.2f, %3.2f]" % (pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
-
         quat = Quaternion.unpack(data[offset:offset+16])
         offset += 16
         trace_dd("\tRotation         : [%3.2f, %3.2f, %3.2f, %3.2f]" % (quat[0], quat[1], quat[2], quat[3])) #type: ignore  # noqa E501
-
         # Marker Count
         marker_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
@@ -1199,15 +869,12 @@ class NatNetClient:
             # Offset
             marker_offset = Vector3.unpack(data[offset1:offset1+12])
             offset1 += 12
-
             # Active Label
             active_label = int.from_bytes(data[offset2:offset2+4], byteorder='little', signed=True) #type: ignore  # noqa E501
             offset2 += 4
-
             marker_name, separator, remainder = bytes(data[offset3:]).partition(b'\0') #type: ignore  # noqa E501
             marker_name = marker_name.decode('utf-8')
             offset3 += len(marker_name) + 1
-
             rb_marker = DataDescriptions.RBMarker(marker_name, active_label, marker_offset) #type: ignore  # noqa E501
             rb_desc.add_rb_marker(rb_marker)
             trace_dd("\t%3.1d Marker Label: %s Position: [ %3.2f %3.2f %3.2f] %s" % (marker, active_label, #type: ignore  # noqa E501
@@ -1222,34 +889,27 @@ class NatNetClient:
     def __unpack_rigid_body_descript_4_n_4_1(self, data):
         """Unpack rigid body description data for NatNet Versions 4 and
         4.1"""
-
         rb_desc = DataDescriptions.RigidBodyDescription()
         offset = 0
-
         name, separator, remainder = bytes(data[offset:]).partition(b'\0')
         offset += len(name) + 1
         rb_desc.set_name(name)
         trace_dd("\tRigid Body Name  : ", name.decode('utf-8'))
-
         # ID
         new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         rb_desc.set_id(new_id)
         trace_dd("\tRigid Body ID      : ", str(new_id))
-
         # Parent ID
         parent_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         rb_desc.set_parent_id(parent_id)
         trace_dd("\tParent ID        : ", parent_id)
-
         # Position Offsets
         pos = Vector3.unpack(data[offset:offset+12])
         offset += 12
         rb_desc.set_pos(pos[0], pos[1], pos[2])
-
         trace_dd("\tPosition         : [%3.2f, %3.2f, %3.2f]" % (pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
-
         # Marker Count
         marker_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
@@ -1266,15 +926,12 @@ class NatNetClient:
             # Offset
             marker_offset = Vector3.unpack(data[offset1:offset1+12])
             offset1 += 12
-
             # Active Label
             active_label = int.from_bytes(data[offset2:offset2+4], byteorder='little', signed=True) #type: ignore  # noqa E501
             offset2 += 4
-
             marker_name, separator, remainder = bytes(data[offset3:]).partition(b'\0') #type: ignore  # noqa E501
             marker_name = marker_name.decode('utf-8')
             offset3 += len(marker_name) + 1
-
             rb_marker = DataDescriptions.RBMarker(marker_name, active_label, marker_offset) #type: ignore  # noqa E501
             rb_desc.add_rb_marker(rb_marker)
             trace_dd("\t%3.1d Marker Label: %s Position: [ %3.2f %3.2f %3.2f] %s" % (marker, active_label, #type: ignore  # noqa E501
@@ -1283,7 +940,6 @@ class NatNetClient:
                                                                                         marker_offset[2], #type: ignore  # noqa E501
                                                                                         marker_name)) #type: ignore  # noqa E501
             offset = offset3
-
         trace_dd("\tunpack_rigid_body_description processed bytes: ", offset)
         return offset, rb_desc
 
@@ -1292,31 +948,25 @@ class NatNetClient:
         not inclusive of 4.0"""
         rb_desc = DataDescriptions.RigidBodyDescription()
         offset = 0
-
         name, separator, remainder = bytes(data[offset:]).partition(b'\0')
         offset += len(name) + 1
         rb_desc.set_name(name)
         trace_dd("\tRigid Body Name  : ", name.decode('utf-8'))
-
         # ID
         new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         rb_desc.set_id(new_id)
         trace_dd("\tRigid Body ID      : ", str(new_id))
-
         # Parent ID
         parent_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         rb_desc.set_parent_id(parent_id)
         trace_dd("\tParent ID        : ", parent_id)
-
         # Position Offsets
         pos = Vector3.unpack(data[offset:offset+12])
         offset += 12
         rb_desc.set_pos(pos[0], pos[1], pos[2])
-
         trace_dd("\tPosition         : [%3.2f, %3.2f, %3.2f]" % (pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
-
         # Marker Count
         marker_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
@@ -1333,11 +983,9 @@ class NatNetClient:
             # Offset
             marker_offset = Vector3.unpack(data[offset1:offset1+12])
             offset1 += 12
-
             # Active Label
             active_label = int.from_bytes(data[offset2:offset2+4], byteorder='little', signed=True) #type: ignore  # noqa E501
             offset2 += 4
-
             rb_marker = DataDescriptions.RBMarker(marker_name, active_label, marker_offset) #type: ignore  # noqa E501
             rb_desc.add_rb_marker(rb_marker)
             trace_dd("\t%3.1d Marker Label: %s Position: [ %3.2f %3.2f %3.2f] %s" % (marker, active_label, #type: ignore  # noqa E501
@@ -1346,7 +994,6 @@ class NatNetClient:
                                                                                         marker_offset[2], #type: ignore  # noqa E501
                                                                                         marker_name)) #type: ignore  # noqa E501
             offset = offset3
-
         trace_dd("\tunpack_rigid_body_description processed bytes: ", offset)
         return offset, rb_desc
 
@@ -1355,31 +1002,25 @@ class NatNetClient:
         to not inclusive 3"""
         rb_desc = DataDescriptions.RigidBodyDescription()
         offset = 0
-
         name, separator, remainder = bytes(data[offset:]).partition(b'\0')
         offset += len(name) + 1
         rb_desc.set_name(name)
         trace_dd("\tRigid Body Name  : ", name.decode('utf-8'))
-
         # ID
         new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         rb_desc.set_id(new_id)
         trace_dd("\tRigid Body ID      : ", str(new_id))
-
         # Parent ID
         parent_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         rb_desc.set_parent_id(parent_id)
         trace_dd("\tParent ID        : ", parent_id)
-
         # Position Offsets
         pos = Vector3.unpack(data[offset:offset+12])
         offset += 12
         rb_desc.set_pos(pos[0], pos[1], pos[2])
-
         trace_dd("\tPosition         : [%3.2f, %3.2f, %3.2f]" % (pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
-
         trace_dd("\tunpack_rigid_body_description processed bytes: ", offset)
         return offset, rb_desc
 
@@ -1387,26 +1028,21 @@ class NatNetClient:
         """Helper function for NatNet versions under 2"""
         rb_desc = DataDescriptions.RigidBodyDescription()
         offset = 0
-
         # ID
         new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         rb_desc.set_id(new_id)
         trace_dd("\tRigid Body ID      : ", str(new_id))
-
         # Parent ID
         parent_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         rb_desc.set_parent_id(parent_id)
         trace_dd("\tParent ID        : ", parent_id)
-
         # Position Offsets
         pos = Vector3.unpack(data[offset:offset+12])
         offset += 12
         rb_desc.set_pos(pos[0], pos[1], pos[2])
-
         trace_dd("\tPosition         : [%3.2f, %3.2f, %3.2f]" % (pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
-
         trace_dd("\tunpack_rigid_body_description processed bytes: ", offset)
         return offset, rb_desc
 
@@ -1414,35 +1050,28 @@ class NatNetClient:
         """Helper function for NatNet 0 case"""
         rb_desc = DataDescriptions.RigidBodyDescription()
         offset = 0
-
         name, separator, remainder = bytes(data[offset:]).partition(b'\0')
         offset += len(name) + 1
         rb_desc.set_name(name)
         trace_dd("\tRigid Body Name  : ", name.decode('utf-8'))
-
         # ID
         new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         rb_desc.set_id(new_id)
         trace_dd("\tRigid Body ID      : ", str(new_id))
-
         # Parent ID
         parent_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         rb_desc.set_parent_id(parent_id)
         trace_dd("\tParent ID        : ", parent_id)
-
         # Position Offsets
         pos = Vector3.unpack(data[offset:offset+12])
         offset += 12
         rb_desc.set_pos(pos[0], pos[1], pos[2])
-
         trace_dd("\tPosition         : [%3.2f, %3.2f, %3.2f]" % (pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
-
         quat = Quaternion.unpack(data[offset:offset+16])
         offset += 16
         trace_dd("\tRotation         : [%3.2f, %3.2f, %3.2f, %3.2f]" % (quat[0], quat[1], quat[2], quat[3])) #type: ignore  # noqa E501
-
         # Marker Count
         marker_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
@@ -1459,15 +1088,12 @@ class NatNetClient:
             # Offset
             marker_offset = Vector3.unpack(data[offset1:offset1+12])
             offset1 += 12
-
             # Active Label
             active_label = int.from_bytes(data[offset2:offset2+4], byteorder='little', signed=True) #type: ignore  # noqa E501
             offset2 += 4
-
             marker_name, separator, remainder = bytes(data[offset3:]).partition(b'\0') #type: ignore  # noqa E501
             marker_name = marker_name.decode('utf-8')
             offset3 += len(marker_name) + 1
-
             rb_marker = DataDescriptions.RBMarker(marker_name, active_label, marker_offset) #type: ignore  # noqa E501
             rb_desc.add_rb_marker(rb_marker)
             trace_dd("\t%3.1d Marker Label: %s Position: [ %3.2f %3.2f %3.2f] %s" % (marker, active_label, #type: ignore  # noqa E501
@@ -1499,24 +1125,20 @@ class NatNetClient:
     def __unpack_skeleton_description(self, data, major, minor):
         skeleton_desc = DataDescriptions.SkeletonDescription()
         offset = 0
-
         # Name
         name, separator, remainder = bytes(data[offset:]).partition(b'\0')
         offset += len(name) + 1
         skeleton_desc.set_name(name)
         trace_dd("Name: %s" % name.decode('utf-8'))
-
         # ID
         new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         skeleton_desc.set_id(new_id)
         trace_dd("ID: %3.1d" % new_id)
-
         # # of RigidBodies
         rigid_body_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         trace_dd("Rigid Body (Bone) Count: %3.1d" % rigid_body_count)
-
         # Loop over all Rigid Bodies
         for i in range(0, rigid_body_count):
             trace_dd("Rigid Body (Bone) %d:" % (i))
@@ -1535,13 +1157,11 @@ class NatNetClient:
             offset += 4
             fp_desc.set_id(new_id)
             trace_dd("\tID: ", str(new_id))
-
             # Serial Number
             serial_number, separator, remainder = bytes(data[offset:]).partition(b'\0') #type: ignore  # noqa F401
             offset += len(serial_number) + 1
             fp_desc.set_serial_number(serial_number)
             trace_dd("\tSerial Number: ", serial_number.decode('utf-8'))
-
             # Dimensions
             f_width = FloatValue.unpack(data[offset:offset+4])
             offset += 4
@@ -1550,17 +1170,14 @@ class NatNetClient:
             offset += 4
             fp_desc.set_dimensions(f_width[0], f_length[0])
             trace_dd("\tLength: %3.2f" % f_length)
-
             # Origin
             origin = Vector3.unpack(data[offset:offset+12])
             offset += 12
             fp_desc.set_origin(origin[0], origin[1], origin[2])
             trace_dd("\tOrigin: [%3.2f, %3.2f, %3.2f]" % (origin[0], origin[1], origin[2])) #type: ignore  # noqa E501
-
             # Calibration Matrix 12x12 floats
             trace_dd("Cal Matrix:")
             cal_matrix_tmp = [[0.0 for col in range(12)] for row in range(12)]
-
             for i in range(0, 12):
                 cal_matrix_row = FPCalMatrixRow.unpack(data[offset:offset+(12 * 4)]) #type: ignore  # noqa E501
                 trace_dd("\t%3.1d %3.3e %3.3e %3.3e %3.3e %3.3e %3.3e %3.3e %3.3e %3.3e %3.3e %3.3e %3.3e" % (i #type: ignore  # noqa E501
@@ -1583,31 +1200,26 @@ class NatNetClient:
                 corners_tmp[i][2] = corners[o_2+2]
                 o_2 += 3
             fp_desc.set_corners(corners_tmp)
-
             # Plate Type int
             plate_type = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
             offset += 4
             fp_desc.set_plate_type(plate_type)
             trace_dd("Plate Type: ", plate_type)
-
             # Channel Data Type int
             channel_data_type = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
             offset += 4
             fp_desc.set_channel_data_type(channel_data_type)
             trace_dd("Channel Data Type: ", channel_data_type)
-
             # Number of Channels int
             num_channels = int.from_bytes(data[offset:offset+4], byteorder='little',  signed=True) #type: ignore  # noqa E501
             offset += 4
             trace_dd("Number of Channels: ", num_channels)
-
             # Channel Names list of NoC strings
             for i in range(0, num_channels):
                 channel_name, separator, remainder = bytes(data[offset:]).partition(b'\0') #type: ignore  # noqa E501
                 offset += len(channel_name) + 1
                 trace_dd("\tChannel Name %3.1d: %s" % (i, channel_name.decode('utf-8'))) #type: ignore  # noqa E501
                 fp_desc.add_channel_name(channel_name)
-
         trace_dd("unpackForcePlate processed ", offset, " bytes")
         return offset, fp_desc
 
@@ -1619,41 +1231,33 @@ class NatNetClient:
             new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
             offset += 4
             trace_dd("\tID: ", str(new_id))
-
             # Name
             name, separator, remainder = bytes(data[offset:]).partition(b'\0')
             offset += len(name) + 1
             trace_dd("\tName: ", name.decode('utf-8'))
-
             # Serial Number
             serial_number, separator, remainder = bytes(data[offset:]).partition(b'\0') #type: ignore  # noqa E501
             offset += len(serial_number) + 1
             trace_dd("\tSerial Number: ", serial_number.decode('utf-8'))
-
             # Device Type int
             device_type = int.from_bytes(data[offset:offset+4], byteorder='little',  signed=True) #type: ignore  # noqa E501
             offset += 4
             trace_dd("Device Type: ", device_type)
-
             # Channel Data Type int
             channel_data_type = int.from_bytes(data[offset:offset+4], byteorder='little',  signed=True) #type: ignore  # noqa E501
             offset += 4
             trace_dd("Channel Data Type: ", channel_data_type)
-
             device_desc = DataDescriptions.DeviceDescription(new_id, name, serial_number, device_type, channel_data_type) #type: ignore  # noqa E501
-
             # Number of Channels int
             num_channels = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
             offset += 4
             trace_dd("Number of Channels ", num_channels)
-
             # Channel Names list of NoC strings
             for i in range(0, num_channels):
                 channel_name, separator, remainder = bytes(data[offset:]).partition(b'\0') #type: ignore  # noqa E501
                 offset += len(channel_name) + 1
                 device_desc.add_channel_name(channel_name)
                 trace_dd("\tChannel ", i, " Name: ", channel_name.decode('utf-8')) #type: ignore  # noqa E501
-
         trace_dd("unpack_device_description processed ", offset, " bytes")
         return offset, device_desc
 
@@ -1667,46 +1271,37 @@ class NatNetClient:
         position = Vector3.unpack(data[offset:offset+12])
         offset += 12
         trace_dd("\tPosition  : [%3.2f, %3.2f, %3.2f]" % (position[0], position[1], position[2])) #type: ignore  # noqa E501
-
         # Orientation
         orientation = Quaternion.unpack(data[offset:offset+16])
         offset += 16
         trace_dd("\tOrientation: [%3.2f, %3.2f, %3.2f, %3.2f]" % (orientation[0], orientation[1], orientation[2], orientation[3])) #type: ignore  # noqa E501
         trace_dd("unpack_camera_description processed %3.1d bytes" % offset)
-
         camera_desc = DataDescriptions.CameraDescription(name, position, orientation) #type: ignore  # noqa E501
         return offset, camera_desc
 
     def __unpack_marker_description(self, data, major, minor):
         offset = 0
-
         # Name
         name, separator, remainder = bytes(data[offset:]).partition(b'\0')
         offset += len(name) + 1
         trace_dd("\tName      : %s" % name.decode('utf-8'))
-
         # ID
         marker_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         trace_dd("\tID        : %d" % (marker_id))
-
         # Initial Position
         initialPosition = Vector3.unpack(data[offset:offset+12])
         offset += 12
         trace_dd("\tPosition  : [%3.2f, %3.2f, %3.2f]" % (initialPosition[0], initialPosition[1], initialPosition[2])) #type: ignore  # noqa E501
-
         # Size
         marker_size = FloatValue.unpack(data[offset:offset+4])
         offset += 4
         trace_mf("\tMarker Size:", marker_size)
-
         # Params
         marker_params, = struct.unpack('h', data[offset:offset+2])
         offset += 2
         trace_mf("\tParams    :", marker_params)
-
         trace_dd("\tunpack_marker_description processed %3.1d bytes" % offset)
-
         # Package for return object
         marker_desc = DataDescriptions.MarkerDescription(name, marker_id, initialPosition, marker_size, marker_params) #type: ignore  # noqa E501
         return offset, marker_desc
@@ -1717,31 +1312,25 @@ class NatNetClient:
         rbID = int.from_bytes(data[offset:offset+4], 'little',  signed=True)
         offset += 4
         trace_dd("\tID        : %d" % (rbID))
-
         # Position: x,y,z
         pos = Vector3.unpack(data[offset:offset+12])
         offset += 12
         trace_mf("\tPosition   : [%3.2f, %3.2f, %3.2f]" % (pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
-
         # Orientation: qx, qy, qz, qw
         rot = Quaternion.unpack(data[offset:offset+16])
         offset += 16
         trace_mf("\tOrientation: [%3.2f, %3.2f, %3.2f, %3.2f]" % (rot[0], rot[1], rot[2], rot[3])) #type: ignore  # noqa E501
-
         # Mean error
         mean_error, = FloatValue.unpack(data[offset:offset+4])
         offset += 4
         trace_mf("\tMean Error : %3.2f" % mean_error)
-
         # Params
         marker_params, = struct.unpack('h', data[offset:offset+2])
         offset += 2
         trace_mf("\tParams     :", marker_params)
-
         trace_dd("unpack_marker_description processed %3.1d bytes" % offset)
         # Package for return object
         rigid_body_data = MoCapData.AssetRigidBodyData(rbID, pos, rot, mean_error, marker_params) #type: ignore  # noqa E501
-
         return offset, rigid_body_data
 
     def __unpack_asset_marker_data(self, data, major, minor):
@@ -1750,65 +1339,52 @@ class NatNetClient:
         marker_id = int.from_bytes(data[offset:offset+4], 'little', signed=True) #type: ignore  # noqa E501
         offset += 4
         trace_dd("\tID         : %d" % (marker_id))
-
         # Position: x,y,z
         pos = Vector3.unpack(data[offset:offset+12])
         offset += 12
         trace_mf("\tPosition   : [%3.2f, %3.2f, %3.2f]" % (pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
-
         # Size
         marker_size, = FloatValue.unpack(data[offset:offset+4])
         offset += 4
         trace_mf("\tMarker Size: %3.2f" % marker_size)
-
         # Params
         marker_params, = struct.unpack('h', data[offset:offset+2])
         offset += 2
         trace_mf("\tParams     :", marker_params)
-
         # Residual
         residual, = FloatValue.unpack(data[offset:offset+4])
         offset += 4
         trace_mf("\tResidual   : %3.2f" % residual)
-
         marker_data = MoCapData.AssetMarkerData(marker_id, pos, marker_size, marker_params, residual) #type: ignore  # noqa E501
         return offset, marker_data
 
     def __unpack_asset_data(self, data, packet_size, major, minor):
         asset_data = MoCapData.AssetData()
-
         offset = 0
-
         # Asset Count
         asset_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         trace_mf("Asset Count:", asset_count)
-
         # Get data size (4 bytes)
         offset_tmp, unpackedDataSize = self.__unpack_data_size(data[offset:], major, minor) #type: ignore  # noqa E501
         offset += offset_tmp
-
         # Unpack assets
         for asset_num in range(0, asset_count):
             rel_offset, asset = self.__unpack_asset(data[offset:], major, minor, asset_num) #type: ignore  # noqa E501
             offset += rel_offset
             asset_data.add_asset(asset)
-
         return offset, asset_data
 
     def __unpack_asset_description(self, data, major, minor):
         offset = 0
-
         # Name
         name, separator, remainder = bytes(data[offset:]).partition(b'\0')
         offset += len(name) + 1
         trace_dd("\tName      : %s" % name.decode('utf-8'))
-
         # Asset Type 4 bytes
         assetType = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         trace_dd("\tType      : %d" % (assetType))
-
         # ID 4 bytes
         assetID = int.from_bytes(data[offset:offset+4], byteorder='little',  signed=True) #type: ignore  # noqa E501
         offset += 4
@@ -1952,10 +1528,6 @@ class NatNetClient:
                                  , str(self.__server_version[3]))
         return offset
 
-    # __unpack_bitstream_info is for local use of the client
-    # and will update the values for the current bitstream
-    # of the server.
-
     def __unpack_bitstream_info(self, data, packet_size, major, minor):
         nn_version = []
         inString = data.decode('utf-8')
@@ -1984,8 +1556,6 @@ class NatNetClient:
                 buffer_list_recv_index = (buffer_list_recv_index + 1) % buffer_list_size #type: ignore  # noqa E501
             except socket.error as msg: #type: ignore  # noqa F841
                 if stop():
-                    # print("ERROR: command socket access error occurred:\n  %s" %msg) #type: ignore  # noqa E501
-                    # return 1
                     print("shutting down")
             except socket.herror:
                 print("ERROR: command socket access herror occurred")
@@ -1996,7 +1566,6 @@ class NatNetClient:
             except socket.timeout:
                 if (self.use_multicast):
                     print("ERROR: command socket access timeout occurred. Server not responding") #type: ignore  # noqa E501
-                    # return 4
 
             if len(buffer_list[buffer_list_in_use_index]) > 0:
                 # peek ahead at message_id
@@ -2062,48 +1631,234 @@ class NatNetClient:
                             print_level = 0
                 message_id = self.__process_message(data, print_level)
                 data = bytearray(0)
-
         return 0
     
-        def __getjson(self, inpstr):
-        data = {}
-        for item in inpstr.split("\n"):
-            if re.match(r'^(\s\s)\w', item) is not None:  # match 2 space identation or no space identation - root items
-                #itemkey, itemvalue = [_.strip() for _ in item.strip().split(":")]
-                parts = item.strip().split(":", 1)  # Podziel tylko na pierwsze wystąpienie ":"
-                if len(parts) == 2:
-                    itemkey = parts[0].strip()
-                    itemvalue = parts[1].strip()
-                else:
-                    # Obsługa błędu - nieprawidłowy format
-                    self.logger.warning(f"Invalid format in JSON parsing: {item}")
-                    continue  # Przejdź do następnego elementu
-                if "Frame" in itemkey:
-                    itemkey = "Frame"
-                data[itemkey] = itemvalue
-                print(item, "1st level")
-            elif re.match(r'^(\s\s\s\s)\w', item):
-                print(item, "2nd level")
-            elif re.match(r'^(\s\s\s\s\s\s)\w', item):
-                print(item, "3rd level")
-            else:
-                print(item, "Unk. level")
-        print(data)
-        #MoCapData.jsondata.update(data) pawel
+    def __getjson(self, inpstr):
+        frame_data = {
+            "Frame": None,
+            "MarkerSets": [],
+            "RigidBodies": [],
+            "LabeledMarkers": [],
+            "Metadata": {}
+        }
+        current_markerset = None
+        current_rigid_body = None
+        current_labeled_marker = None
+        lines = inpstr.split('\n')
+        i = 0
+        while i < len(lines):
+            line = lines[i].strip()
+            if not line or line.startswith('----'):
+                i += 1
+                continue
+            if line.startswith('Frame #:'):
+                frame_data["Frame"] = int(line.split(':')[1].strip())
+                i += 1
+                continue
+            if line.startswith('Markerset Count:'):
+                frame_data["MarkersetCount"] = int(line.split(':')[1].strip())
+                i += 1
+                continue
+            if line.startswith('Model Name :'):
+                model_name = line.split(':')[1].strip()
+                current_markerset = {
+                    "Name": model_name,
+                    "MarkerCount": 0,
+                    "Markers": []
+                }
+                frame_data["MarkerSets"].append(current_markerset)
+                i += 1
+                continue
+            if line.startswith('Marker Count :') and current_markerset is not None:
+                current_markerset["MarkerCount"] = int(line.split(':')[1].strip())
+                i += 1
+                continue
+            if line.startswith('Marker') and 'pos' in line and current_markerset is not None:
+                marker_num = int(re.search(r'Marker\s+(\d+)', line).group(1))
+                i += 1
+                if i < len(lines):
+                    pos_line = lines[i].strip()
+                    match = re.search(r'\[x=([-\d\.]+),y=([-\d\.]+),z=([-\d\.]+)\]', pos_line)
+                    if match:
+                        x, y, z = float(match.group(1)), float(match.group(2)), float(match.group(3))
+                        # Dodaj marker z pozycją i numerem
+                        current_markerset["Markers"].append({
+                            "Index": marker_num,
+                            "Position": [x, y, z]
+                        })
+                i += 1
+                continue
+            if line.startswith('Unlabeled Marker Count:'):
+                frame_data["UnlabeledMarkerCount"] = int(line.split(':')[1].strip())
+                i += 1
+                continue
+            if line.startswith('Rigid Body Count:'):
+                frame_data["RigidBodyCount"] = int(line.split(':')[1].strip())
+                i += 1
+                continue
+            if line.startswith('Rigid Body    :'):
+                body_index = int(line.split(':')[1].strip())
+                current_rigid_body = {
+                    "Index": body_index,
+                    "ID": None,
+                    "Position": None,
+                    "Orientation": None,
+                    "MarkerError": None,
+                    "TrackingValid": False
+                }
+                frame_data["RigidBodies"].append(current_rigid_body)
+                i += 1
+                continue
+            if line.startswith('ID            :') and current_rigid_body is not None:
+                current_rigid_body["ID"] = int(line.split(':')[1].strip())
+                i += 1
+                continue
+            if line.startswith('Position      :') and current_rigid_body is not None:
+                pos_match = re.search(r'\[([-\d\.]+), ([-\d\.]+), ([-\d\.]+)\]', line)
+                if pos_match:
+                    x, y, z = float(pos_match.group(1)), float(pos_match.group(2)), float(pos_match.group(3))
+                    current_rigid_body["Position"] = [x, y, z]
+                i += 1
+                continue
+            if line.startswith('Orientation   :') and current_rigid_body is not None:
+                orient_match = re.search(r'\[([-\d\.]+), ([-\d\.]+), ([-\d\.]+), ([-\d\.]+)\]', line)
+                if orient_match:
+                    x, y, z, w = float(orient_match.group(1)), float(orient_match.group(2)), float(
+                        orient_match.group(3)), float(orient_match.group(4))
+                    current_rigid_body["Orientation"] = [x, y, z, w]
+                i += 1
+                continue
+            if line.startswith('Marker Error  :') and current_rigid_body is not None:
+                current_rigid_body["MarkerError"] = float(line.split(':')[1].strip())
+                i += 1
+                continue
+            if line.startswith('Tracking Valid:') and current_rigid_body is not None:
+                current_rigid_body["TrackingValid"] = (line.split(':')[1].strip() == "True")
+                i += 1
+                continue
+            if line.startswith('Skeleton Count:'):
+                frame_data["SkeletonCount"] = int(line.split(':')[1].strip())
+                i += 1
+                continue
+            if line.startswith('Asset Count:'):
+                frame_data["AssetCount"] = int(line.split(':')[1].strip())
+                i += 1
+                continue
+            if line.startswith('Labeled Marker Count:'):
+                frame_data["LabeledMarkerCount"] = int(line.split(':')[1].strip())
+                i += 1
+                continue
+            if line.startswith('Labeled Marker'):
+                marker_index = int(line.split()[2].rstrip(':'))
+                current_labeled_marker = {
+                    "Index": marker_index,
+                    "ID": None,
+                    "Position": None,
+                    "Size": None,
+                    "Error": None,
+                    "Occluded": None,
+                    "PointCloudSolved": None,
+                    "ModelSolved": None
+                }
+                frame_data["LabeledMarkers"].append(current_labeled_marker)
+                i += 1
+                continue
+            if line.startswith('ID                 :') and current_labeled_marker is not None:
+                current_labeled_marker["ID"] = line.split(':', 1)[1].strip()
+                i += 1
+                continue
+            if line.startswith('pos                :') and current_labeled_marker is not None:
+                pos_match = re.search(r'\[([-\d\.]+), ([-\d\.]+), ([-\d\.]+)\]', line)
+                if pos_match:
+                    x, y, z = float(pos_match.group(1)), float(pos_match.group(2)), float(pos_match.group(3))
+                    current_labeled_marker["Position"] = [x, y, z]
+                i += 1
+                continue
+            if line.startswith('size               :') and current_labeled_marker is not None:
+                size_match = re.search(r'\[([-\d\.]+)\]', line)
+                if size_match:
+                    current_labeled_marker["Size"] = float(size_match.group(1))
+                i += 1
+                continue
+            if line.startswith('err                :') and current_labeled_marker is not None:
+                err_match = re.search(r'\[([-\d\.]+)\]', line)
+                if err_match:
+                    current_labeled_marker["Error"] = float(err_match.group(1))
+                i += 1
+                continue
+            if line.startswith('occluded           :') and current_labeled_marker is not None:
+                occluded_match = re.search(r'\[\s*(\d+)\]', line)
+                if occluded_match:
+                    current_labeled_marker["Occluded"] = int(occluded_match.group(1))
+                i += 1
+                continue
+            if line.startswith('point_cloud_solved :') and current_labeled_marker is not None:
+                solved_match = re.search(r'\[\s*(\d+)\]', line)
+                if solved_match:
+                    current_labeled_marker["PointCloudSolved"] = int(solved_match.group(1))
+                i += 1
+                continue
+            if line.startswith('model_solved       :') and current_labeled_marker is not None:
+                solved_match = re.search(r'\[\s*(\d+)\]', line)
+                if solved_match:
+                    current_labeled_marker["ModelSolved"] = int(solved_match.group(1))
+                i += 1
+                continue
+            if line.startswith('Force Plate Count:'):
+                frame_data["ForcePlateCount"] = int(line.split(':')[1].strip())
+                i += 1
+                continue
+            if line.startswith('Device Count:'):
+                frame_data["DeviceCount"] = int(line.split(':')[1].strip())
+                i += 1
+                continue
+            if line.startswith('Timecode:'):
+                frame_data["Timecode"] = line.split(':', 1)[1].strip()
+                i += 1
+                continue
+            if line.startswith('Timestamp '):
+                frame_data["Timestamp"] = float(line.split(':', 1)[1].strip())
+                i += 1
+                continue
+            if line.startswith('Mid-exposure timestamp'):
+                frame_data["MidExposureTimestamp"] = int(line.split(':', 1)[1].strip())
+                i += 1
+                continue
+            if line.startswith('Camera data received timestamp'):
+                frame_data["CameraDataReceivedTimestamp"] = int(line.split(':', 1)[1].strip())
+                i += 1
+                continue
+            if line.startswith('Transmit timestamp'):
+                frame_data["TransmitTimestamp"] = int(line.split(':', 1)[1].strip())
+                i += 1
+                continue
+            i += 1
+        if not hasattr(self, 'jsondata'):
+            self.jsondata = {}
+        frame_data["Time"] = int(time.time() * 1e9)  # Czas w nanosekundach
+        self.alljsondata.append(frame_data)
+        if not hasattr(MoCapData, 'jsondata'):
+            MoCapData.jsondata = {}
+        MoCapData.jsondata = frame_data
+
+        return frame_data
 
     def write_to_file(self):
-        ''' Write jsondata to json logfile'''
-        json_data = self.alljsondata
-        if json_data:
-            print('Writing socket data to: {}'.format(self.output_file))
+        if not self.alljsondata:
+            print("No frames to write to file")
+            return
+        try:
+            print(f'Writing {len(self.alljsondata)} frames to: {self.output_file}')
             with open(self.output_file, 'w') as log_file:
-                log_file.write(json.dumps(json_data, indent=4))
+                json.dump(self.alljsondata, log_file, indent=4)
+            print(f'Successfully wrote {len(self.alljsondata)} frames to: {self.output_file}')
+        except Exception as e:
+            print(f"Error writing to file: {e}")
 
     def processmessage(self, data: bytes, print_level=0):
         return self.__process_message(data, print_level=0)
 
-
-     def __process_message(self, data: bytes, print_level=0):
+    def __process_message(self, data: bytes, print_level=0):
         # return message ID
         MoCapData.jsondata = {}
         major = self.get_major()
@@ -2118,10 +1873,7 @@ class NatNetClient:
                                   , str(self.__nat_net_requested_version[3]))
 
         message_id = get_message_id(data)
-
         packet_size = int.from_bytes(data[2:4], byteorder='little', signed=True) #type: ignore  # noqa E501
-
-        # skip the 4 bytes for message ID and packet_size
         offset = 4
         if message_id == self.NAT_FRAMEOFDATA:
             MoCapData.jsondata["Time"] = self.pkttime
@@ -2134,10 +1886,10 @@ class NatNetClient:
             # get a string version of the data for output
             #if print_level >= 1:
             mocap_data_str = mocap_data.get_as_string()
-            print("asdfgh--22")
             self.__getjson(mocap_data_str)
-            print("asdfgh--23")
-                #print(" %s\n" % mocap_data_str)
+            print("########################################################################")
+            print(mocap_data_str)
+            print("########################################################################")
             self.alljsondata.append(MoCapData.jsondata)
 
         elif message_id == self.NAT_MODELDEF:
@@ -2266,8 +2018,6 @@ class NatNetClient:
                 break
         return ret_val
 
-        # return self.send_request(self.data_socket, self.NAT_REQUEST, command_str, (self.server_ip_address, self.command_port)) #type: ignore  # noqa E501
-
     def send_commands(self, tmpCommands, print_results: bool = True):
         for sz_command in tmpCommands:
             return_code = self.send_command(sz_command)
@@ -2327,26 +2077,14 @@ class NatNetClient:
         # Create a separate thread for receiving command packets
         if thread_option == 'c':
             self.command_thread.start()
-
-        # Required for setup
-        # Get NatNet and server versions
         self.send_request(self.command_socket, self.NAT_CONNECT, "", (self.server_ip_address, self.command_port)) #type: ignore  # noqa E501
-
-        # Example Commands
-        # Get NatNet and server versions
-        # self.send_request(self.command_socket, self.NAT_CONNECT, "", (self.server_ip_address, self.command_port)) #type: ignore  # noqa E501
-        # Request the model definitions
-        # self.send_request(self.command_socket, self.NAT_REQUEST_MODELDEF, "", (self.server_ip_address, self.command_port)) #type: ignore  # noqa E501
         return True
 
     def shutdown(self):
         print("shutdown called")
         self.stop_threads = True
-        # closing sockets causes blocking recvfrom to throw
-        # an exception and break the loop
         self.command_socket.close()
         self.data_socket.close()
-        # attempt to join the threads back.
         if self.command_thread.is_alive():
             self.command_thread.join()
         if self.data_thread.is_alive():
