@@ -92,15 +92,13 @@ def test_hash2(test_name, test_hash_str, test_object, generator_string,
             out_str2 += "%s%s test_hash_str != out_hash_str\n" % (
                 indent_string, test_name)
             out_str2 += "%stest_hash_str=%s\n" % (indent_string, test_hash_str)
-            out_str2 += "%sobj_out_hash_str=%s\n" % (indent_string,
-                                                     obj_out_hash_str)
+            out_str2 += "%sobj_out_hash_str=%s\n" % (indent_string, obj_out_hash_str)
             out_str2 += "%sUpdated Test Entry:\n" % (indent_string)
             out_str2 += "%s[\"%s\", \"%s\", \"%s\", True],\n" % (
                 indent_string, test_name, obj_out_hash_str, generator_string)
             out_str2 += "%sobj_out_str =\n%s" % (indent_string, obj_out_str)
             ret_value = K_FAIL
     print("[%s]:%s" % (out_str, test_name))
-
     if len(out_str2):
         print("%s" % out_str2)
     return ret_value
@@ -111,7 +109,6 @@ def get_as_string(input_str):
         return input_str
     else:
         return input_str.decode('utf-8')
-
 
 def get_data_sub_packet_type(new_data):
     out_string = ""
@@ -135,7 +132,6 @@ def get_data_sub_packet_type(new_data):
     else:
         out_string = "Type: Unknown %s\n" % str(data_type)
     return out_string
-
 
 # cMarkerSetDescription
 class MarkerSetDescription:
