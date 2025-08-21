@@ -37,7 +37,6 @@ def trace(*args):
     # print("".join(map(str,args)))
     pass
 
-# Used for Data Description functions
 def trace_dd(*args):
     pass
 
@@ -48,7 +47,6 @@ def get_message_id(data):
     message_id = int.from_bytes(data[0:2], byteorder='little',  signed=True)
     return message_id
 
-# Create structs for reading various object types to speed up parsing.
 Vector2 = struct.Struct('<ff')
 Vector3 = struct.Struct('<fff')
 Quaternion = struct.Struct('<ffff')
@@ -59,65 +57,31 @@ FPCalMatrixRow = struct.Struct('<ffffffffffff')
 FPCorners = struct.Struct('<ffffffffffff')
 
 class NatNetClient:
-    # print_level = 0 off
-    # print_level = 1 on
-    # print_level = >1 on / print every nth mocap frame
     print_level = 20
 
     def __init__(self):
-        # Change this value to the IP address of the NatNet server.
         self.server_ip_address = "127.0.0.1"
-
-        # Change this value to the IP address of your local network interface
         self.local_ip_address = "127.0.0.1"
-
-        # Should match multicast address listed in Motive's streaming settings.
         self.multicast_address = "239.255.42.99"
-
-        # NatNet Command channel
         self.command_port = 1510
-
-        # NatNet Data channel
         self.data_port = 1511
-
         self.use_multicast = None
-
-        # Set this to a callback method of your choice.
-        # Allows receiving per-rigid-body data at each frame.
         self.rigid_body_listener = None
         self.new_frame_listener = None
         self.new_frame_with_data_listener = None
-
-        # Set Application Name
         self.__application_name = "Not Set"
-
-        # NatNet stream version server is capable of.
-        # Updated during initialization only.
         self.__nat_net_stream_version_server = [0, 0, 0, 0]
-
-        # NatNet stream version.
-        # Will be updated to the actual version the server is using at runtime.
         self.__nat_net_requested_version = [0, 0, 0, 0]
-
-        # server stream version.
-        # Will be updated to the actual version the server is using at init..
         self.__server_version = [0, 0, 0, 0]
-
-        # Lock values once run is called
         self.__is_locked = False
-
-        # Server has the ability to change bitstream version
         self.__can_change_bitstream_version = False
-
         self.command_thread = None
         self.data_thread = None
         self.command_socket = None
         self.data_socket = None
-
         self.stop_threads = False
         self.alljsondata = []
 
-    # Client/server message ids
     NAT_CONNECT = 0
     NAT_SERVERINFO = 1
     NAT_REQUEST = 2
@@ -208,7 +172,6 @@ class NatNetClient:
             ret_value = False
         elif self.data_socket is None:
             ret_value = False
-        # check versions
         elif self.get_application_name() == "Not Set":
             ret_value = False
         elif (self.__server_version[0] == 0) and\
@@ -244,7 +207,7 @@ class NatNetClient:
     def __create_data_socket(self):
         result = None
         if self.use_multicast:
-            result = socket.socket(socket.AF_INET, socket.SOCK_DGRAM,0)
+            result = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
             result.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             result.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP,
                               socket.inet_aton(self.multicast_address) +
@@ -271,9 +234,7 @@ class NatNetClient:
         new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         trace_mf("RB: %3.1d ID: %3.1d" % (rb_num, new_id))
-        # Position and orientation
         pos = Vector3.unpack(data[offset:offset+12])
-        # print(pos)
         offset += 12
         trace_mf("\tPosition   : [%3.2f, %3.2f, %3.2f]" % (pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
         rot = Quaternion.unpack(data[offset:offset+16])
@@ -297,7 +258,6 @@ class NatNetClient:
             rigid_body.tracking_valid = True
         else:
             rigid_body.tracking_valid = False
-        print(rigid_body.pos)
         return offset, rigid_body
 
     def __unpack_rigid_body_0_case(self, data, rb_num):
@@ -341,7 +301,6 @@ class NatNetClient:
         trace_mf("Rigid Body Count: %3.1d" % rigid_body_count)
         if (rigid_body_count > 0):
             for rb_num in range(0, rigid_body_count):
-                print("QWER")
                 offset_tmp, rigid_body = self.__unpack_rigid_body(data[offset:], major, minor, rb_num) #type: ignore  # noqa E501
                 skeleton.add_rigid_body(rigid_body)
                 offset += offset_tmp
@@ -368,7 +327,7 @@ class NatNetClient:
         offset += 4
         trace_dd("\tMarkers     : %d" % (numMarkers))
         for marker_num in range(numMarkers):
-            # # of Markers
+            # number of Markers
             offset1, marker = self.__unpack_asset_marker_data(data[offset:], major, minor) #type: ignore  # noqa E501
             offset += offset1
             marker.marker_num = marker_num
@@ -456,7 +415,6 @@ class NatNetClient:
         offset_tmp, unpackedDataSize = self.__unpack_data_size(data[offset:], major, minor) #type: ignore  # noqa E501
         offset += offset_tmp
         for i in range(0, rigid_body_count):
-            print("ASDF")
             offset_tmp, rigid_body = self.__unpack_rigid_body(data[offset:], major, minor, i) #type: ignore  # noqa E501
             offset += offset_tmp
             rigid_body_data.add_rigid_body(rigid_body)
@@ -920,7 +878,6 @@ class NatNetClient:
         offset1 = offset
         offset2 = offset1 + (12*marker_count)
         offset3 = offset2 + (4*marker_count)
-        # Marker Offsets X,Y,Z
         marker_name = ""
         for marker in marker_count_range:
             # Offset
@@ -1135,7 +1092,7 @@ class NatNetClient:
         offset += 4
         skeleton_desc.set_id(new_id)
         trace_dd("ID: %3.1d" % new_id)
-        # # of RigidBodies
+        # number of RigidBodies
         rigid_body_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         trace_dd("Rigid Body (Bone) Count: %3.1d" % rigid_body_count)
@@ -1389,33 +1346,30 @@ class NatNetClient:
         assetID = int.from_bytes(data[offset:offset+4], byteorder='little',  signed=True) #type: ignore  # noqa E501
         offset += 4
         trace_dd("\tID        : %d" % (assetID))
-
-        # # of RigidBodies
+        # number of RigidBodies
         numRBs = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         trace_dd("\tRigid Body (Bone) Count: %d" % (numRBs))
         rigidbodyArray = []
         offset1 = 0
         for rbNum in range(numRBs):
-            # # of RigidBodies
+            # number of RigidBodies
             trace_dd("\tRigid Body (Bone) %d:" % (rbNum))
             offset1, rigidbody = self.__unpack_rigid_body_description(data[offset:], major, minor) #type: ignore  # noqa E501
             offset += offset1
             rigidbodyArray.append(rigidbody)
-        # # of Markers
+        # number of Markers
         numMarkers = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         trace_dd("\tMarker Count: %d" % (numMarkers))
         markerArray = []
         for markerNum in range(numMarkers):
-            # # of Markers
+            # number of Markers
             trace_dd("\tMarker %d:" % (markerNum))
             offset1, marker = self.__unpack_marker_description(data[offset:], major, minor) #type: ignore  # noqa E501
             offset += offset1
             markerArray.append(marker)
-
         trace_dd("\tunpack_asset_description processed %3.1d bytes" % offset)
-
         # package for output
         asset_desc = DataDescriptions.AssetDescription(name, assetType, assetID, rigidbodyArray, markerArray) #type: ignore  # noqa E501
         return offset, asset_desc
@@ -1424,7 +1378,7 @@ class NatNetClient:
     def __unpack_data_descriptions(self, data: bytes, packet_size, major, minor): #type: ignore  # noqa E501
         data_descs = DataDescriptions.DataDescriptions()
         offset = 0
-        # # of data sets to process
+        # number of data sets to process
         dataset_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
         offset += 4
         trace_dd("Dataset Count: ", str(dataset_count))
@@ -1468,12 +1422,8 @@ class NatNetClient:
             data_descs.add_data(data_tmp)
             trace_dd("\t" + str(i+1) + " datasets processed of " + str(dataset_count)) #type: ignore  # noqa E501
             trace_dd("\t " + str(offset) + " bytes processed of " + str(packet_size)) #type: ignore  # noqa E501
-
         return offset, data_descs
 
-    # __unpack_server_info is for local use of the client
-    # and will update the values for the versions/ NatNet capabilities
-    # of the server.
     def __unpack_server_info(self, data, packet_size, major, minor):
         offset = 0
         # Server name
@@ -1488,7 +1438,6 @@ class NatNetClient:
         self.__server_version[1] = server_version[1]
         self.__server_version[2] = server_version[2]
         self.__server_version[3] = server_version[3]
-
         # NatNet Version info
         nnsvs = struct.unpack('BBBB', data[offset:offset+4])
         offset += 4
@@ -1507,7 +1456,6 @@ class NatNetClient:
                 self.__nat_net_requested_version[1],
                 self.__nat_net_requested_version[2],
                 self.__nat_net_requested_version[3]))
-
             self.__nat_net_requested_version[0] = self.__nat_net_stream_version_server[0] #type: ignore  # noqa E501
             self.__nat_net_requested_version[1] = self.__nat_net_stream_version_server[1] #type: ignore  # noqa E501
             self.__nat_net_requested_version[2] = self.__nat_net_stream_version_server[2] #type: ignore  # noqa E501
@@ -1515,13 +1463,11 @@ class NatNetClient:
             # Determine if the bitstream version can be changed
             if (self.__nat_net_stream_version_server[0] >= 4) and (self.use_multicast is False): #type: ignore  # noqa E501
                 self.__can_change_bitstream_version = True
-
         trace_mf("Sending Application Name: ", self.__application_name)
         trace_mf("NatNetVersion ", str(self.__nat_net_stream_version_server[0]), " ", #type: ignore  # noqa E501
                                    str(self.__nat_net_stream_version_server[1]), " ", #type: ignore  # noqa E501
                                    str(self.__nat_net_stream_version_server[2]), " ", #type: ignore  # noqa E501
                                    str(self.__nat_net_stream_version_server[3])) #type: ignore  # noqa E501
-
         trace_mf("ServerVersion ", str(self.__server_version[0]), " " #type: ignore  # noqa E203
                                  , str(self.__server_version[1]), " " #type: ignore  # noqa E203
                                  , str(self.__server_version[2]), " " #type: ignore  # noqa E203
@@ -1549,7 +1495,6 @@ class NatNetClient:
         buffer_list_recv_index = 0
         buffer_list_in_use_index = 0
         while not stop():
-            # Block for input
             try:
                 buffer_list[buffer_list_recv_index], addr = in_socket.recvfrom(recv_buffer_size) #type: ignore  # noqa E501
                 buffer_list_in_use_index = buffer_list_recv_index
@@ -1568,7 +1513,6 @@ class NatNetClient:
                     print("ERROR: command socket access timeout occurred. Server not responding") #type: ignore  # noqa E501
 
             if len(buffer_list[buffer_list_in_use_index]) > 0:
-                # peek ahead at message_id
                 message_id = get_message_id(buffer_list[buffer_list_in_use_index]) #type: ignore  # noqa E501
                 tmp_str = "mi_%1.1d" % message_id
                 if tmp_str not in message_id_dict:
@@ -1581,12 +1525,10 @@ class NatNetClient:
                             print_level = 1
                         else:
                             print_level = 0
-                message_id = self.__process_message(buffer_list[buffer_list_in_use_index], print_level) #type: ignore  # noqa E501
+                message_id = self.process_message(buffer_list[buffer_list_in_use_index], print_level) #type: ignore  # noqa E501
                 buffer_list[buffer_list_in_use_index] = bytearray(0)
-
             if not self.use_multicast:
                 if not stop():
-                    # provides option for users to use prompting
                     if thread_option == 'c':
                         time.sleep(1)
                     self.send_keep_alive(in_socket, self.server_ip_address, self.command_port) #type: ignore  # noqa E501
@@ -1629,10 +1571,10 @@ class NatNetClient:
                             print_level = 1
                         else:
                             print_level = 0
-                message_id = self.__process_message(data, print_level)
+                message_id = self.process_message(data, print_level)
                 data = bytearray(0)
         return 0
-    
+
     def __getjson(self, inpstr):
         frame_data = {
             "Frame": None,
@@ -1650,16 +1592,13 @@ class NatNetClient:
             line = lines[i].strip()
             if not line or line.startswith('----'):
                 i += 1
-                continue
-            if line.startswith('Frame #:'):
+            elif line.startswith('Frame #:'):
                 frame_data["Frame"] = int(line.split(':')[1].strip())
                 i += 1
-                continue
-            if line.startswith('Markerset Count:'):
+            elif line.startswith('Markerset Count:'):
                 frame_data["MarkersetCount"] = int(line.split(':')[1].strip())
                 i += 1
-                continue
-            if line.startswith('Model Name :'):
+            elif line.startswith('Model Name :'):
                 model_name = line.split(':')[1].strip()
                 current_markerset = {
                     "Name": model_name,
@@ -1668,12 +1607,10 @@ class NatNetClient:
                 }
                 frame_data["MarkerSets"].append(current_markerset)
                 i += 1
-                continue
-            if line.startswith('Marker Count :') and current_markerset is not None:
+            elif line.startswith('Marker Count :') and current_markerset is not None:
                 current_markerset["MarkerCount"] = int(line.split(':')[1].strip())
                 i += 1
-                continue
-            if line.startswith('Marker') and 'pos' in line and current_markerset is not None:
+            elif line.startswith('Marker') and 'pos' in line and current_markerset is not None:
                 marker_num = int(re.search(r'Marker\s+(\d+)', line).group(1))
                 i += 1
                 if i < len(lines):
@@ -1681,22 +1618,18 @@ class NatNetClient:
                     match = re.search(r'\[x=([-\d\.]+),y=([-\d\.]+),z=([-\d\.]+)\]', pos_line)
                     if match:
                         x, y, z = float(match.group(1)), float(match.group(2)), float(match.group(3))
-                        # Dodaj marker z pozycją i numerem
                         current_markerset["Markers"].append({
                             "Index": marker_num,
                             "Position": [x, y, z]
                         })
                 i += 1
-                continue
-            if line.startswith('Unlabeled Marker Count:'):
+            elif line.startswith('Unlabeled Marker Count:'):
                 frame_data["UnlabeledMarkerCount"] = int(line.split(':')[1].strip())
                 i += 1
-                continue
-            if line.startswith('Rigid Body Count:'):
+            elif line.startswith('Rigid Body Count:'):
                 frame_data["RigidBodyCount"] = int(line.split(':')[1].strip())
                 i += 1
-                continue
-            if line.startswith('Rigid Body    :'):
+            elif line.startswith('Rigid Body    :'):
                 body_index = int(line.split(':')[1].strip())
                 current_rigid_body = {
                     "Index": body_index,
@@ -1708,47 +1641,38 @@ class NatNetClient:
                 }
                 frame_data["RigidBodies"].append(current_rigid_body)
                 i += 1
-                continue
-            if line.startswith('ID            :') and current_rigid_body is not None:
+            elif line.startswith('ID            :') and current_rigid_body is not None:
                 current_rigid_body["ID"] = int(line.split(':')[1].strip())
                 i += 1
-                continue
-            if line.startswith('Position      :') and current_rigid_body is not None:
+            elif line.startswith('Position      :') and current_rigid_body is not None:
                 pos_match = re.search(r'\[([-\d\.]+), ([-\d\.]+), ([-\d\.]+)\]', line)
                 if pos_match:
                     x, y, z = float(pos_match.group(1)), float(pos_match.group(2)), float(pos_match.group(3))
                     current_rigid_body["Position"] = [x, y, z]
                 i += 1
-                continue
-            if line.startswith('Orientation   :') and current_rigid_body is not None:
+            elif line.startswith('Orientation   :') and current_rigid_body is not None:
                 orient_match = re.search(r'\[([-\d\.]+), ([-\d\.]+), ([-\d\.]+), ([-\d\.]+)\]', line)
                 if orient_match:
                     x, y, z, w = float(orient_match.group(1)), float(orient_match.group(2)), float(
                         orient_match.group(3)), float(orient_match.group(4))
                     current_rigid_body["Orientation"] = [x, y, z, w]
                 i += 1
-                continue
-            if line.startswith('Marker Error  :') and current_rigid_body is not None:
+            elif line.startswith('Marker Error  :') and current_rigid_body is not None:
                 current_rigid_body["MarkerError"] = float(line.split(':')[1].strip())
                 i += 1
-                continue
-            if line.startswith('Tracking Valid:') and current_rigid_body is not None:
+            elif line.startswith('Tracking Valid:') and current_rigid_body is not None:
                 current_rigid_body["TrackingValid"] = (line.split(':')[1].strip() == "True")
                 i += 1
-                continue
-            if line.startswith('Skeleton Count:'):
+            elif line.startswith('Skeleton Count:'):
                 frame_data["SkeletonCount"] = int(line.split(':')[1].strip())
                 i += 1
-                continue
-            if line.startswith('Asset Count:'):
+            elif line.startswith('Asset Count:'):
                 frame_data["AssetCount"] = int(line.split(':')[1].strip())
                 i += 1
-                continue
-            if line.startswith('Labeled Marker Count:'):
+            elif line.startswith('Labeled Marker Count:'):
                 frame_data["LabeledMarkerCount"] = int(line.split(':')[1].strip())
                 i += 1
-                continue
-            if line.startswith('Labeled Marker'):
+            elif line.startswith('Labeled Marker'):
                 marker_index = int(line.split()[2].rstrip(':'))
                 current_labeled_marker = {
                     "Index": marker_index,
@@ -1762,85 +1686,67 @@ class NatNetClient:
                 }
                 frame_data["LabeledMarkers"].append(current_labeled_marker)
                 i += 1
-                continue
-            if line.startswith('ID                 :') and current_labeled_marker is not None:
+            elif line.startswith('ID                 :') and current_labeled_marker is not None:
                 current_labeled_marker["ID"] = line.split(':', 1)[1].strip()
                 i += 1
-                continue
-            if line.startswith('pos                :') and current_labeled_marker is not None:
+            elif line.startswith('pos                :') and current_labeled_marker is not None:
                 pos_match = re.search(r'\[([-\d\.]+), ([-\d\.]+), ([-\d\.]+)\]', line)
                 if pos_match:
                     x, y, z = float(pos_match.group(1)), float(pos_match.group(2)), float(pos_match.group(3))
                     current_labeled_marker["Position"] = [x, y, z]
                 i += 1
-                continue
-            if line.startswith('size               :') and current_labeled_marker is not None:
+            elif line.startswith('size               :') and current_labeled_marker is not None:
                 size_match = re.search(r'\[([-\d\.]+)\]', line)
                 if size_match:
                     current_labeled_marker["Size"] = float(size_match.group(1))
                 i += 1
-                continue
-            if line.startswith('err                :') and current_labeled_marker is not None:
+            elif line.startswith('err                :') and current_labeled_marker is not None:
                 err_match = re.search(r'\[([-\d\.]+)\]', line)
                 if err_match:
                     current_labeled_marker["Error"] = float(err_match.group(1))
                 i += 1
-                continue
-            if line.startswith('occluded           :') and current_labeled_marker is not None:
+            elif line.startswith('occluded           :') and current_labeled_marker is not None:
                 occluded_match = re.search(r'\[\s*(\d+)\]', line)
                 if occluded_match:
                     current_labeled_marker["Occluded"] = int(occluded_match.group(1))
                 i += 1
-                continue
-            if line.startswith('point_cloud_solved :') and current_labeled_marker is not None:
+            elif line.startswith('point_cloud_solved :') and current_labeled_marker is not None:
                 solved_match = re.search(r'\[\s*(\d+)\]', line)
                 if solved_match:
                     current_labeled_marker["PointCloudSolved"] = int(solved_match.group(1))
                 i += 1
-                continue
-            if line.startswith('model_solved       :') and current_labeled_marker is not None:
+            elif line.startswith('model_solved       :') and current_labeled_marker is not None:
                 solved_match = re.search(r'\[\s*(\d+)\]', line)
                 if solved_match:
                     current_labeled_marker["ModelSolved"] = int(solved_match.group(1))
                 i += 1
-                continue
-            if line.startswith('Force Plate Count:'):
+            elif line.startswith('Force Plate Count:'):
                 frame_data["ForcePlateCount"] = int(line.split(':')[1].strip())
                 i += 1
-                continue
-            if line.startswith('Device Count:'):
+            elif line.startswith('Device Count:'):
                 frame_data["DeviceCount"] = int(line.split(':')[1].strip())
                 i += 1
-                continue
-            if line.startswith('Timecode:'):
+            elif line.startswith('Timecode:'):
                 frame_data["Timecode"] = line.split(':', 1)[1].strip()
                 i += 1
-                continue
-            if line.startswith('Timestamp '):
+            elif line.startswith('Timestamp '):
                 frame_data["Timestamp"] = float(line.split(':', 1)[1].strip())
                 i += 1
-                continue
-            if line.startswith('Mid-exposure timestamp'):
+            elif line.startswith('Mid-exposure timestamp'):
                 frame_data["MidExposureTimestamp"] = int(line.split(':', 1)[1].strip())
                 i += 1
-                continue
-            if line.startswith('Camera data received timestamp'):
+            elif line.startswith('Camera data received timestamp'):
                 frame_data["CameraDataReceivedTimestamp"] = int(line.split(':', 1)[1].strip())
                 i += 1
-                continue
-            if line.startswith('Transmit timestamp'):
+            elif line.startswith('Transmit timestamp'):
                 frame_data["TransmitTimestamp"] = int(line.split(':', 1)[1].strip())
                 i += 1
-                continue
-            i += 1
-        if not hasattr(self, 'jsondata'):
-            self.jsondata = {}
-        frame_data["Time"] = int(time.time() * 1e9)  # Czas w nanosekundach
-        self.alljsondata.append(frame_data)
-        if not hasattr(MoCapData, 'jsondata'):
-            MoCapData.jsondata = {}
-        MoCapData.jsondata = frame_data
+            else:
+                i += 1
 
+        frame_data["Time"] = int(time.time() * 1e9)
+        self.alljsondata.append(frame_data)
+        MoCapData.jsondata = frame_data
         return frame_data
 
     def write_to_file(self):
@@ -1855,10 +1761,8 @@ class NatNetClient:
         except Exception as e:
             print(f"Error writing to file: {e}")
 
-    def processmessage(self, data: bytes, print_level=0):
-        return self.__process_message(data, print_level=0)
 
-    def __process_message(self, data: bytes, print_level=0):
+    def process_message(self, data: bytes, print_level=0):
         # return message ID
         MoCapData.jsondata = {}
         major = self.get_major()
@@ -1877,19 +1781,11 @@ class NatNetClient:
         offset = 4
         if message_id == self.NAT_FRAMEOFDATA:
             MoCapData.jsondata["Time"] = self.pkttime
-            # trace("Message ID : %3.1d NAT_FRAMEOFDATA" % message_id)
-            # trace("Packet Size: ", packet_size)
-
             offset_tmp, mocap_data = self.__unpack_mocap_data(data[offset:], packet_size, major, minor) #type: ignore  # noqa E501
             offset += offset_tmp
             print("MoCap Frame: %d\n" % (mocap_data.prefix_data.frame_number))
-            # get a string version of the data for output
-            #if print_level >= 1:
             mocap_data_str = mocap_data.get_as_string()
             self.__getjson(mocap_data_str)
-            print("########################################################################")
-            print(mocap_data_str)
-            print("########################################################################")
             self.alljsondata.append(MoCapData.jsondata)
 
         elif message_id == self.NAT_MODELDEF:
@@ -1898,7 +1794,6 @@ class NatNetClient:
             offset_tmp, data_descs = self.__unpack_data_descriptions(data[offset:], packet_size, major, minor) #type: ignore  # noqa E501
             offset += offset_tmp
             print("Data Descriptions:\n")
-            # get a string version of the data for output
             data_descs_str = data_descs.get_as_string()
             if print_level > 0:
                 print(" %s\n" % (data_descs_str))
@@ -1924,16 +1819,13 @@ class NatNetClient:
                 message, separator, remainder = bytes(data[offset:]).partition(b'\0') #type: ignore  # noqa E501
                 if (len(message) < 30):
                     tmpString = message.decode('utf-8')
-                    # Decode bitstream version
                     if (tmpString.startswith('Bitstream')):
                         nn_version = self.__unpack_bitstream_info(data[offset:], packet_size, major, minor) #type: ignore  # noqa E501
-                        # This is the current server version
                         if (len(nn_version) > 1):
                             for i in range(len(nn_version)):
                                 self.__nat_net_stream_version_server[i] = int(nn_version[i]) #type: ignore  # noqa E501
                             for i in range(len(nn_version), 4):
                                 self.__nat_net_stream_version_server[i] = 0
-
                 offset += len(message) + 1
 
                 if (show_remainder):
@@ -1955,12 +1847,10 @@ class NatNetClient:
             trace("Message ID : %3.1d UNKNOWN" % message_id)
             trace("Packet Size: ", packet_size)
             trace("ERROR: Unrecognized packet type")
-
         trace("End Packet\n-----------------")
         return message_id
 
     def send_request(self, in_socket, command, command_str, address):
-        # Compose the message in our known message format
         packet_size = 0
         if command == self.NAT_REQUEST_MODELDEF or command == self.NAT_REQUEST_FRAMEOFDATA: #type: ignore  # noqa E501
             packet_size = 0
@@ -1974,11 +1864,6 @@ class NatNetClient:
                 tmp_version[1],
                 tmp_version[2],
                 tmp_version[3]))
-
-            # allocate a byte array for 270 bytes
-            # to connect with a specific version
-            # The first 4 bytes spell out "Ping"
-
             command_str = []
             command_str = [0 for i in range(270)]
             command_str[0] = 80
@@ -1994,20 +1879,16 @@ class NatNetClient:
         elif command == self.NAT_KEEPALIVE:
             packet_size = 0
             command_str = ""
-
         data = command.to_bytes(2, byteorder='little',  signed=True)
         data += packet_size.to_bytes(2, byteorder='little',  signed=True)
-
         if command == self.NAT_CONNECT:
             data += bytearray(command_str)
         else:
             data += command_str.encode('utf-8')
         data += b'\0'
-
         return in_socket.sendto(data, address)
 
     def send_command(self, command_str):
-        # print("Send command %s" %command_str)
         nTries = 3
         ret_val = -1
         while nTries:
@@ -2031,8 +1912,6 @@ class NatNetClient:
         return self.command_port
 
     def refresh_configuration(self):
-        # query for application configuration
-        # print("Request current configuration")
         sz_command = "Bitstream"
         return_code = self.send_command(sz_command) #type: ignore  # noqa F841
         time.sleep(0.5)
@@ -2062,10 +1941,7 @@ class NatNetClient:
             print("Could not open command channel")
             return False
         self.__is_locked = True
-
         self.stop_threads = False
-
-        # Create a separate thread for receiving data packets
         self.data_thread = Thread(target=self.__data_thread_function, args=(self.data_socket, lambda: self.stop_threads, lambda: self.print_level,)) #type: ignore  # noqa E501
         self.command_thread = Thread(target=self.__command_thread_function, args=(self.command_socket, lambda: self.stop_threads, lambda: self.print_level, thread_option,)) #type: ignore  # noqa E501
         if thread_option == 'd':
@@ -2073,8 +1949,6 @@ class NatNetClient:
             self.command_thread.start()
             if self.command_thread.is_alive():
                 self.data_thread.start()
-
-        # Create a separate thread for receiving command packets
         if thread_option == 'c':
             self.command_thread.start()
         self.send_request(self.command_socket, self.NAT_CONNECT, "", (self.server_ip_address, self.command_port)) #type: ignore  # noqa E501
