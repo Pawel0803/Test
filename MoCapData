@@ -145,7 +145,6 @@ def stringify_timecode(timecode, timecode_sub):
     timecode_string = f'{hour:02}:{minute:02}:{second:02}:{frame:02}:{subframe:02}' #type: ignore  # noqa E501
     return timecode_string
 
-#jsondata = {"Time": "0.0"}
 
 # MoCap Frame Classes
 class FramePrefixData:
