@@ -2,896 +2,1964 @@
 # Copyright © 2025 NaturalPoint, Inc. All Rights Reserved.
 #
 # THIS SOFTWARE IS GOVERNED BY THE OPTITRACK PLUGINS EULA AVAILABLE AT
-#  https://www.optitrack.com/about/legal/eula.html AND/OR FOR DOWNLOAD WITH
-# THE APPLICABLE SOFTWARE FILE(S) (“PLUGINS EULA”). BY DOWNLOADING, INSTALLING,
-# ACTIVATING AND/OR OTHERWISE USING THE SOFTWARE, YOU ARE AGREEING THAT YOU
-# HAVE READ, AND THAT YOU AGREE TO COMPLY WITH AND ARE BOUND BY, THE PLUGINS
-# EULA AND ALL APPLICABLE LAWS AND REGULATIONS. IF YOU DO NOT AGREE TO BE
-# BOUND BY THE PLUGINS EULA, THEN YOU MAY NOT DOWNLOAD, INSTALL, ACTIVATE OR
-# OTHERWISE USE THE SOFTWARE AND YOU MUST PROMPTLY DELETE OR RETURN IT. IF YOU
-# ARE DOWNLOADING, INSTALLING, ACTIVATING AND/OR OTHERWISE USING THE SOFTWARE
-# ON BEHALF OF AN ENTITY, THEN BY DOING SO YOU REPRESENT AND WARRANT THAT YOU
-# HAVE THE APPROPRIATE AUTHORITY TO ACCEPT THE PLUGINS EULA ON BEHALF OF SUCH
-# ENTITY.
+# https://www.optitrack.com/about/legal/eula.html  AND/OR FOR DOWNLOAD WITH
+# THE APPLICABLE SOFTWARE FILE(S) (“PLUGINS EULA”). BY DOWNLOADING,
+# INSTALLING, ACTIVATING AND/OR OTHERWISE USING THE SOFTWARE, YOU ARE AGREEING
+# THAT YOU HAVE READ, AND THAT YOU AGREE TO COMPLY WITH AND ARE BOUND BY, THE
+# PLUGINS EULA AND ALL APPLICABLE LAWS AND REGULATIONS. IF YOU DO NOT AGREE TO
+# BE BOUND BY THE PLUGINS EULA, THEN YOU MAY NOT DOWNLOAD, INSTALL, ACTIVATE
+# OR OTHERWISE USE THE SOFTWARE AND YOU MUST PROMPTLY DELETE OR RETURN IT. IF
+# YOU ARE DOWNLOADING, INSTALLING, ACTIVATING AND/OR OTHERWISE USING THE
+# SOFTWARE ON BEHALF OF AN ENTITY, THEN BY DOING SO YOU REPRESENT AND WARRANT
+# THAT YOU HAVE THE APPROPRIATE AUTHORITY TO ACCEPT THE PLUGINS EULA ON BEHALF
+# OF SUCH ENTITY.
 # See license file in root directory for additional governing terms and
 # information.
 # =============================================================================
 
+# OptiTrack NatNet direct depacketization library for Python 3.x
 
-# OptiTrack NatNet direct depacketization sample for Python 3.x
-#
-
-
-# Uses the Python NatNetClient.py library to establish a connection (by
-# creating a NatNetClient), and receive data via a NatNet connection and
-# decode it using the NatNetClient library.
-
-
+import sys #type: ignore  # noqa F401
+import socket
+import threading #type: ignore  # noqa F401
+import struct
+import re
+import json
+from threading import Thread
 import copy
-import hashlib
-import random
-
-K_SKIP = [0, 0, 1]
-K_FAIL = [0, 1, 0]
-K_PASS = [1, 0, 0]
-
-
-def get_tab_str(tab_str, level):
-    out_tab_str = ""
-    loop_range = range(0, level)
-    for _ in loop_range:
-        out_tab_str += tab_str
-    return out_tab_str
-
-
-def add_lists(totals, totals_tmp):
-    totals[0] += totals_tmp[0]
-    totals[1] += totals_tmp[1]
-    totals[2] += totals_tmp[2]
-    return totals
-
-
-def test_hash(test_name, test_hash_str, test_object):
-    out_str = test_object.get_as_string()
-    out_hash_str = hashlib.sha1(out_str.encode()).hexdigest()
-    ret_value = True
-    if test_hash_str == out_hash_str:
-        print("[PASS]:%s" % test_name)
-    else:
-        print("[FAIL]:%s test_hash_str != out_hash_str" % test_name)
-        print("test_hash_str=%s" % test_hash_str)
-        print("out_hash_str=%s" % out_hash_str)
-        print("out_str =\n%s" % out_str)
-        ret_value = False
-    return ret_value
-
-
-def test_hash2(test_name, test_hash_str, test_object, generator_string,
-               run_test=True):
-    ret_value = K_FAIL
-    out_str = "FAIL"
-    out_str2 = ""
-    indent_string = "       "
-    if not run_test:
-        ret_value = K_SKIP
-        out_str = "SKIP"
-    elif test_object is None:
-        out_str = "FAIL"
-        ret_value = K_FAIL
-        out_str2 = "%sERROR: test_object was None" % indent_string
-    else:
-        obj_out_hash_str = ""
-        if str(type(test_object)) != 'NoneType':
-            obj_out_str = test_object.get_as_string()
-            obj_out_hash_str = hashlib.sha1(obj_out_str.encode()).hexdigest()
-
-        if test_hash_str == obj_out_hash_str:
-            out_str = "PASS"
-            ret_value = K_PASS
-        else:
-            out_str2 += "%s%s test_hash_str != out_hash_str\n" % (
-                indent_string, test_name)
-            out_str2 += "%stest_hash_str=%s\n" % (indent_string, test_hash_str)
-            out_str2 += "%sobj_out_hash_str=%s\n" % (indent_string, obj_out_hash_str)
-            out_str2 += "%sUpdated Test Entry:\n" % (indent_string)
-            out_str2 += "%s[\"%s\", \"%s\", \"%s\", True],\n" % (
-                indent_string, test_name, obj_out_hash_str, generator_string)
-            out_str2 += "%sobj_out_str =\n%s" % (indent_string, obj_out_str)
-            ret_value = K_FAIL
-    print("[%s]:%s" % (out_str, test_name))
-    if len(out_str2):
-        print("%s" % out_str2)
-    return ret_value
-
-
-def get_as_string(input_str):
-    if type(input_str) is str:
-        return input_str
-    else:
-        return input_str.decode('utf-8')
-
-def get_data_sub_packet_type(new_data):
-    out_string = ""
-    data_type = type(new_data)
-    if data_type == MarkerSetDescription:
-        out_string = "Type: 0 Markerset\n"
-    elif data_type == RigidBodyDescription:
-        out_string = "Type: 1 Rigid Body\n"
-    elif data_type == SkeletonDescription:
-        out_string = "Type: 2 Skeleton\n"
-    elif data_type == ForcePlateDescription:
-        out_string = " Type: 3 Force Plate\n"
-    elif data_type == DeviceDescription:
-        out_string = "Type: 4 Device\n"
-    elif data_type == CameraDescription:
-        out_string = "Type: 5 Camera\n"
-    elif data_type == AssetDescription:
-        out_string = "Type: 6 Asset\n"
-    elif data_type is None:
-        out_string = "Type: None\n"
-    else:
-        out_string = "Type: Unknown %s\n" % str(data_type)
-    return out_string
-
-# cMarkerSetDescription
-class MarkerSetDescription:
-    def __init__(self):
-        self.marker_set_name = "Not Set"
-        self.marker_names_list = []
-
-    def set_name(self, new_name):
-        self.marker_set_name = new_name
-
-    def get_num_markers(self):
-        return len(self.marker_names_list)
-
-    def add_marker_name(self, marker_name):
-        self.marker_names_list.append(copy.copy(marker_name))
-        return self.get_num_markers()
-
-    def get_as_string(self, tab_str="  ", level=0):
-        out_tab_str = get_tab_str(tab_str, level)
-        out_tab_str2 = get_tab_str(tab_str, level+1)
-        out_tab_str3 = get_tab_str(tab_str, level+2)
-        out_string = ""
-        out_string += "%sMarkerset Name: %s\n" % (
-            out_tab_str, get_as_string(self.marker_set_name))
-        num_markers = len(self.marker_names_list)
-        out_string += "%sMarker Count   : %d\n" % (out_tab_str2, num_markers)
-        for i in range(num_markers):
-            out_string += "%s%3.1d Marker Name: %s\n" % (
-                out_tab_str3, i, get_as_string(self.marker_names_list[i]))
-        return out_string
-
-
-class RBMarker:
-    def __init__(self, marker_name="", active_label=0, pos=[0.0, 0.0, 0.0]):
-        self.marker_name = marker_name
-        self.active_label = active_label
-        self.pos = pos
-
-    def get_as_string(self, tab_str="  ", level=0):
-        out_tab_str = get_tab_str(tab_str, level)
-        out_string = ""
-        out_string += """%sMarker Label: %s Position: [%3.2f %3.2f %3.2f] %s
-        \n""" % \
-            (out_tab_str, self.active_label,
-             self.pos[0], self.pos[1], self.pos[2],
-             self.marker_name)
-        return out_string
-
-
-class RigidBodyDescription:
-    def __init__(self, sz_name="", new_id=0, parent_id=0, pos=[0.0, 0.0, 0.0]):
-        self.sz_name = sz_name
-        self.id_num = new_id
-        self.parent_id = parent_id
-        self.pos = pos
-        self.rb_marker_list = []
-        self.rb_num = -1
-
-    def set_name(self, new_name):
-        self.sz_name = new_name
-
-    def set_id(self, new_id):
-        self.id_num = new_id
-
-    def set_parent_id(self, parent_id):
-        self.parent_id = parent_id
-
-    def set_pos(self, p_x, p_y, p_z):
-        self.pos = [p_x, p_y, p_z]
-
-    def get_num_markers(self):
-        return len(self.rb_marker_list)
-
-    def add_rb_marker(self, new_rb_maker):
-        self.rb_marker_list.append(copy.deepcopy(new_rb_maker))
-        return self.get_num_markers()
-
-    def get_as_string(self, tab_str="  ", level=0):
-        out_tab_str = get_tab_str(tab_str, level)
-        out_tab_str2 = get_tab_str(tab_str, level+1)
-        out_string = ""
-        out_string += "%sRigid Body        :" % (out_tab_str)
-        if (self.rb_num > -1):
-            out_string += " %d\n" % (self.rb_num)
-        out_string += "\n"
-        out_string += "%sRigid Body Name   : %s\n" % (
-            out_tab_str, get_as_string(self.sz_name))
-        out_string += "%sRigid Body ID     : %d\n" % (out_tab_str, self.id_num)
-        out_string += "%sParent ID         : %d\n" % (
-            out_tab_str, self.parent_id)
-        out_string += "%sPosition          : [%3.2f, %3.2f, %3.2f]\n" % (
-            out_tab_str, self.pos[0], self.pos[1], self.pos[2])
-        num_markers = len(self.rb_marker_list)
-        out_string += "%sNumber of Markers : %d\n" % (out_tab_str, num_markers)
-        # loop over markers
-        for i in range(num_markers):
-            out_string += "%s%i %s" % (
-                out_tab_str2, i,
-                self.rb_marker_list[i].get_as_string(tab_str, 0))
-        return out_string
-
-
-class SkeletonDescription:
-    def __init__(self, name="", new_id=0):
-        self.name = name
-        self.id_num = new_id
-        self.rigid_body_description_list = []
-
-    def set_name(self, new_name):
-        self.name = new_name
-
-    def set_id(self, new_id):
-        self.id_num = new_id
-
-    def add_rigid_body_description(self, rigid_body_description):
-        self.rigid_body_description_list.append(
-            copy.deepcopy(rigid_body_description))
-        return len(self.rigid_body_description_list)
-
-    def get_as_string(self, tab_str="  ", level=0):
-        out_tab_str = get_tab_str(tab_str, level)
-        out_tab_str2 = get_tab_str(tab_str, level+1)
-        out_string = ""
-        out_string += "%sName                    : %s\n" % (
-            out_tab_str, get_as_string(self.name))
-        out_string += "%sID                      : %d\n" % (
-            out_tab_str, self.id_num)
-        num_bones = len(self.rigid_body_description_list)
-        out_string += "%sRigid Body (Bone) Count : %d\n" % (
-            out_tab_str, num_bones)
-        for i in range(num_bones):
-            out_string += "%sRigid Body (Bone) %d\n" % (out_tab_str2, i)
-            out_string += self.rigid_body_description_list[i].get_as_string(
-                tab_str, level+2)
-        return out_string
-
-
-class ForcePlateDescription:
-    def __init__(self, new_id=0, serial_number=""):
-        self.id_num = new_id
-        self.serial_number = serial_number
-        self.width = 0
-        self.length = 0
-        self.position = [0.0, 0.0, 0.0]
-        self.cal_matrix = [[0.0 for col in range(12)] for row in range(12)]
-        self.corners = [[0.0 for col in range(3)] for row in range(4)]
-        self.plate_type = 0
-        self.channel_data_type = 0
-        self.channel_list = []
-
-    def set_id(self, new_id):
-        self.id_num = new_id
-
-    def set_serial_number(self, serial_number):
-        self.serial_number = serial_number
-
-    def set_dimensions(self, width, length):
-        self.width = width
-        self.length = length
-
-    def set_origin(self, p_x, p_y, p_z):
-        self.position = [p_x, p_y, p_z]
-
-    def set_cal_matrix(self, cal_matrix):
-        self.cal_matrix = cal_matrix
-
-    def set_corners(self, corners):
-        self.corners = corners
-
-    def set_plate_type(self, plate_type):
-        self.plate_type = plate_type
-
-    def set_channel_data_type(self, channel_data_type):
-        self.channel_data_type = channel_data_type
-
-    def add_channel_name(self, channel_name):
-        self.channel_list.append(copy.deepcopy(channel_name))
-        return len(self.channel_list)
-
-    def get_cal_matrix_as_string(self, tab_str="", level=0):
-        """Get force plate calibration matrix as string"""
-        out_tab_str = get_tab_str(tab_str, level)
-        out_tab_str2 = get_tab_str(tab_str, level+1)
-        out_string = ""
-        out_string += "%sCal Matrix:\n" % out_tab_str
-        for i in range(0, 12):
-            out_string += """%s%2.1d %3.3e %3.3e %3.3e %3.3e %3.3e %3.3e %3.3e
-             %3.3e %3.3e %3.3e %3.3e %3.3e\n""" % \
-                    (out_tab_str2, i,
-                     self.cal_matrix[i][0], self.cal_matrix[i][1],
-                     self.cal_matrix[i][2], self.cal_matrix[i][3],
-                     self.cal_matrix[i][4], self.cal_matrix[i][5],
-                     self.cal_matrix[i][6], self.cal_matrix[i][7],
-                     self.cal_matrix[i][8], self.cal_matrix[i][9],
-                     self.cal_matrix[i][10], self.cal_matrix[i][11])
-        return out_string
-
-    def get_corners_as_string(self, tab_str="", level=0):
-        """Get force plate corner positions as a string"""
-        # Corners 4x3 floats
-        out_tab_str = get_tab_str(tab_str, level)
-        out_tab_str2 = get_tab_str(tab_str, level+1)
-        out_string = ""
-        out_string += "%sCorners:\n" % out_tab_str
-        for i in range(0, 4):
-            out_string += "%s%2.1d %3.3e %3.3e %3.3e\n" % \
-                    (out_tab_str2, i,
-                     self.corners[i][0],
-                     self.corners[i][1],
-                     self.corners[i][2])
-        return out_string
-
-    def get_as_string(self, tab_str="  ", level=0):
-        """Get force plate description as a class"""
-        out_tab_str = get_tab_str(tab_str, level)
-        out_string = ""
-        out_string += "%sID                      : %d\n" % (
-            out_tab_str, self.id_num)
-        out_string += "%sSerial Number           : %s\n" % (
-            out_tab_str,
-            get_as_string(self.serial_number))
-        out_string += "%sWidth                   : %3.2f\n" % (
-            out_tab_str, self.width)
-        out_string += "%sLength                  : %3.2f\n" % (
-            out_tab_str, self.length)
-        out_string += "%sOrigin                  : [%3.2f, %3.2f, %3.2f]\n" % (
-            out_tab_str,
-            self.position[0], self.position[1], self.position[2])
-        out_string += self.get_cal_matrix_as_string(tab_str, level)
-        out_string += self.get_corners_as_string(tab_str, level)
-
-        out_string += "%sPlate Type                : %d\n" % (
-            out_tab_str, self.plate_type)
-        out_string += "%sChannel Data Type         : %d\n" % (
-            out_tab_str, self.channel_data_type)
-        num_channels = len(self.channel_list)
-        out_string += "%sNumber of Channels        : %d\n" % (
-            out_tab_str, num_channels)
-        # Channel Names list of NoC strings
-        out_tab_str2 = get_tab_str(tab_str, level+1)
-        for channel_num in range(num_channels):
-            out_string += "%sChannel Name %d: %s\n" % (
-                out_tab_str2, channel_num, get_as_string(
-                    self.channel_list[channel_num]))
-
-        return out_string
-
-
-class DeviceDescription:
-    """Device Description class"""
-    def __init__(self, new_id, name, serial_number,
-                 device_type, channel_data_type):
-        self.id_num = new_id
-        self.name = name
-        self.serial_number = serial_number
-        self.device_type = device_type
-        self.channel_data_type = channel_data_type
-        self.channel_list = []
-
-    def set_id(self, new_id):
-        """Set the device id"""
-        self.id_num = new_id
-
-    def set_name(self, name):
-        """Set the Device name"""
-        self.name = name
-
-    def add_channel_name(self, channel_name):
-        """Add channel name to channel_list"""
-        self.channel_list.append(channel_name)
-        return len(self.channel_list)
-
-    def get_as_string(self, tab_str="  ", level=0):
-        """Get Device Description as string"""
-        out_tab_str = get_tab_str(tab_str, level)
-        out_tab_str2 = get_tab_str(tab_str, level+1)
-        out_string = ""
-        out_string += "%sID                 : %5.1d\n" % (
-            out_tab_str, self.id_num)
-        out_string += "%sName               : %s\n" % (
-            out_tab_str, get_as_string(self.name))
-        out_string += "%sSerial Number      : %s\n" % (
-            out_tab_str, get_as_string(self.serial_number))
-        out_string += "%sDevice Type        : %d\n" % (
-            out_tab_str, self.device_type)
-        out_string += "%sChannel Data Type  : %d\n" % (
-            out_tab_str, self.channel_data_type)
-        num_channels = len(self.channel_list)
-        out_string += "%sNumber of Channels : %d\n" % (
-            out_tab_str, num_channels)
-        for i in range(num_channels):
-            out_string += "%sChannel %2.1d Name : %s\n" % (
-                out_tab_str2, i, get_as_string(self.channel_list[i]))
-        return out_string
-
-
-class CameraDescription:
-    """Camera Description class"""
-    def __init__(self, name, position_vec3, orientation_quat):
-        self.name = name
-        self.position = position_vec3
-        self.orientation = orientation_quat
-
-    def get_as_string(self, tab_str="..", level=0):
-        """Get Camera Description as a string"""
-        out_tab_str = get_tab_str(tab_str, level)
-        out_string = ""
-        out_string += "%sName        : %s\n" % (
-            out_tab_str, get_as_string(self.name))
-        out_string += "%sPosition    : [%3.2f, %3.2f, %3.2f]\n" % \
-            (out_tab_str, self.position[0], self.position[1], self.position[2])
-        out_string += "%sOrientation : [%3.2f, %3.2f, %3.2f, %3.2f]\n" % \
-            (out_tab_str, self.orientation[0], self.orientation[1],
-             self.orientation[2], self.orientation[3])
-        return out_string
-
-
-class MarkerDescription:
-    """Marker Description class"""
-    def __init__(self, name, marker_id, position, marker_size, marker_params):
-        self.name = name
-        self.marker_id = marker_id
-        self.position = position
-        self.marker_size = marker_size
-        self.marker_params = marker_params
-
-    def get_as_string(self, tab_str="..", level=0):
-        """Get Marker Description as a string"""
-        out_tab_str = get_tab_str(tab_str, level)
-        out_string = ""
-        out_string += "%sName        : %s\n" % (
-            out_tab_str, get_as_string(self.name))
-        out_string += "%sID          : %d\n" % (
-            out_tab_str, self.marker_id)
-        out_string += "%sPosition    : [%3.2f, %3.2f, %3.2f]\n" % \
-            (out_tab_str, self.position[0], self.position[1], self.position[2])
-        out_string += "%sSize          : %3.2f\n" % (
-            out_tab_str, self.marker_size[0])
-        out_string += "%sParams        : %d\n" % (
-            out_tab_str, self.marker_params)
-
-        return out_string
-
-
-class AssetDescription:
-    """Asset Description class"""
-    def __init__(self, name, assetType, assetID, rigidbodyArray, markerArray):
-        self.name = name
-        self.assetType = assetType
-        self.assetID = assetID
-        self.rigidbodyArray = rigidbodyArray
-        self.markerArray = markerArray
-
-    def get_as_string(self, tab_str="..", level=0):
-        """Get Asset Description as a string"""
-        out_tab_str = get_tab_str(tab_str, level)
-        out_string = ""
-        # out_string += "Asset Description\n"
-        out_string += "%sName       : %s\n" % (
-            out_tab_str, get_as_string(self.name))
-        out_string += "%sType       : %d\n" % (
-            out_tab_str, self.assetType)
-        out_string += "%sID         : %d\n" % (
-            out_tab_str, self.assetID)
-
-        rbCount = 0
-        out_string += "%sRigidBody (Bone) Count : %d\n" % (
-            out_tab_str, len(self.rigidbodyArray))
-        for rigidbody in self.rigidbodyArray:
-            out_string += "%sRigidBody (Bone) %d:\n" % (out_tab_str, rbCount)
-            out_string += rigidbody.get_as_string(tab_str, level+1)
-            rbCount += 1
-
-        markerCount = 0
-        out_string += "%sMarker Count : %d\n" % (
-            out_tab_str, len(self.markerArray))
-        for marker in self.markerArray:
-            out_string += "%sMarker %d:\n" % (out_tab_str, markerCount)
-            out_string += marker.get_as_string(tab_str, level+1)
-            markerCount += 1
-
-        return out_string
-
-
-# cDataDescriptions
-# Full data descriptions
-class DataDescriptions():
-    """Data Descriptions class"""
-    order_num = 0
+import time
+import DataDescriptions
+import MoCapData
+
+
+def trace(*args):
+    # uncomment the one you want to use
+    # print("".join(map(str,args)))
+    pass
+
+def trace_dd(*args):
+    pass
+
+def trace_mf(*args):
+    pass
+
+def get_message_id(data):
+    message_id = int.from_bytes(data[0:2], byteorder='little',  signed=True)
+    return message_id
+
+Vector2 = struct.Struct('<ff')
+Vector3 = struct.Struct('<fff')
+Quaternion = struct.Struct('<ffff')
+FloatValue = struct.Struct('<f')
+DoubleValue = struct.Struct('<d')
+NNIntValue = struct.Struct('<I')
+FPCalMatrixRow = struct.Struct('<ffffffffffff')
+FPCorners = struct.Struct('<ffffffffffff')
+
+class NatNetClient:
+    print_level = 20
 
     def __init__(self):
-        self.data_order_dict = {}
-        self.marker_set_list = []
-        self.rigid_body_list = []
-        self.skeleton_list = []
-        self.asset_list = []
-        self.force_plate_list = []
-        self.device_list = []
-        self.camera_list = []
+        self.server_ip_address = "127.0.0.1"
+        self.local_ip_address = "127.0.0.1"
+        self.multicast_address = "239.255.42.99"
+        self.command_port = 1510
+        self.data_port = 1511
+        self.use_multicast = None
+        self.rigid_body_listener = None
+        self.new_frame_listener = None
+        self.new_frame_with_data_listener = None
+        self.__application_name = "Not Set"
+        self.__nat_net_stream_version_server = [0, 0, 0, 0]
+        self.__nat_net_requested_version = [0, 0, 0, 0]
+        self.__server_version = [0, 0, 0, 0]
+        self.__is_locked = False
+        self.__can_change_bitstream_version = False
+        self.command_thread = None
+        self.data_thread = None
+        self.command_socket = None
+        self.data_socket = None
+        self.stop_threads = False
+        self.alljsondata = []
 
-    def generate_order_name(self):
-        """Generate the name for the order list based on the current length of
-        the list"""
-        # should be a one up counter instead of based on length of
-        # data_order_dict
-        order_name = "data_%3.3d" % self.order_num
-        self.order_num += 1
-        return order_name
+    NAT_CONNECT = 0
+    NAT_SERVERINFO = 1
+    NAT_REQUEST = 2
+    NAT_RESPONSE = 3
+    NAT_REQUEST_MODELDEF = 4
+    NAT_MODELDEF = 5
+    NAT_REQUEST_FRAMEOFDATA = 6
+    NAT_FRAMEOFDATA = 7
+    NAT_MESSAGESTRING = 8
+    NAT_DISCONNECT = 9
+    NAT_KEEPALIVE = 10
+    NAT_UNRECOGNIZED_REQUEST = 100
+    NAT_UNDEFINED = 999999.9999
 
-    # Add Markerset
-    def add_marker_set(self, new_marker_set):
-        """Add a Markerset"""
-        order_name = self.generate_order_name()
+    def set_output_file(self, output_file):
+        self.output_file = output_file
 
-        # generate order entry
-        pos = len(self.marker_set_list)
-        self.data_order_dict[order_name] = ("marker_set_list", pos)
-        self.marker_set_list.append(copy.deepcopy(new_marker_set))
+    def set_all_jsondata(self, jsondata):
+        self.alljsondata = jsondata
 
-    # Add Rigid Body
-    def add_rigid_body(self, new_rigid_body):
-        """Add a rigid body"""
-        order_name = self.generate_order_name()
+    def set_pkt_time(self, pkttime):
+        self.pkttime = pkttime
 
-        # generate order entry
-        pos = len(self.rigid_body_list)
-        self.data_order_dict[order_name] = ("rigid_body_list", pos)
-        self.rigid_body_list.append(copy.deepcopy(new_rigid_body))
+    def set_client_address(self, local_ip_address):
+        if not self.__is_locked:
+            self.local_ip_address = local_ip_address
 
-    # Add a skeleton
-    def add_skeleton(self, new_skeleton):
-        """Add a skeleton"""
-        order_name = self.generate_order_name()
+    def get_client_address(self):
+        return self.local_ip_address
 
-        # generate order entry
-        pos = len(self.skeleton_list)
-        self.data_order_dict[order_name] = ("skeleton_list", pos)
-        self.skeleton_list.append(copy.deepcopy(new_skeleton))
+    def set_server_address(self, server_ip_address):
+        if not self.__is_locked:
+            self.server_ip_address = server_ip_address
 
-    # Add an asset
-    def add_asset(self, new_asset):
-        """Add an asset"""
-        order_name = self.generate_order_name()
+    def get_server_address(self):
+        return self.server_ip_address
 
-        # generate order entry
-        pos = len(self.asset_list)
-        self.data_order_dict[order_name] = ("asset_list", pos)
-        self.asset_list.append(copy.deepcopy(new_asset))
+    def set_use_multicast(self, use_multicast):
+        if not self.__is_locked:
+            self.use_multicast = use_multicast
 
-    # Add a force plate
-    def add_force_plate(self, new_force_plate):
-        """Add a force plate"""
-        order_name = self.generate_order_name()
+    def can_change_bitstream_version(self):
+        return self.__can_change_bitstream_version
 
-        # generate order entry
-        pos = len(self.force_plate_list)
-        self.data_order_dict[order_name] = ("force_plate_list", pos)
-        self.force_plate_list.append(copy.deepcopy(new_force_plate))
+    def set_nat_net_version(self, major, minor):
+        return_code = -1
+        if self.__can_change_bitstream_version and \
+            ((major != self.__nat_net_requested_version[0]) or
+             (minor != self.__nat_net_requested_version[1])):
+            sz_command = "Bitstream,%1.1d.%1.1d" % (major, minor)
+            return_code = self.send_command(sz_command)
+            if return_code >= 0:
+                self.__nat_net_requested_version[0] = major
+                self.__nat_net_requested_version[1] = minor
+                self.__nat_net_requested_version[2] = 0
+                self.__nat_net_requested_version[3] = 0
+                print("changing bitstream MAIN")
+                self.send_command("TimelinePlay")
+                time.sleep(0.1)
+                tmpCommands = ["TimelinePlay",
+                               "TimelineStop",
+                               "SetPlaybackCurrentFrame,0",
+                               "TimelineStop"]
+                self.send_commands(tmpCommands, False)
+                time.sleep(2)
+            else:
+                print("Bitstream change request failed")
+        return return_code
 
-    def add_device(self, newdevice):
-        """ add_device - Add a device"""
-        order_name = self.generate_order_name()
+    def get_major(self):
+        return self.__nat_net_requested_version[0]
 
-        # generate order entry
-        pos = len(self.device_list)
-        self.data_order_dict[order_name] = ("device_list", pos)
-        self.device_list.append(copy.deepcopy(newdevice))
+    def get_minor(self):
+        return self.__nat_net_requested_version[1]
 
-    def add_camera(self, newcamera):
-        """ Add a new camera """
-        order_name = self.generate_order_name()
+    def set_print_level(self, print_level=0):
+        if (print_level >= 0):
+            self.print_level = print_level
+        return self.print_level
 
-        # generate order entry
-        pos = len(self.camera_list)
-        self.data_order_dict[order_name] = ("camera_list", pos)
-        self.camera_list.append(copy.deepcopy(newcamera))
+    def get_print_level(self):
+        return self.print_level
 
-    def add_data(self, new_data):
-        """Add data based on data type"""
-        data_type = type(new_data)
-        if data_type == MarkerSetDescription:
-            self.add_marker_set(new_data)
-        elif data_type == RigidBodyDescription:
-            self.add_rigid_body(new_data)
-        elif data_type == SkeletonDescription:
-            self.add_skeleton(new_data)
-        elif data_type == ForcePlateDescription:
-            self.add_force_plate(new_data)
-        elif data_type == DeviceDescription:
-            self.add_device(new_data)
-        elif data_type == CameraDescription:
-            self.add_camera(new_data)
-        elif data_type == AssetDescription:
-            self.add_asset(new_data)
-        elif data_type is None:
-            data_type = None
-        else:
-            print("ERROR: Type %s unknown" % str(data_type))
-
-    def get_object_from_list(self, list_name, pos_num):
-        """Determine list name and position of the object"""
-        ret_value = None
-        if (list_name == "marker_set_list") and \
-           (pos_num < len(self.marker_set_list)):
-            ret_value = self.marker_set_list[pos_num]
-
-        elif (list_name == "rigid_body_list") and \
-             (pos_num < len(self.rigid_body_list)):
-            ret_value = self.rigid_body_list[pos_num]
-
-        elif (list_name == "skeleton_list") and \
-             (pos_num < len(self.skeleton_list)):
-            ret_value = self.skeleton_list[pos_num]
-
-        elif (list_name == "asset_list") and \
-             (pos_num < len(self.asset_list)):
-            ret_value = self.asset_list[pos_num]
-
-        elif (list_name == "force_plate_list") and \
-             (pos_num < len(self.force_plate_list)):
-            ret_value = self.force_plate_list[pos_num]
-
-        elif (list_name == "device_list") and \
-             (pos_num < len(self.device_list)):
-            ret_value = self.device_list[pos_num]
-
-        elif (list_name == "camera_list") and \
-             (pos_num < len(self.camera_list)):
-            ret_value = self.camera_list[pos_num]
-
-        else:
-            ret_value = None
-
+    def connected(self):
+        ret_value = True
+        # check sockets
+        if self.command_socket is None:
+            ret_value = False
+        elif self.data_socket is None:
+            ret_value = False
+        elif self.get_application_name() == "Not Set":
+            ret_value = False
+        elif (self.__server_version[0] == 0) and\
+             (self.__server_version[1] == 0) and\
+             (self.__server_version[2] == 0) and\
+             (self.__server_version[3] == 0):
+            ret_value = False
         return ret_value
 
-    def get_as_string(self, tab_str="  ", level=0):
-        """Ensure data comes back as a string"""
-        out_tab_str = get_tab_str(tab_str, level)
-        out_tab_str2 = get_tab_str(tab_str, level+1)
-        out_tab_str3 = get_tab_str(tab_str, level+2)
-        out_string = ""
-        num_data_sets = len(self.data_order_dict)
-        out_string += "%sDataset Count: %d\n" % (out_tab_str, num_data_sets)
-        i = 0
-        for tmp_key, tmp_value in self.data_order_dict.items():
-            # tmp_name,tmp_num=self.data_order_dict[data_set]
-            tmp_name = tmp_value[0]
-            tmp_num = tmp_value[1]
-            tmp_object = self.get_object_from_list(tmp_name, tmp_num)
-            out_string += "%sDataset %3.1d\n" % (out_tab_str2, i)
-            tmp_string = get_data_sub_packet_type(tmp_object)
-            if tmp_string != "":
-                out_string += "%s%s" % (out_tab_str2, tmp_string)
-            # outputs keys for looking up objects
-            # out_string += "%s%s %s %d\n" % (
-            #    out_tab_str2, data_set, tmp_name, tmp_num)
-            if tmp_object is not None:
-                out_string += tmp_object.get_as_string(tab_str, level+2)
+    def __create_command_socket(self):
+        result = None
+        if self.use_multicast:
+            result = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
+            result.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            try:
+                if self.server_ip_address == self.local_ip_address:
+                    result.bind(('', 0))
+                else:
+                    result.bind((self.local_ip_address, self.command_port))
+            except socket.error as e:
+                print(f'Socket error: {e}')
+            result.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+            result.settimeout(2.0)
+        else:
+            result = socket.socket(socket.AF_INET, socket.SOCK_DGRAM,
+                                   socket.IPPROTO_UDP)
+            try:
+                result.bind((self.local_ip_address, 0))
+            except socket.error as e:
+                print(f'Socket error: {e}')
+        return result
+
+    def __create_data_socket(self):
+        result = None
+        if self.use_multicast:
+            result = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
+            result.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            result.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP,
+                              socket.inet_aton(self.multicast_address) +
+                              socket.inet_aton(self.local_ip_address))
+            try:
+                result.bind((self.local_ip_address, self.data_port))
+            except socket.error as e:
+                print(f'Multicast Error: {e}')
+                sys.exit(1)
+        else:
+            self.use_multicast = False
+            result = socket.socket(socket.AF_INET,socket.SOCK_DGRAM,socket.IPPROTO_UDP)
+            result.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            try:
+                result.bind((self.local_ip_address, 0))
+            except socket.error as e:
+                print(f'Unicast Socket Error: {e}')
+                sys.exit(1)
+        return result
+
+    def __unpack_rigid_body_3_and_above(self, data, rb_num):
+        offset = 0
+        # ID (4 bytes)
+        new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        trace_mf("RB: %3.1d ID: %3.1d" % (rb_num, new_id))
+        pos = Vector3.unpack(data[offset:offset+12])
+        offset += 12
+        trace_mf("\tPosition   : [%3.2f, %3.2f, %3.2f]" % (pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
+        rot = Quaternion.unpack(data[offset:offset+16])
+        offset += 16
+        trace_mf("\tOrientation: [%3.2f, %3.2f, %3.2f, %3.2f]" % (rot[0], rot[1], rot[2], rot[3])) #type: ignore  # noqa E501
+        rigid_body = MoCapData.RigidBody(new_id, pos, rot)
+        if self.rigid_body_listener is not None:
+            self.rigid_body_listener(new_id, pos, rot)
+        marker_error, = FloatValue.unpack(data[offset:offset+4])
+        offset += 4
+        trace_mf("\tMean Marker Error: %3.2f" % marker_error)
+        rigid_body.error = marker_error
+        param, = struct.unpack('h', data[offset:offset+2])
+        tracking_valid = (param & 0x01) != 0
+        offset += 2
+        is_valid_str = 'False'
+        if tracking_valid:
+            is_valid_str = 'True'
+        trace_mf("\tTracking Valid: %s" % is_valid_str)
+        if tracking_valid:
+            rigid_body.tracking_valid = True
+        else:
+            rigid_body.tracking_valid = False
+        return offset, rigid_body
+
+    def __unpack_rigid_body_0_case(self, data, rb_num):
+        """Calculates offset for case where major version is 0"""
+        offset = 0
+        new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        trace_mf("RB: %3.1d ID: %3.1d" % (rb_num, new_id))
+        pos = Vector3.unpack(data[offset:offset+12])
+        offset += 12
+        trace_mf("\tPosition   : [%3.2f, %3.2f, %3.2f]" % (pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
+        rot = Quaternion.unpack(data[offset:offset+16])
+        offset += 16
+        trace_mf("\tOrientation: [%3.2f, %3.2f, %3.2f, %3.2f]" % (rot[0], rot[1], rot[2], rot[3])) #type: ignore  # noqa E501
+        rigid_body = MoCapData.RigidBody(new_id, pos, rot)
+        if self.rigid_body_listener is not None:
+            self.rigid_body_listener(new_id, pos, rot)
+        return offset, rigid_body
+
+    def __unpack_rigid_body(self, data, major, minor, rb_num):
+        if (major >= 3):
+            offset, rigid_body = self.__unpack_rigid_body_3_and_above(data, rb_num) #type: ignore  # noqa E501
+        elif (major == 2 and minor >= 6):
+            offset, rigid_body = self.__unpack_rigid_body_2_6_to_3(data, rb_num) #type: ignore  # noqa E501
+        elif (major < 2 or (major == 2 and minor < 6)):
+            offset, rigid_body = self.__unpack_rigid_body_pre_2_6(data, major, rb_num) #type: ignore  # noqa E501
+        elif (major == 0):
+            offset, rigid_body = self.__unpack_rigid_body_0_case(data, rb_num)
+        else:
+            pass
+        return offset, rigid_body
+
+    def __unpack_skeleton(self, data, major, minor, skeleton_num=0):
+        offset = 0
+        new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        trace_mf("Skeleton %3.1d ID: %3.1d" % (skeleton_num, new_id))
+        skeleton = MoCapData.Skeleton(new_id)
+        rigid_body_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        trace_mf("Rigid Body Count: %3.1d" % rigid_body_count)
+        if (rigid_body_count > 0):
+            for rb_num in range(0, rigid_body_count):
+                offset_tmp, rigid_body = self.__unpack_rigid_body(data[offset:], major, minor, rb_num) #type: ignore  # noqa E501
+                skeleton.add_rigid_body(rigid_body)
+                offset += offset_tmp
+        return offset, skeleton
+
+    def __unpack_asset(self, data, major, minor, asset_num=0):
+        offset = 0
+        trace_dd("\tAsset       : %d" % (asset_num))
+        new_id = int.from_bytes(data[offset:offset+4], 'little',  signed=True)
+        offset += 4
+        asset = MoCapData.Asset()
+        trace_dd("\tAsset ID    : %d" % (new_id))
+        asset.set_id(new_id)
+        numRBs = int.from_bytes(data[offset:offset+4], 'little',  signed=True)
+        offset += 4
+        trace_dd("\tRigid Bodies: %d" % (numRBs))
+        offset1 = 0
+        for rb_num in range(numRBs):
+            offset1, rigid_body = self.__unpack_asset_rigid_body_data(data[offset:], major, minor) #type: ignore  # noqa E501
+            offset += offset1
+            rigid_body.rb_num = rb_num
+            asset.add_rigid_body(rigid_body)
+        numMarkers = int.from_bytes(data[offset:offset+4], 'little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        trace_dd("\tMarkers     : %d" % (numMarkers))
+        for marker_num in range(numMarkers):
+            # number of Markers
+            offset1, marker = self.__unpack_asset_marker_data(data[offset:], major, minor) #type: ignore  # noqa E501
+            offset += offset1
+            marker.marker_num = marker_num
+            asset.add_marker(marker)
+        return offset, asset
+
+    def __unpack_frame_prefix_data(self, data):
+        offset = 0
+        frame_number = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        trace_mf("Frame #: %3.1d" % frame_number)
+        frame_prefix_data = MoCapData.FramePrefixData(frame_number)
+        return offset, frame_prefix_data
+
+    def __unpack_data_size(self, data, major, minor):
+        sizeInBytes = 0
+        offset = 0
+        if (((major == 4) and (minor > 0)) or (major > 4)):
+            sizeInBytes = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+            offset += 4
+            trace_mf("Byte Count: %3.1d" % sizeInBytes)
+        return offset, sizeInBytes
+
+    def __unpack_legacy_other_markers(self, data, packet_size, major, minor):
+        offset = 0
+        other_marker_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        trace_mf("Other Marker Count:", other_marker_count)
+        offset_tmp, unpackedDataSize = self.__unpack_data_size(data[offset:], major, minor) #type: ignore  # noqa E501
+        offset += offset_tmp
+        other_marker_data = MoCapData.LegacyMarkerData()
+        if (other_marker_count > 0):
+            for j in range(0, other_marker_count):
+                pos = Vector3.unpack(data[offset:offset+12])
+                offset += 12
+                trace_mf("\tMarker %3.1d: [x=%3.2f,y=%3.2f,z=%3.2f]" % (j, pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
+                other_marker_data.add_pos(pos)
+        return offset, other_marker_data
+
+    def __unpack_marker_set_data(self, data, packet_size, major, minor):
+        marker_set_data = MoCapData.MarkerSetData()
+        offset = 0
+        marker_set_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501s
+        offset += 4
+        trace_mf("Markerset Count:", marker_set_count)
+        offset_tmp, unpackedDataSize = self.__unpack_data_size(data[offset:], major, minor) #type: ignore  # noqa E501
+        offset += offset_tmp
+
+        for i in range(0, marker_set_count):
+            marker_data = MoCapData.MarkerData()
+            model_name, separator, remainder = bytes(data[offset:]).partition(b'\0') #type: ignore  # noqa E501
+            offset += len(model_name) + 1
+            trace_mf("Model Name     : ", model_name.decode('utf-8'))
+            marker_data.set_model_name(model_name)
+            marker_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+            offset += 4
+            if (marker_count < 0):
+                print("WARNING: Early return.  Invalid marker count")
+                offset = len(data)
+                return offset, marker_set_data
+            elif (marker_count > 10000):
+                print("WARNING: Early return.  Marker count too high")
+                offset = len(data)
+                return offset, marker_set_data
+            trace_mf("Marker Count   : ", marker_count)
+            for j in range(0, marker_count):
+                if (len(data) < (offset+12)):
+                    print("WARNING: Early return.  Out of data at marker ", j, " of ", marker_count) #type: ignore  # noqa E501
+                    offset = len(data)
+                    return offset, marker_set_data
+                    break
+                pos = Vector3.unpack(data[offset:offset+12])
+                offset += 12
+                trace_mf("\tMarker %3.1d: [x=%3.2f,y=%3.2f,z=%3.2f]" % (j, pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
+                marker_data.add_pos(pos)
+            marker_set_data.add_marker_data(marker_data)
+        return offset, marker_set_data
+
+    def __unpack_rigid_body_data(self, data, packet_size, major, minor):
+        rigid_body_data = MoCapData.RigidBodyData()
+        offset = 0
+        rigid_body_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        trace_mf("Rigid Body Count:", rigid_body_count)
+        offset_tmp, unpackedDataSize = self.__unpack_data_size(data[offset:], major, minor) #type: ignore  # noqa E501
+        offset += offset_tmp
+        for i in range(0, rigid_body_count):
+            offset_tmp, rigid_body = self.__unpack_rigid_body(data[offset:], major, minor, i) #type: ignore  # noqa E501
+            offset += offset_tmp
+            rigid_body_data.add_rigid_body(rigid_body)
+        return offset, rigid_body_data
+
+    def __unpack_skeleton_data(self, data, packet_size, major, minor):
+        skeleton_data = MoCapData.SkeletonData()
+        offset = 0
+        skeleton_count = 0
+        if ((major == 2 and minor > 0) or major > 2):
+            skeleton_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501v
+            offset += 4
+            trace_mf("Skeleton Count:", skeleton_count)
+            offset_tmp, unpackedDataSize = self.__unpack_data_size(data[offset:], major, minor) #type: ignore  # noqa E501
+            offset += offset_tmp
+            if (skeleton_count > 0):
+                for skeleton_num in range(0, skeleton_count):
+                    rel_offset, skeleton = self.__unpack_skeleton(data[offset:], major, minor, skeleton_num) #type: ignore  # noqa E501
+                    offset += rel_offset
+                    skeleton_data.add_skeleton(skeleton)
+        return offset, skeleton_data
+
+    def __decode_marker_id(self, new_id):
+        model_id = 0
+        marker_id = 0
+        model_id = new_id >> 16
+        marker_id = new_id & 0x0000ffff
+        return model_id, marker_id
+
+    def __unpack_labeled_marker_data(self, data, packet_size, major, minor):
+        labeled_marker_data = MoCapData.LabeledMarkerData()
+        offset = 0
+        labeled_marker_count = 0
+        if ((major == 2 and minor > 3) or major > 2):
+            labeled_marker_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+            offset += 4
+            trace_mf("Labeled Marker Count:", labeled_marker_count)
+            # get data size (4 bytes)
+            offset_tmp, unpackedDataSize = self.__unpack_data_size(data[offset:], major, minor) #type: ignore  # noqa E501
+            offset += offset_tmp
+            for lm_num in range(0, labeled_marker_count):
+                model_id = 0
+                marker_id = 0
+                tmp_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+                offset += 4
+                model_id, marker_id = self.__decode_marker_id(tmp_id)
+                pos = Vector3.unpack(data[offset:offset+12])
+                offset += 12
+                size = FloatValue.unpack(data[offset:offset+4])
+                offset += 4
+                trace_mf(" %3.1d ID    : [MarkerID: %3.1d] [ModelID: %3.1d]" % (lm_num, marker_id,model_id)) #type: ignore  # noqa E501
+                trace_mf("    pos : [%3.2f, %3.2f, %3.2f]" % (pos[0],pos[1],pos[2])) #type: ignore  # noqa E501
+                trace_mf("    size: [%3.2f]" % size)
+                param = 0
+                if ((major == 2 and minor >= 6) or major > 2):
+                    param, = struct.unpack('h', data[offset:offset+2])
+                    offset += 2
+                residual = 0.0
+                if major >= 3:
+                    residual, = FloatValue.unpack(data[offset:offset+4])
+                    offset += 4
+                    residual = residual * 1000.0
+                    trace_mf("    err : [%3.2f]" % residual)
+                labeled_marker = MoCapData.LabeledMarker(tmp_id, pos, size, param, residual) #type: ignore  # noqa E501
+                labeled_marker_data.add_labeled_marker(labeled_marker)
+        return offset, labeled_marker_data
+
+    def __unpack_force_plate_data(self, data, packet_size, major, minor):
+        force_plate_data = MoCapData.ForcePlateData()
+        n_frames_show_max = 4
+        offset = 0
+        force_plate_count = 0
+        if ((major == 2 and minor >= 9) or major > 2):
+            force_plate_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+            offset += 4
+            trace_mf("Force Plate Count:", force_plate_count)
+            offset_tmp, unpackedDataSize = self.__unpack_data_size(data[offset:], major, minor) #type: ignore  # noqa E501
+            offset += offset_tmp
+            for i in range(0, force_plate_count):
+                force_plate_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+                offset += 4
+                force_plate = MoCapData.ForcePlate(force_plate_id)
+                force_plate_channel_count = int.from_bytes(data[offset:offset+4], byteorder='little',  signed=True) #type: ignore  # noqa E501
+                offset += 4
+                trace_mf("\tForce Plate %3.1d ID: %3.1d Num Channels: %3.1d" % (i, force_plate_id, force_plate_channel_count)) #type: ignore  # noqa E501
+                for j in range(force_plate_channel_count):
+                    fp_channel_data = MoCapData.ForcePlateChannelData()
+                    force_plate_channel_frame_count = int.from_bytes(data[offset:offset+4], byteorder='little',  signed=True) #type: ignore  # noqa E501
+                    offset += 4
+                    out_string = "\tChannel %3.1d: " % (j)
+                    out_string += "  %3.1d Frames - Frame Data: " % (force_plate_channel_frame_count) #type: ignore  # noqa E501
+                    n_frames_show = min(force_plate_channel_frame_count, n_frames_show_max) #type: ignore  # noqa E501
+                    for k in range(force_plate_channel_frame_count):
+                        force_plate_channel_val = FloatValue.unpack(data[offset:offset+4]) #type: ignore  # noqa E501
+                        offset += 4
+                        fp_channel_data.add_frame_entry(force_plate_channel_val) #type: ignore  # noqa E501
+                        if k < n_frames_show:
+                            out_string += " %3.2f " % (force_plate_channel_val)
+                    if n_frames_show < force_plate_channel_frame_count:
+                        out_string += " showing %3.1d of %3.1d frames" % (n_frames_show, force_plate_channel_frame_count) #type: ignore  # noqa E501
+                    force_plate.add_channel_data(fp_channel_data)
+                force_plate_data.add_force_plate(force_plate)
+        return offset, force_plate_data
+
+    def __unpack_device_data(self, data, packet_size, major, minor):
+        device_data = MoCapData.DeviceData()
+        n_frames_show_max = 4
+        offset = 0
+        device_count = 0
+        if (major == 2 and minor >= 11) or (major > 2):
+            device_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+            offset += 4
+            offset_tmp, unpackedDataSize = self.__unpack_data_size(data[offset:], major, minor) #type: ignore  # noqa E501
+            offset += offset_tmp
+
+            for i in range(0, device_count):
+                device_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+                offset += 4
+                device = MoCapData.Device(device_id)
+                device_channel_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+                offset += 4
+                trace_mf("\tDevice %3.1d      ID: %3.1d Num Channels: %3.1d" % (i, device_id, device_channel_count)) #type: ignore  # noqa E501
+                for j in range(0, device_channel_count):
+                    device_channel_data = MoCapData.DeviceChannelData()
+                    device_channel_frame_count = int.from_bytes(data[offset:offset+4], byteorder='little',  signed=True) #type: ignore  # noqa E501
+                    offset += 4
+                    out_string = "\tChannel %3.1d " % (j)
+                    out_string += "  %3.1d Frames - Frame Data: " % (device_channel_frame_count) #type: ignore  # noqa E501
+                    n_frames_show = min(device_channel_frame_count, n_frames_show_max) #type: ignore  # noqa E501
+                    for k in range(0, device_channel_frame_count):
+                        device_channel_val = int.from_bytes(data[offset:offset+4], byteorder='little',  signed=True) #type: ignore  # noqa E501
+                        device_channel_val = FloatValue.unpack(data[offset:offset+4]) #type: ignore  # noqa E501
+                        offset += 4
+                        if k < n_frames_show:
+                            out_string += " %3.2f " % (device_channel_val)
+                        device_channel_data.add_frame_entry(device_channel_val)
+                    if n_frames_show < device_channel_frame_count:
+                        out_string += " showing %3.1d of %3.1d frames" % (n_frames_show, device_channel_frame_count) #type: ignore  # noqa E501
+                    trace_mf(" %s" % out_string)
+                    device.add_channel_data(device_channel_data)
+                device_data.add_device(device)
+        return offset, device_data
+
+    def __unpack_frame_suffix_data_4_1_to_present(self, data, offset, frame_suffix_data, param): #type: ignore  # noqa E501
+        """Unpacks frame suffix data from NatNet 4.1 to present NatNet"""
+        timestamp, = DoubleValue.unpack(data[offset:offset+8])
+        offset += 8
+        trace_mf("Timestamp: %3.2f" % timestamp)
+        frame_suffix_data.timestamp = timestamp
+        trace_mf("Mid-exposure timestamp        : %3.1d" % stamp_camera_mid_exposure) #type: ignore  # noqa E501
+        offset += 8
+        frame_suffix_data.stamp_camera_mid_exposure = stamp_camera_mid_exposure #type: ignore  # noqa E501
+        stamp_data_received = int.from_bytes(data[offset:offset+8], byteorder='little',  signed=True) #type: ignore  # noqa E501
+        offset += 8
+        frame_suffix_data.stamp_data_received = stamp_data_received
+        trace_mf("Camera data received timestamp: %3.1d" %stamp_data_received) #type: ignore  # noqa E501
+        stamp_transmit = int.from_bytes(data[offset:offset+8], byteorder='little',  signed=True) #type: ignore  # noqa E501
+        offset += 8
+        trace_mf("Transmit timestamp            : %3.1d" % stamp_transmit)  #type: ignore  # noqa E501
+        frame_suffix_data.stamp_transmit = stamp_transmit
+        prec_timestamp_secs = int.from_bytes(data[offset:offset+4], byteorder='little',  signed=True) #type: ignore  # noqa E501
+        trace_mf("Precision timestamp (sec)     : %3.1d" % prec_timestamp_secs) #type: ignore  # noqa E501
+        offset += 4
+        frame_suffix_data.prec_timestamp_secs = prec_timestamp_secs
+        prec_timestamp_frac_secs = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        trace_mf("Precision timestamp (frac sec): %3.1d" % prec_timestamp_frac_secs) #type: ignore  # noqa E501
+        offset += 4
+        frame_suffix_data.prec_timestamp_frac_secs = prec_timestamp_frac_secs #type: ignore  # noqa E501
+        param, = struct.unpack('h', data[offset:offset+2])
+        offset += 2
+        return data, offset, frame_suffix_data, param
+
+    def __unpack_frame_suffix_data_3_to_4(self, data, offset, frame_suffix_data, param):  #type: ignore  # noqa E501
+        """Unpacks frame suffix data inclusive from NatNet 3 to NatNet 4"""
+        timestamp, = DoubleValue.unpack(data[offset:offset+8])
+        offset += 8
+        trace_mf("Timestamp: %3.2f" % timestamp)
+        frame_suffix_data.timestamp = timestamp
+        stamp_camera_mid_exposure = int.from_bytes(data[offset:offset+8], byteorder='little',  signed=True) #type: ignore  # noqa E501
+        trace_mf("Mid-exposure timestamp        : %3.1d" % stamp_camera_mid_exposure) #type: ignore  # noqa E501
+        offset += 8
+        frame_suffix_data.stamp_camera_mid_exposure = stamp_camera_mid_exposure #type: ignore  # noqa E501
+        stamp_data_received = int.from_bytes(data[offset:offset+8], byteorder='little',  signed=True) #type: ignore  # noqa E501
+        offset += 8
+        frame_suffix_data.stamp_data_received = stamp_data_received
+        trace_mf("Camera data received timestamp: %3.1d" %stamp_data_received) #type: ignore  # noqa E501
+        stamp_transmit = int.from_bytes(data[offset:offset+8], byteorder='little',  signed=True) #type: ignore  # noqa E501
+        offset += 8
+        trace_mf("Transmit timestamp            : %3.1d" % stamp_transmit)  #type: ignore  # noqa E501
+        frame_suffix_data.stamp_transmit = stamp_transmit
+        param, = struct.unpack('h', data[offset:offset+2])
+        offset += 2
+        return data, offset, frame_suffix_data, param
+    def __unpack_frame_suffix_data_2_7_to_3(self, data, offset, frame_suffix_data, param): #type: ignore  # noqa E501
+        """Unpacks frame suffix data from inclusive of NatNet 2.7 to but not
+        including NatNet 3"""
+        timestamp, = DoubleValue.unpack(data[offset:offset+8])
+        offset += 8
+        trace_mf("Timestamp: %3.2f" % timestamp)
+        frame_suffix_data.timestamp = timestamp
+        param, = struct.unpack('h', data[offset:offset+2])
+        offset += 2
+        return data, offset, frame_suffix_data, param
+
+    def __unpack_frame_suffix_data_pre_2_7(self, data, offset, frame_suffix_data, param): #type: ignore  # noqa E501
+        """Unpacks frame suffix data for any NatNet version before
+          NatNet 2.7"""
+        timestamp, = FloatValue.unpack(data[offset:offset+4])
+        offset += 4
+        trace_mf("Timestamp: %3.2f" % timestamp)
+        frame_suffix_data.timestamp = timestamp
+        param, = struct.unpack('h', data[offset:offset+2])
+        offset += 2
+        return data, offset, frame_suffix_data, param
+
+    def __unpack_frame_suffix_data_0_case(self, data, offset, frame_suffix_data, param): #type: ignore  # noqa E501
+        """Unpacks frame suffix data if the major case is 0 """
+        timestamp, = DoubleValue.unpack(data[offset:offset+8])
+        offset += 8
+        trace_mf("Timestamp: %3.2f" % timestamp)
+        frame_suffix_data.timestamp = timestamp
+        param, = struct.unpack('h', data[offset:offset+2])
+        offset += 2
+        return data, offset, frame_suffix_data, param
+
+    def __unpack_frame_suffix_data(self, data, packet_size, major, minor):
+        frame_suffix_data = MoCapData.FrameSuffixData()
+        offset = 0
+        timecode = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        frame_suffix_data.timecode = timecode
+        timecode_sub = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        frame_suffix_data.timecode_sub = timecode_sub
+        param = 0
+        if ((packet_size-offset) <= 0):
+            print("ERROR: Early End of Data Frame Suffix Data")
+            print("\tNo time stamp info available")
+        else:
+            if (major == 0):
+                data, offset, frame_suffix_data = self.__unpack_frame_suffix_data_0_case(data, offset, frame_suffix_data, param) #type: ignore  # noqa E501
+            elif (major < 2 or (major <= 2 and minor < 7)):
+                data, offset, frame_suffix_data, param = self.__unpack_frame_suffix_data_pre_2_7(data, offset, frame_suffix_data, param)#type: ignore  # noqa E501
+            elif (major == 2 and minor >= 7 and major < 3):
+                data, offset, frame_suffix_data, param = self.__unpack_frame_suffix_data_2_7_to_3(data, offset, frame_suffix_data, param) #type: ignore  # noqa E501
+            elif (major >= 3 or (major == 4 and minor == 0)):
+                data, offset, frame_suffix_data, param = self.__unpack_frame_suffix_data_3_to_4(data, offset, frame_suffix_data, param) #type: ignore  # noqa E501
+            elif (major >= 4 and minor != 0):
+                data, offset, frame_suffix_data, param = self.__unpack_frame_suffix_data_4_1_to_present(data, offset, frame_suffix_data, param) #type: ignore  # noqa E501
+        is_recording = (param & 0x01) != 0
+        tracked_models_changed = (param & 0x02) != 0
+        frame_suffix_data.param = param
+        frame_suffix_data.is_recording = is_recording
+        frame_suffix_data.tracked_models_changed = tracked_models_changed
+        return offset, frame_suffix_data
+
+    # Unpack data from a motion capture frame message
+    def __unpack_mocap_data(self, data: bytes, packet_size, major, minor):
+        mocap_data = MoCapData.MoCapData()
+        data = memoryview(data)
+        offset = 0
+        rel_offset = 0
+        rel_offset, frame_prefix_data = self.__unpack_frame_prefix_data(data[offset:]) #type: ignore  # noqa E501
+        offset += rel_offset
+        mocap_data.set_prefix_data(frame_prefix_data)
+        frame_number = frame_prefix_data.frame_number
+        # Markerset Data
+        rel_offset, marker_set_data = self.__unpack_marker_set_data(data[offset:], (packet_size - offset), major, minor) #type: ignore  # noqa E501
+        offset += rel_offset
+        mocap_data.set_marker_set_data(marker_set_data)
+        marker_set_count = marker_set_data.get_marker_set_count()
+        unlabeled_markers_count = marker_set_data.get_unlabeled_marker_count()
+        # Legacy Other Markers
+        rel_offset, legacy_other_markers = self.__unpack_legacy_other_markers(data[offset:], (packet_size - offset),major, minor) #type: ignore  # noqa E501
+        offset += rel_offset
+        mocap_data.set_legacy_other_markers(legacy_other_markers)
+        marker_set_count = legacy_other_markers.get_marker_count()
+        legacy_other_markers_count = marker_set_data.get_unlabeled_marker_count() #type: ignore  # noqa F401
+        # Rigid Body Data
+        rel_offset, rigid_body_data = self.__unpack_rigid_body_data(data[offset:], (packet_size - offset), major, minor) #type: ignore  # noqa E501
+        offset += rel_offset
+        mocap_data.set_rigid_body_data(rigid_body_data)
+        rigid_body_count = rigid_body_data.get_rigid_body_count()
+        # Skeleton Data
+        rel_offset, skeleton_data = self.__unpack_skeleton_data(data[offset:], (packet_size - offset), major, minor) #type: ignore  # noqa E501
+        offset += rel_offset
+        mocap_data.set_skeleton_data(skeleton_data)
+        skeleton_count = skeleton_data.get_skeleton_count()
+        # Assets (Motive 3.1/NatNet 4.1 and greater)
+        asset_count = 0
+        if (((major >= 4) and (minor >= 1)) or (major > 4)):
+            rel_offset, asset_data = self.__unpack_asset_data(data[offset:], (packet_size - offset), major, minor) #type: ignore  # noqa E501
+            offset += rel_offset
+            mocap_data.set_asset_data(asset_data)
+            asset_count = asset_data.get_asset_count()
+        # Labeled Marker Data
+        rel_offset, labeled_marker_data = self.__unpack_labeled_marker_data(data[offset:], (packet_size - offset), major, minor) #type: ignore  # noqa E501
+        offset += rel_offset
+        mocap_data.set_labeled_marker_data(labeled_marker_data)
+        labeled_marker_count = labeled_marker_data.get_labeled_marker_count()
+        # Force Plate Data
+        rel_offset, force_plate_data = self.__unpack_force_plate_data(data[offset:], (packet_size - offset), major, minor) #type: ignore  # noqa E501
+        offset += rel_offset
+        mocap_data.set_force_plate_data(force_plate_data)
+        # Device Data
+        rel_offset, device_data = self.__unpack_device_data(data[offset:], (packet_size - offset), major, minor) #type: ignore  # noqa E501
+        offset += rel_offset
+        mocap_data.set_device_data(device_data)
+        # Frame Suffix Data
+        rel_offset, frame_suffix_data = self.__unpack_frame_suffix_data(data[offset:], (packet_size - offset), major, minor) #type: ignore  # noqa E501
+        offset += rel_offset
+        mocap_data.set_suffix_data(frame_suffix_data)
+        timecode = frame_suffix_data.timecode
+        timecode_sub = frame_suffix_data.timecode_sub
+        timestamp = frame_suffix_data.timestamp
+        is_recording = frame_suffix_data.is_recording
+        tracked_models_changed = frame_suffix_data.tracked_models_changed
+        if self.new_frame_listener is not None:
+            data_dict = {}
+            data_dict["frame_number"] = frame_number
+            data_dict["marker_set_count"] = marker_set_count
+            data_dict["unlabeled_markers_count"] = unlabeled_markers_count
+            data_dict["rigid_body_count"] = rigid_body_count
+            data_dict["skeleton_count"] = skeleton_count
+            data_dict["asset_count"] = asset_count
+            data_dict["labeled_marker_count"] = labeled_marker_count
+            data_dict["timecode"] = timecode
+            data_dict["timecode_sub"] = timecode_sub
+            data_dict["timestamp"] = timestamp
+            data_dict["is_recording"] = is_recording
+            data_dict["tracked_models_changed"] = tracked_models_changed
+            self.new_frame_listener(data_dict)
+        if self.new_frame_with_data_listener is not None:
+            data_dict = {}
+            data_dict["frame_number"] = frame_number
+            data_dict["marker_set_count"] = marker_set_count
+            data_dict["unlabeled_markers_count"] = unlabeled_markers_count
+            data_dict["rigid_body_count"] = rigid_body_count
+            data_dict["skeleton_count"] = skeleton_count
+            data_dict["asset_count"] = asset_count
+            data_dict["labeled_marker_count"] = labeled_marker_count
+            data_dict["timecode"] = timecode
+            data_dict["timecode_sub"] = timecode_sub
+            data_dict["timestamp"] = timestamp
+            data_dict["is_recording"] = is_recording
+            data_dict["tracked_models_changed"] = tracked_models_changed
+            data_dict["offset"] = offset
+            data_dict["mocap_data"] = mocap_data
+            self.new_frame_with_data_listener(data_dict)
+        return offset, mocap_data
+
+    def __unpack_marker_set_description(self, data, major, minor):
+        """Unpack marker description packet"""
+        ms_desc = DataDescriptions.MarkerSetDescription()
+        offset = 0
+        name, separator, remainder = bytes(data[offset:]).partition(b'\0')
+        offset += len(name) + 1
+        trace_dd("Markerset Name: %s" % (name.decode('utf-8')))
+        ms_desc.set_name(name)
+        marker_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        trace_dd("Marker Count: %3.1d" % marker_count)
+        if (marker_count > 0):
+            for i in range(0, marker_count):
+                name, separator, remainder = bytes(data[offset:]).partition(b'\0') #type: ignore  # noqa E501
+                offset += len(name) + 1
+                trace_dd("\t%2.1d Marker Name: %s" % (i, name.decode('utf-8')))
+                ms_desc.add_marker_name(name)
+        return offset, ms_desc
+
+    def __unpack_rigid_body_descript_4_2_to_current(self, data):
+        """Unpack rigid body helper function for NatNet 4.2"""
+        rb_desc = DataDescriptions.RigidBodyDescription()
+        offset = 0
+        name, separator, remainder = bytes(data[offset:]).partition(b'\0')
+        offset += len(name) + 1
+        rb_desc.set_name(name)
+        trace_dd("\tRigid Body Name  : ", name.decode('utf-8'))
+        # ID
+        new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        rb_desc.set_id(new_id)
+        trace_dd("\tRigid Body ID      : ", str(new_id))
+        # Parent ID
+        parent_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        rb_desc.set_parent_id(parent_id)
+        trace_dd("\tParent ID        : ", parent_id)
+        # Position Offsets
+        pos = Vector3.unpack(data[offset:offset+12])
+        offset += 12
+        rb_desc.set_pos(pos[0], pos[1], pos[2])
+        trace_dd("\tPosition         : [%3.2f, %3.2f, %3.2f]" % (pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
+        quat = Quaternion.unpack(data[offset:offset+16])
+        offset += 16
+        trace_dd("\tRotation         : [%3.2f, %3.2f, %3.2f, %3.2f]" % (quat[0], quat[1], quat[2], quat[3])) #type: ignore  # noqa E501
+        # Marker Count
+        marker_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        trace_dd("\tNumber of Markers: ", marker_count)
+        if marker_count > 0:
+            trace_dd("\tMarker Positions: ")
+        marker_count_range = range(0, marker_count)
+        offset1 = offset
+        offset2 = offset1 + (12*marker_count)
+        offset3 = offset2 + (4*marker_count)
+        # Marker Offsets X,Y,Z
+        marker_name = ""
+        for marker in marker_count_range:
+            # Offset
+            marker_offset = Vector3.unpack(data[offset1:offset1+12])
+            offset1 += 12
+            # Active Label
+            active_label = int.from_bytes(data[offset2:offset2+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+            offset2 += 4
+            marker_name, separator, remainder = bytes(data[offset3:]).partition(b'\0') #type: ignore  # noqa E501
+            marker_name = marker_name.decode('utf-8')
+            offset3 += len(marker_name) + 1
+            rb_marker = DataDescriptions.RBMarker(marker_name, active_label, marker_offset) #type: ignore  # noqa E501
+            rb_desc.add_rb_marker(rb_marker)
+            trace_dd("\t%3.1d Marker Label: %s Position: [ %3.2f %3.2f %3.2f] %s" % (marker, active_label, #type: ignore  # noqa E501
+                                                                                        marker_offset[0], #type: ignore  # noqa E501
+                                                                                        marker_offset[1], #type: ignore  # noqa E501
+                                                                                        marker_offset[2], #type: ignore  # noqa E501
+                                                                                        marker_name)) #type: ignore  # noqa E501
+            offset = offset3
+        trace_dd("\tunpack_rigid_body_description processed bytes: ", offset)
+        return offset, rb_desc
+
+    def __unpack_rigid_body_descript_4_n_4_1(self, data):
+        """Unpack rigid body description data for NatNet Versions 4 and
+        4.1"""
+        rb_desc = DataDescriptions.RigidBodyDescription()
+        offset = 0
+        name, separator, remainder = bytes(data[offset:]).partition(b'\0')
+        offset += len(name) + 1
+        rb_desc.set_name(name)
+        trace_dd("\tRigid Body Name  : ", name.decode('utf-8'))
+        # ID
+        new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        rb_desc.set_id(new_id)
+        trace_dd("\tRigid Body ID      : ", str(new_id))
+        # Parent ID
+        parent_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        rb_desc.set_parent_id(parent_id)
+        trace_dd("\tParent ID        : ", parent_id)
+        # Position Offsets
+        pos = Vector3.unpack(data[offset:offset+12])
+        offset += 12
+        rb_desc.set_pos(pos[0], pos[1], pos[2])
+        trace_dd("\tPosition         : [%3.2f, %3.2f, %3.2f]" % (pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
+        # Marker Count
+        marker_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        trace_dd("\tNumber of Markers: ", marker_count)
+        if marker_count > 0:
+            trace_dd("\tMarker Positions: ")
+        marker_count_range = range(0, marker_count)
+        offset1 = offset
+        offset2 = offset1 + (12*marker_count)
+        offset3 = offset2 + (4*marker_count)
+        marker_name = ""
+        for marker in marker_count_range:
+            # Offset
+            marker_offset = Vector3.unpack(data[offset1:offset1+12])
+            offset1 += 12
+            # Active Label
+            active_label = int.from_bytes(data[offset2:offset2+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+            offset2 += 4
+            marker_name, separator, remainder = bytes(data[offset3:]).partition(b'\0') #type: ignore  # noqa E501
+            marker_name = marker_name.decode('utf-8')
+            offset3 += len(marker_name) + 1
+            rb_marker = DataDescriptions.RBMarker(marker_name, active_label, marker_offset) #type: ignore  # noqa E501
+            rb_desc.add_rb_marker(rb_marker)
+            trace_dd("\t%3.1d Marker Label: %s Position: [ %3.2f %3.2f %3.2f] %s" % (marker, active_label, #type: ignore  # noqa E501
+                                                                                        marker_offset[0], #type: ignore  # noqa E501
+                                                                                        marker_offset[1], #type: ignore  # noqa E501
+                                                                                        marker_offset[2], #type: ignore  # noqa E501
+                                                                                        marker_name)) #type: ignore  # noqa E501
+            offset = offset3
+        trace_dd("\tunpack_rigid_body_description processed bytes: ", offset)
+        return offset, rb_desc
+
+    def __unpack_rigid_body_descript_3_to_4_0(self, data):
+        """Helper function for NatNets versions 3 to 4.0
+        not inclusive of 4.0"""
+        rb_desc = DataDescriptions.RigidBodyDescription()
+        offset = 0
+        name, separator, remainder = bytes(data[offset:]).partition(b'\0')
+        offset += len(name) + 1
+        rb_desc.set_name(name)
+        trace_dd("\tRigid Body Name  : ", name.decode('utf-8'))
+        # ID
+        new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        rb_desc.set_id(new_id)
+        trace_dd("\tRigid Body ID      : ", str(new_id))
+        # Parent ID
+        parent_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        rb_desc.set_parent_id(parent_id)
+        trace_dd("\tParent ID        : ", parent_id)
+        # Position Offsets
+        pos = Vector3.unpack(data[offset:offset+12])
+        offset += 12
+        rb_desc.set_pos(pos[0], pos[1], pos[2])
+        trace_dd("\tPosition         : [%3.2f, %3.2f, %3.2f]" % (pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
+        # Marker Count
+        marker_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        trace_dd("\tNumber of Markers: ", marker_count)
+        if marker_count > 0:
+            trace_dd("\tMarker Positions: ")
+        marker_count_range = range(0, marker_count)
+        offset1 = offset
+        offset2 = offset1 + (12*marker_count)
+        offset3 = offset2 + (4*marker_count)
+        # Marker Offsets X,Y,Z
+        marker_name = ""
+        for marker in marker_count_range:
+            # Offset
+            marker_offset = Vector3.unpack(data[offset1:offset1+12])
+            offset1 += 12
+            # Active Label
+            active_label = int.from_bytes(data[offset2:offset2+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+            offset2 += 4
+            rb_marker = DataDescriptions.RBMarker(marker_name, active_label, marker_offset) #type: ignore  # noqa E501
+            rb_desc.add_rb_marker(rb_marker)
+            trace_dd("\t%3.1d Marker Label: %s Position: [ %3.2f %3.2f %3.2f] %s" % (marker, active_label, #type: ignore  # noqa E501
+                                                                                        marker_offset[0], #type: ignore  # noqa E501
+                                                                                        marker_offset[1], #type: ignore  # noqa E501
+                                                                                        marker_offset[2], #type: ignore  # noqa E501
+                                                                                        marker_name)) #type: ignore  # noqa E501
+            offset = offset3
+        trace_dd("\tunpack_rigid_body_description processed bytes: ", offset)
+        return offset, rb_desc
+
+    def __unpack_rigid_body_descript_2_to_3(self, data):
+        """Helper function for NatNet version inclusive 2,
+        to not inclusive 3"""
+        rb_desc = DataDescriptions.RigidBodyDescription()
+        offset = 0
+        name, separator, remainder = bytes(data[offset:]).partition(b'\0')
+        offset += len(name) + 1
+        rb_desc.set_name(name)
+        trace_dd("\tRigid Body Name  : ", name.decode('utf-8'))
+        # ID
+        new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        rb_desc.set_id(new_id)
+        trace_dd("\tRigid Body ID      : ", str(new_id))
+        # Parent ID
+        parent_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        rb_desc.set_parent_id(parent_id)
+        trace_dd("\tParent ID        : ", parent_id)
+        # Position Offsets
+        pos = Vector3.unpack(data[offset:offset+12])
+        offset += 12
+        rb_desc.set_pos(pos[0], pos[1], pos[2])
+        trace_dd("\tPosition         : [%3.2f, %3.2f, %3.2f]" % (pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
+        trace_dd("\tunpack_rigid_body_description processed bytes: ", offset)
+        return offset, rb_desc
+
+    def __unpack_rigid_body_descript_under_2(self, data):
+        """Helper function for NatNet versions under 2"""
+        rb_desc = DataDescriptions.RigidBodyDescription()
+        offset = 0
+        # ID
+        new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        rb_desc.set_id(new_id)
+        trace_dd("\tRigid Body ID      : ", str(new_id))
+        # Parent ID
+        parent_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        rb_desc.set_parent_id(parent_id)
+        trace_dd("\tParent ID        : ", parent_id)
+        # Position Offsets
+        pos = Vector3.unpack(data[offset:offset+12])
+        offset += 12
+        rb_desc.set_pos(pos[0], pos[1], pos[2])
+        trace_dd("\tPosition         : [%3.2f, %3.2f, %3.2f]" % (pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
+        trace_dd("\tunpack_rigid_body_description processed bytes: ", offset)
+        return offset, rb_desc
+
+    def __unpack_rigid_body_descript_0_case(self, data):
+        """Helper function for NatNet 0 case"""
+        rb_desc = DataDescriptions.RigidBodyDescription()
+        offset = 0
+        name, separator, remainder = bytes(data[offset:]).partition(b'\0')
+        offset += len(name) + 1
+        rb_desc.set_name(name)
+        trace_dd("\tRigid Body Name  : ", name.decode('utf-8'))
+        # ID
+        new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        rb_desc.set_id(new_id)
+        trace_dd("\tRigid Body ID      : ", str(new_id))
+        # Parent ID
+        parent_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        rb_desc.set_parent_id(parent_id)
+        trace_dd("\tParent ID        : ", parent_id)
+        # Position Offsets
+        pos = Vector3.unpack(data[offset:offset+12])
+        offset += 12
+        rb_desc.set_pos(pos[0], pos[1], pos[2])
+        trace_dd("\tPosition         : [%3.2f, %3.2f, %3.2f]" % (pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
+        quat = Quaternion.unpack(data[offset:offset+16])
+        offset += 16
+        trace_dd("\tRotation         : [%3.2f, %3.2f, %3.2f, %3.2f]" % (quat[0], quat[1], quat[2], quat[3])) #type: ignore  # noqa E501
+        # Marker Count
+        marker_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        trace_dd("\tNumber of Markers: ", marker_count)
+        if marker_count > 0:
+            trace_dd("\tMarker Positions: ")
+        marker_count_range = range(0, marker_count)
+        offset1 = offset
+        offset2 = offset1 + (12*marker_count)
+        offset3 = offset2 + (4*marker_count)
+        # Marker Offsets X,Y,Z
+        marker_name = ""
+        for marker in marker_count_range:
+            # Offset
+            marker_offset = Vector3.unpack(data[offset1:offset1+12])
+            offset1 += 12
+            # Active Label
+            active_label = int.from_bytes(data[offset2:offset2+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+            offset2 += 4
+            marker_name, separator, remainder = bytes(data[offset3:]).partition(b'\0') #type: ignore  # noqa E501
+            marker_name = marker_name.decode('utf-8')
+            offset3 += len(marker_name) + 1
+            rb_marker = DataDescriptions.RBMarker(marker_name, active_label, marker_offset) #type: ignore  # noqa E501
+            rb_desc.add_rb_marker(rb_marker)
+            trace_dd("\t%3.1d Marker Label: %s Position: [ %3.2f %3.2f %3.2f] %s" % (marker, active_label, #type: ignore  # noqa E501
+                                                                                        marker_offset[0], #type: ignore  # noqa E501
+                                                                                        marker_offset[1], #type: ignore  # noqa E501
+                                                                                        marker_offset[2], #type: ignore  # noqa E501
+                                                                                        marker_name)) #type: ignore  # noqa E501
+            offset = offset3
+        trace_dd("\tunpack_rigid_body_description processed bytes: ", offset)
+        return offset, rb_desc
+
+    def __unpack_rigid_body_description(self, data, major, minor):
+        if (major == 0):
+            offset, rb_desc = self.__unpack_rigid_body_descript_0_case(data)
+        elif (major == 4 and minor >= 2):
+            offset, rb_desc = self.__unpack_rigid_body_descript_4_2_to_current(data) #type: ignore  # noqa E501
+        elif (major == 4):
+            offset, rb_desc = self.__unpack_rigid_body_descript_4_n_4_1(data)
+        elif (major == 3):
+            offset, rb_desc = self.__unpack_rigid_body_descript_3_to_4_0(data)
+        elif (major == 2):
+            offset, rb_desc = self.__unpack_rigid_body_descript_2_to_3(data)
+        elif (major < 2):
+            offset, rb_desc = self.__unpack_rigid_body_descript_under_2(data)
+
+        return offset, rb_desc
+
+    # Unpack a skeleton description packet
+    def __unpack_skeleton_description(self, data, major, minor):
+        skeleton_desc = DataDescriptions.SkeletonDescription()
+        offset = 0
+        # Name
+        name, separator, remainder = bytes(data[offset:]).partition(b'\0')
+        offset += len(name) + 1
+        skeleton_desc.set_name(name)
+        trace_dd("Name: %s" % name.decode('utf-8'))
+        # ID
+        new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        skeleton_desc.set_id(new_id)
+        trace_dd("ID: %3.1d" % new_id)
+        # number of RigidBodies
+        rigid_body_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        trace_dd("Rigid Body (Bone) Count: %3.1d" % rigid_body_count)
+        # Loop over all Rigid Bodies
+        for i in range(0, rigid_body_count):
+            trace_dd("Rigid Body (Bone) %d:" % (i))
+            offset_tmp, rb_desc_tmp = self.__unpack_rigid_body_description(data[offset:], major, minor) #type: ignore  # noqa E501
+            offset += offset_tmp
+            skeleton_desc.add_rigid_body_description(rb_desc_tmp)
+        return offset, skeleton_desc
+
+    def __unpack_force_plate_description(self, data, major, minor):
+        fp_desc = None
+        offset = 0
+        if major >= 3:
+            fp_desc = DataDescriptions.ForcePlateDescription()
+            # ID
+            new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+            offset += 4
+            fp_desc.set_id(new_id)
+            trace_dd("\tID: ", str(new_id))
+            # Serial Number
+            serial_number, separator, remainder = bytes(data[offset:]).partition(b'\0') #type: ignore  # noqa F401
+            offset += len(serial_number) + 1
+            fp_desc.set_serial_number(serial_number)
+            trace_dd("\tSerial Number: ", serial_number.decode('utf-8'))
+            # Dimensions
+            f_width = FloatValue.unpack(data[offset:offset+4])
+            offset += 4
+            trace_dd("\tWidth : %3.2f" % f_width)
+            f_length = FloatValue.unpack(data[offset:offset+4])
+            offset += 4
+            fp_desc.set_dimensions(f_width[0], f_length[0])
+            trace_dd("\tLength: %3.2f" % f_length)
+            # Origin
+            origin = Vector3.unpack(data[offset:offset+12])
+            offset += 12
+            fp_desc.set_origin(origin[0], origin[1], origin[2])
+            trace_dd("\tOrigin: [%3.2f, %3.2f, %3.2f]" % (origin[0], origin[1], origin[2])) #type: ignore  # noqa E501
+            # Calibration Matrix 12x12 floats
+            trace_dd("Cal Matrix:")
+            cal_matrix_tmp = [[0.0 for col in range(12)] for row in range(12)]
+            for i in range(0, 12):
+                cal_matrix_row = FPCalMatrixRow.unpack(data[offset:offset+(12 * 4)]) #type: ignore  # noqa E501
+                trace_dd("\t%3.1d %3.3e %3.3e %3.3e %3.3e %3.3e %3.3e %3.3e %3.3e %3.3e %3.3e %3.3e %3.3e" % (i #type: ignore  # noqa E501
+                      , cal_matrix_row[0], cal_matrix_row[1], cal_matrix_row[2], cal_matrix_row[3] #type: ignore  # noqa E501
+                      , cal_matrix_row[4], cal_matrix_row[5], cal_matrix_row[6], cal_matrix_row[7] #type: ignore  # noqa E501
+                      , cal_matrix_row[8], cal_matrix_row[9], cal_matrix_row[10], cal_matrix_row[11])) #type: ignore  # noqa E501
+                cal_matrix_tmp[i] = copy.deepcopy(cal_matrix_row)
+                offset += (12*4)
+            fp_desc.set_cal_matrix(cal_matrix_tmp)
+            # Corners 4x3 floats
+            corners = FPCorners.unpack(data[offset:offset + (12*4)])
+            offset += (12*4)
+            o_2 = 0
+            trace_dd("Corners:")
+            corners_tmp = [[0.0 for col in range(3)] for row in range(4)]
+            for i in range(0, 4):
+                trace_dd("\t%3.1d %3.3e %3.3e %3.3e" % (i, corners[o_2], corners[o_2+1], corners[o_2+2])) #type: ignore  # noqa E501
+                corners_tmp[i][0] = corners[o_2]
+                corners_tmp[i][1] = corners[o_2+1]
+                corners_tmp[i][2] = corners[o_2+2]
+                o_2 += 3
+            fp_desc.set_corners(corners_tmp)
+            # Plate Type int
+            plate_type = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+            offset += 4
+            fp_desc.set_plate_type(plate_type)
+            trace_dd("Plate Type: ", plate_type)
+            # Channel Data Type int
+            channel_data_type = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+            offset += 4
+            fp_desc.set_channel_data_type(channel_data_type)
+            trace_dd("Channel Data Type: ", channel_data_type)
+            # Number of Channels int
+            num_channels = int.from_bytes(data[offset:offset+4], byteorder='little',  signed=True) #type: ignore  # noqa E501
+            offset += 4
+            trace_dd("Number of Channels: ", num_channels)
+            # Channel Names list of NoC strings
+            for i in range(0, num_channels):
+                channel_name, separator, remainder = bytes(data[offset:]).partition(b'\0') #type: ignore  # noqa E501
+                offset += len(channel_name) + 1
+                trace_dd("\tChannel Name %3.1d: %s" % (i, channel_name.decode('utf-8'))) #type: ignore  # noqa E501
+                fp_desc.add_channel_name(channel_name)
+        trace_dd("unpackForcePlate processed ", offset, " bytes")
+        return offset, fp_desc
+
+    def __unpack_device_description(self, data, major, minor):
+        device_desc = None
+        offset = 0
+        if major >= 3:
+            # new_id
+            new_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+            offset += 4
+            trace_dd("\tID: ", str(new_id))
+            # Name
+            name, separator, remainder = bytes(data[offset:]).partition(b'\0')
+            offset += len(name) + 1
+            trace_dd("\tName: ", name.decode('utf-8'))
+            # Serial Number
+            serial_number, separator, remainder = bytes(data[offset:]).partition(b'\0') #type: ignore  # noqa E501
+            offset += len(serial_number) + 1
+            trace_dd("\tSerial Number: ", serial_number.decode('utf-8'))
+            # Device Type int
+            device_type = int.from_bytes(data[offset:offset+4], byteorder='little',  signed=True) #type: ignore  # noqa E501
+            offset += 4
+            trace_dd("Device Type: ", device_type)
+            # Channel Data Type int
+            channel_data_type = int.from_bytes(data[offset:offset+4], byteorder='little',  signed=True) #type: ignore  # noqa E501
+            offset += 4
+            trace_dd("Channel Data Type: ", channel_data_type)
+            device_desc = DataDescriptions.DeviceDescription(new_id, name, serial_number, device_type, channel_data_type) #type: ignore  # noqa E501
+            # Number of Channels int
+            num_channels = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+            offset += 4
+            trace_dd("Number of Channels ", num_channels)
+            # Channel Names list of NoC strings
+            for i in range(0, num_channels):
+                channel_name, separator, remainder = bytes(data[offset:]).partition(b'\0') #type: ignore  # noqa E501
+                offset += len(channel_name) + 1
+                device_desc.add_channel_name(channel_name)
+                trace_dd("\tChannel ", i, " Name: ", channel_name.decode('utf-8')) #type: ignore  # noqa E501
+        trace_dd("unpack_device_description processed ", offset, " bytes")
+        return offset, device_desc
+
+    def __unpack_camera_description(self, data, major, minor):
+        offset = 0
+        # Name
+        name, separator, remainder = bytes(data[offset:]).partition(b'\0')
+        offset += len(name) + 1
+        trace_dd("\tName      : %s" % name.decode('utf-8'))
+        # Position
+        position = Vector3.unpack(data[offset:offset+12])
+        offset += 12
+        trace_dd("\tPosition  : [%3.2f, %3.2f, %3.2f]" % (position[0], position[1], position[2])) #type: ignore  # noqa E501
+        # Orientation
+        orientation = Quaternion.unpack(data[offset:offset+16])
+        offset += 16
+        trace_dd("\tOrientation: [%3.2f, %3.2f, %3.2f, %3.2f]" % (orientation[0], orientation[1], orientation[2], orientation[3])) #type: ignore  # noqa E501
+        trace_dd("unpack_camera_description processed %3.1d bytes" % offset)
+        camera_desc = DataDescriptions.CameraDescription(name, position, orientation) #type: ignore  # noqa E501
+        return offset, camera_desc
+
+    def __unpack_marker_description(self, data, major, minor):
+        offset = 0
+        # Name
+        name, separator, remainder = bytes(data[offset:]).partition(b'\0')
+        offset += len(name) + 1
+        trace_dd("\tName      : %s" % name.decode('utf-8'))
+        # ID
+        marker_id = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        trace_dd("\tID        : %d" % (marker_id))
+        # Initial Position
+        initialPosition = Vector3.unpack(data[offset:offset+12])
+        offset += 12
+        trace_dd("\tPosition  : [%3.2f, %3.2f, %3.2f]" % (initialPosition[0], initialPosition[1], initialPosition[2])) #type: ignore  # noqa E501
+        # Size
+        marker_size = FloatValue.unpack(data[offset:offset+4])
+        offset += 4
+        trace_mf("\tMarker Size:", marker_size)
+        # Params
+        marker_params, = struct.unpack('h', data[offset:offset+2])
+        offset += 2
+        trace_mf("\tParams    :", marker_params)
+        trace_dd("\tunpack_marker_description processed %3.1d bytes" % offset)
+        # Package for return object
+        marker_desc = DataDescriptions.MarkerDescription(name, marker_id, initialPosition, marker_size, marker_params) #type: ignore  # noqa E501
+        return offset, marker_desc
+
+    def __unpack_asset_rigid_body_data(self, data, major, minor):
+        offset = 0
+        # ID
+        rbID = int.from_bytes(data[offset:offset+4], 'little',  signed=True)
+        offset += 4
+        trace_dd("\tID        : %d" % (rbID))
+        # Position: x,y,z
+        pos = Vector3.unpack(data[offset:offset+12])
+        offset += 12
+        trace_mf("\tPosition   : [%3.2f, %3.2f, %3.2f]" % (pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
+        # Orientation: qx, qy, qz, qw
+        rot = Quaternion.unpack(data[offset:offset+16])
+        offset += 16
+        trace_mf("\tOrientation: [%3.2f, %3.2f, %3.2f, %3.2f]" % (rot[0], rot[1], rot[2], rot[3])) #type: ignore  # noqa E501
+        # Mean error
+        mean_error, = FloatValue.unpack(data[offset:offset+4])
+        offset += 4
+        trace_mf("\tMean Error : %3.2f" % mean_error)
+        # Params
+        marker_params, = struct.unpack('h', data[offset:offset+2])
+        offset += 2
+        trace_mf("\tParams     :", marker_params)
+        trace_dd("unpack_marker_description processed %3.1d bytes" % offset)
+        # Package for return object
+        rigid_body_data = MoCapData.AssetRigidBodyData(rbID, pos, rot, mean_error, marker_params) #type: ignore  # noqa E501
+        return offset, rigid_body_data
+
+    def __unpack_asset_marker_data(self, data, major, minor):
+        offset = 0
+        # ID
+        marker_id = int.from_bytes(data[offset:offset+4], 'little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        trace_dd("\tID         : %d" % (marker_id))
+        # Position: x,y,z
+        pos = Vector3.unpack(data[offset:offset+12])
+        offset += 12
+        trace_mf("\tPosition   : [%3.2f, %3.2f, %3.2f]" % (pos[0], pos[1], pos[2])) #type: ignore  # noqa E501
+        # Size
+        marker_size, = FloatValue.unpack(data[offset:offset+4])
+        offset += 4
+        trace_mf("\tMarker Size: %3.2f" % marker_size)
+        # Params
+        marker_params, = struct.unpack('h', data[offset:offset+2])
+        offset += 2
+        trace_mf("\tParams     :", marker_params)
+        # Residual
+        residual, = FloatValue.unpack(data[offset:offset+4])
+        offset += 4
+        trace_mf("\tResidual   : %3.2f" % residual)
+        marker_data = MoCapData.AssetMarkerData(marker_id, pos, marker_size, marker_params, residual) #type: ignore  # noqa E501
+        return offset, marker_data
+
+    def __unpack_asset_data(self, data, packet_size, major, minor):
+        asset_data = MoCapData.AssetData()
+        offset = 0
+        # Asset Count
+        asset_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        trace_mf("Asset Count:", asset_count)
+        # Get data size (4 bytes)
+        offset_tmp, unpackedDataSize = self.__unpack_data_size(data[offset:], major, minor) #type: ignore  # noqa E501
+        offset += offset_tmp
+        # Unpack assets
+        for asset_num in range(0, asset_count):
+            rel_offset, asset = self.__unpack_asset(data[offset:], major, minor, asset_num) #type: ignore  # noqa E501
+            offset += rel_offset
+            asset_data.add_asset(asset)
+        return offset, asset_data
+
+    def __unpack_asset_description(self, data, major, minor):
+        offset = 0
+        # Name
+        name, separator, remainder = bytes(data[offset:]).partition(b'\0')
+        offset += len(name) + 1
+        trace_dd("\tName      : %s" % name.decode('utf-8'))
+        # Asset Type 4 bytes
+        assetType = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        trace_dd("\tType      : %d" % (assetType))
+        # ID 4 bytes
+        assetID = int.from_bytes(data[offset:offset+4], byteorder='little',  signed=True) #type: ignore  # noqa E501
+        offset += 4
+        trace_dd("\tID        : %d" % (assetID))
+        # number of RigidBodies
+        numRBs = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        trace_dd("\tRigid Body (Bone) Count: %d" % (numRBs))
+        rigidbodyArray = []
+        offset1 = 0
+        for rbNum in range(numRBs):
+            # number of RigidBodies
+            trace_dd("\tRigid Body (Bone) %d:" % (rbNum))
+            offset1, rigidbody = self.__unpack_rigid_body_description(data[offset:], major, minor) #type: ignore  # noqa E501
+            offset += offset1
+            rigidbodyArray.append(rigidbody)
+        # number of Markers
+        numMarkers = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        trace_dd("\tMarker Count: %d" % (numMarkers))
+        markerArray = []
+        for markerNum in range(numMarkers):
+            # number of Markers
+            trace_dd("\tMarker %d:" % (markerNum))
+            offset1, marker = self.__unpack_marker_description(data[offset:], major, minor) #type: ignore  # noqa E501
+            offset += offset1
+            markerArray.append(marker)
+        trace_dd("\tunpack_asset_description processed %3.1d bytes" % offset)
+        # package for output
+        asset_desc = DataDescriptions.AssetDescription(name, assetType, assetID, rigidbodyArray, markerArray) #type: ignore  # noqa E501
+        return offset, asset_desc
+
+    # Unpack a data description packet
+    def __unpack_data_descriptions(self, data: bytes, packet_size, major, minor): #type: ignore  # noqa E501
+        data_descs = DataDescriptions.DataDescriptions()
+        offset = 0
+        # number of data sets to process
+        dataset_count = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset += 4
+        trace_dd("Dataset Count: ", str(dataset_count))
+        for i in range(0, dataset_count):
+            trace_dd("Dataset ", str(i))
+            data_type = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+            offset += 4
+            if ((major == 4) and (minor >= 1)) or (major > 4):
+                size_in_bytes = int.from_bytes(data[offset:offset+4], byteorder='little', signed=True) #type: ignore  # noqa E501
+                offset += 4
+            data_tmp = None
+            if data_type == 0:
+                trace_dd("Type: 0 Markerset")
+                offset_tmp, data_tmp = self.__unpack_marker_set_description(data[offset:], major, minor) #type: ignore  # noqa E501
+            elif data_type == 1:
+                trace_dd("Type: 1 Rigid Body")
+                offset_tmp, data_tmp = self.__unpack_rigid_body_description(data[offset:], major, minor) #type: ignore  # noqa E501
+            elif data_type == 2:
+                trace_dd("Type: 2 Skeleton")
+                offset_tmp, data_tmp = self.__unpack_skeleton_description(data[offset:], major, minor) #type: ignore  # noqa E501
+            elif data_type == 3:
+                trace_dd("Type: 3 Force Plate")
+                offset_tmp, data_tmp = self.__unpack_force_plate_description(data[offset:], major, minor) #type: ignore  # noqa E501
+            elif data_type == 4:
+                trace_dd("Type: 4 Device")
+                offset_tmp, data_tmp = self.__unpack_device_description(data[offset:], major, minor) #type: ignore  # noqa E501
+            elif data_type == 5:
+                trace_dd("Type: 5 Camera")
+                offset_tmp, data_tmp = self.__unpack_camera_description(data[offset:], major, minor) #type: ignore  # noqa E501
+            elif data_type == 6:
+                trace_dd("Type: 6 Asset")
+                offset_tmp, data_tmp = self.__unpack_asset_description(data[offset:], major, minor) #type: ignore  # noqa E501
             else:
-                out_string += "%s%s %s %s not found\n" % (
-                    out_tab_str3, tmp_key, tmp_name, tmp_num)
-            out_string += "\n"
-            i += 1
+                print("Type: Unknown " + str(data_type))
+                print("ERROR: Type decode failure")
+                print("\t" + str(i+1) + " datasets processed of " + str(dataset_count)) #type: ignore  # noqa E501
+                print("\t " + str(offset) + " bytes processed of " + str(packet_size)) #type: ignore  # noqa E501
+                print("\tPACKET DECODE STOPPED")
+                return offset
+            offset += offset_tmp
+            data_descs.add_data(data_tmp)
+            trace_dd("\t" + str(i+1) + " datasets processed of " + str(dataset_count)) #type: ignore  # noqa E501
+            trace_dd("\t " + str(offset) + " bytes processed of " + str(packet_size)) #type: ignore  # noqa E501
+        return offset, data_descs
 
-        return out_string
+    def __unpack_server_info(self, data, packet_size, major, minor):
+        offset = 0
+        # Server name
+        # szName = data[offset: offset+256]
+        self.__application_name, separator, remainder = bytes(data[offset: offset+256]).partition(b'\0') #type: ignore  # noqa E501
+        self.__application_name = str(self.__application_name, "utf-8")
+        offset += 256
+        # Server Version info
+        server_version = struct.unpack('BBBB', data[offset:offset+4])
+        offset += 4
+        self.__server_version[0] = server_version[0]
+        self.__server_version[1] = server_version[1]
+        self.__server_version[2] = server_version[2]
+        self.__server_version[3] = server_version[3]
+        # NatNet Version info
+        nnsvs = struct.unpack('BBBB', data[offset:offset+4])
+        offset += 4
+        self.__nat_net_stream_version_server[0] = nnsvs[0]
+        self.__nat_net_stream_version_server[1] = nnsvs[1]
+        self.__nat_net_stream_version_server[2] = nnsvs[2]
+        self.__nat_net_stream_version_server[3] = nnsvs[3]
+        if (self.__nat_net_requested_version[0] == 0) and\
+           (self.__nat_net_requested_version[1] == 0):
+            print("resetting requested version to %d %d %d %d from %d %d %d %d" % ( #type: ignore  # noqa E501
+                self.__nat_net_stream_version_server[0],
+                self.__nat_net_stream_version_server[1],
+                self.__nat_net_stream_version_server[2],
+                self.__nat_net_stream_version_server[3],
+                self.__nat_net_requested_version[0],
+                self.__nat_net_requested_version[1],
+                self.__nat_net_requested_version[2],
+                self.__nat_net_requested_version[3]))
+            self.__nat_net_requested_version[0] = self.__nat_net_stream_version_server[0] #type: ignore  # noqa E501
+            self.__nat_net_requested_version[1] = self.__nat_net_stream_version_server[1] #type: ignore  # noqa E501
+            self.__nat_net_requested_version[2] = self.__nat_net_stream_version_server[2] #type: ignore  # noqa E501
+            self.__nat_net_requested_version[3] = self.__nat_net_stream_version_server[3] #type: ignore  # noqa E501
+            # Determine if the bitstream version can be changed
+            if (self.__nat_net_stream_version_server[0] >= 4) and (self.use_multicast is False): #type: ignore  # noqa E501
+                self.__can_change_bitstream_version = True
+        trace_mf("Sending Application Name: ", self.__application_name)
+        trace_mf("NatNetVersion ", str(self.__nat_net_stream_version_server[0]), " ", #type: ignore  # noqa E501
+                                   str(self.__nat_net_stream_version_server[1]), " ", #type: ignore  # noqa E501
+                                   str(self.__nat_net_stream_version_server[2]), " ", #type: ignore  # noqa E501
+                                   str(self.__nat_net_stream_version_server[3])) #type: ignore  # noqa E501
+        trace_mf("ServerVersion ", str(self.__server_version[0]), " " #type: ignore  # noqa E203
+                                 , str(self.__server_version[1]), " " #type: ignore  # noqa E203
+                                 , str(self.__server_version[2]), " " #type: ignore  # noqa E203
+                                 , str(self.__server_version[3]))
+        return offset
 
-# cDataDescriptions END
+    def __unpack_bitstream_info(self, data, packet_size, major, minor):
+        nn_version = []
+        inString = data.decode('utf-8')
+        messageList = inString.split(',')
+        if (len(messageList) > 1):
+            if (messageList[0] == 'Bitstream'):
+                nn_version = messageList[1].split('.')
+        return nn_version
+
+    def __command_thread_function(self, in_socket, stop, gprint_level, thread_option): #type: ignore  # noqa E501
+        message_id_dict = {}
+        if not self.use_multicast:
+            in_socket.settimeout(2.0)
+        data = bytearray(0) #type: ignore  # noqa F841
+        # 64k buffer size
+        recv_buffer_size = 128*1024
+        buffer_list_size = 4
+        buffer_list = [bytearray(recv_buffer_size) for _ in range(buffer_list_size)] #type: ignore  # noqa E501
+        buffer_list_recv_index = 0
+        buffer_list_in_use_index = 0
+        while not stop():
+            try:
+                buffer_list[buffer_list_recv_index], addr = in_socket.recvfrom(recv_buffer_size) #type: ignore  # noqa E501
+                buffer_list_in_use_index = buffer_list_recv_index
+                buffer_list_recv_index = (buffer_list_recv_index + 1) % buffer_list_size #type: ignore  # noqa E501
+            except socket.error as msg: #type: ignore  # noqa F841
+                if stop():
+                    print("shutting down")
+            except socket.herror:
+                print("ERROR: command socket access herror occurred")
+                return 2
+            except socket.gaierror:
+                print("ERROR: command socket access gaierror occurred")
+                return 3
+            except socket.timeout:
+                if (self.use_multicast):
+                    print("ERROR: command socket access timeout occurred. Server not responding") #type: ignore  # noqa E501
+
+            if len(buffer_list[buffer_list_in_use_index]) > 0:
+                message_id = get_message_id(buffer_list[buffer_list_in_use_index]) #type: ignore  # noqa E501
+                tmp_str = "mi_%1.1d" % message_id
+                if tmp_str not in message_id_dict:
+                    message_id_dict[tmp_str] = 0
+                message_id_dict[tmp_str] += 1
+                print_level = gprint_level()
+                if message_id == self.NAT_FRAMEOFDATA:
+                    if print_level > 0:
+                        if (message_id_dict[tmp_str] % print_level) == 0:
+                            print_level = 1
+                        else:
+                            print_level = 0
+                message_id = self.process_message(buffer_list[buffer_list_in_use_index], print_level) #type: ignore  # noqa E501
+                buffer_list[buffer_list_in_use_index] = bytearray(0)
+            if not self.use_multicast:
+                if not stop():
+                    if thread_option == 'c':
+                        time.sleep(1)
+                    self.send_keep_alive(in_socket, self.server_ip_address, self.command_port) #type: ignore  # noqa E501
+        return 0
+
+    def __data_thread_function(self, in_socket, stop, gprint_level):
+        message_id_dict = {}
+        data = bytearray(0)
+        # 64k buffer size
+        recv_buffer_size = 128*1024
+        while not stop():
+            # Block for input
+            try:
+                data, addr = in_socket.recvfrom(recv_buffer_size)
+            except socket.error as msg:
+                if not stop():
+                    print("ERROR: data socket access error occurred:\n  %s" % msg) #type: ignore  # noqa E501
+                    return 1
+            except socket.herror:
+                print("ERROR: data socket access herror occurred")
+                # return 2
+            except socket.gaierror:
+                print("ERROR: data socket access gaierror occurred")
+                # return 3
+            except socket.timeout:
+                # if self.use_multicast:
+                print("ERROR: data socket access timeout occurred. Server not responding") #type: ignore  # noqa E501
+                # return 4
+            if len(data) > 0:
+                # peek ahead at message_id
+                message_id = get_message_id(data)
+                tmp_str = "mi_%1.1d" % message_id
+                if tmp_str not in message_id_dict:
+                    message_id_dict[tmp_str] = 0
+                message_id_dict[tmp_str] += 1
+                print_level = gprint_level()
+                if message_id == self.NAT_FRAMEOFDATA:
+                    if print_level > 0:
+                        if (message_id_dict[tmp_str] % print_level) == 0:
+                            print_level = 1
+                        else:
+                            print_level = 0
+                message_id = self.process_message(data, print_level)
+                data = bytearray(0)
+        return 0
+
+    def __getjson(self, inpstr):
+        frame_data = {
+            "Frame": None,
+            "MarkerSets": [],
+            "RigidBodies": [],
+            "LabeledMarkers": [],
+            "Metadata": {}
+        }
+        current_markerset = None
+        current_rigid_body = None
+        current_labeled_marker = None
+        lines = inpstr.split('\n')
+        i = 0
+        while i < len(lines):
+            line = lines[i].strip()
+            if not line or line.startswith('----'):
+                i += 1
+            elif line.startswith('Frame #:'):
+                frame_data["Frame"] = int(line.split(':')[1].strip())
+                i += 1
+            elif line.startswith('Markerset Count:'):
+                frame_data["MarkersetCount"] = int(line.split(':')[1].strip())
+                i += 1
+            elif line.startswith('Model Name :'):
+                model_name = line.split(':')[1].strip()
+                current_markerset = {
+                    "Name": model_name,
+                    "MarkerCount": 0,
+                    "Markers": []
+                }
+                frame_data["MarkerSets"].append(current_markerset)
+                i += 1
+            elif line.startswith('Marker Count :') and current_markerset is not None:
+                current_markerset["MarkerCount"] = int(line.split(':')[1].strip())
+                i += 1
+            elif line.startswith('Marker') and 'pos' in line and current_markerset is not None:
+                marker_num = int(re.search(r'Marker\s+(\d+)', line).group(1))
+                i += 1
+                if i < len(lines):
+                    pos_line = lines[i].strip()
+                    match = re.search(r'\[x=([-\d\.]+),y=([-\d\.]+),z=([-\d\.]+)\]', pos_line)
+                    if match:
+                        x, y, z = float(match.group(1)), float(match.group(2)), float(match.group(3))
+                        current_markerset["Markers"].append({
+                            "Index": marker_num,
+                            "Position": [x, y, z]
+                        })
+                i += 1
+            elif line.startswith('Unlabeled Marker Count:'):
+                frame_data["UnlabeledMarkerCount"] = int(line.split(':')[1].strip())
+                i += 1
+            elif line.startswith('Rigid Body Count:'):
+                frame_data["RigidBodyCount"] = int(line.split(':')[1].strip())
+                i += 1
+            elif line.startswith('Rigid Body    :'):
+                body_index = int(line.split(':')[1].strip())
+                current_rigid_body = {
+                    "Index": body_index,
+                    "ID": None,
+                    "Position": None,
+                    "Orientation": None,
+                    "MarkerError": None,
+                    "TrackingValid": False
+                }
+                frame_data["RigidBodies"].append(current_rigid_body)
+                i += 1
+            elif line.startswith('ID            :') and current_rigid_body is not None:
+                current_rigid_body["ID"] = int(line.split(':')[1].strip())
+                i += 1
+            elif line.startswith('Position      :') and current_rigid_body is not None:
+                pos_match = re.search(r'\[([-\d\.]+), ([-\d\.]+), ([-\d\.]+)\]', line)
+                if pos_match:
+                    x, y, z = float(pos_match.group(1)), float(pos_match.group(2)), float(pos_match.group(3))
+                    current_rigid_body["Position"] = [x, y, z]
+                i += 1
+            elif line.startswith('Orientation   :') and current_rigid_body is not None:
+                orient_match = re.search(r'\[([-\d\.]+), ([-\d\.]+), ([-\d\.]+), ([-\d\.]+)\]', line)
+                if orient_match:
+                    x, y, z, w = float(orient_match.group(1)), float(orient_match.group(2)), float(
+                        orient_match.group(3)), float(orient_match.group(4))
+                    current_rigid_body["Orientation"] = [x, y, z, w]
+                i += 1
+            elif line.startswith('Marker Error  :') and current_rigid_body is not None:
+                current_rigid_body["MarkerError"] = float(line.split(':')[1].strip())
+                i += 1
+            elif line.startswith('Tracking Valid:') and current_rigid_body is not None:
+                current_rigid_body["TrackingValid"] = (line.split(':')[1].strip() == "True")
+                i += 1
+            elif line.startswith('Skeleton Count:'):
+                frame_data["SkeletonCount"] = int(line.split(':')[1].strip())
+                i += 1
+            elif line.startswith('Asset Count:'):
+                frame_data["AssetCount"] = int(line.split(':')[1].strip())
+                i += 1
+            elif line.startswith('Labeled Marker Count:'):
+                frame_data["LabeledMarkerCount"] = int(line.split(':')[1].strip())
+                i += 1
+            elif line.startswith('Labeled Marker'):
+                marker_index = int(line.split()[2].rstrip(':'))
+                current_labeled_marker = {
+                    "Index": marker_index,
+                    "ID": None,
+                    "Position": None,
+                    "Size": None,
+                    "Error": None,
+                    "Occluded": None,
+                    "PointCloudSolved": None,
+                    "ModelSolved": None
+                }
+                frame_data["LabeledMarkers"].append(current_labeled_marker)
+                i += 1
+            elif line.startswith('ID                 :') and current_labeled_marker is not None:
+                current_labeled_marker["ID"] = line.split(':', 1)[1].strip()
+                i += 1
+            elif line.startswith('pos                :') and current_labeled_marker is not None:
+                pos_match = re.search(r'\[([-\d\.]+), ([-\d\.]+), ([-\d\.]+)\]', line)
+                if pos_match:
+                    x, y, z = float(pos_match.group(1)), float(pos_match.group(2)), float(pos_match.group(3))
+                    current_labeled_marker["Position"] = [x, y, z]
+                i += 1
+            elif line.startswith('size               :') and current_labeled_marker is not None:
+                size_match = re.search(r'\[([-\d\.]+)\]', line)
+                if size_match:
+                    current_labeled_marker["Size"] = float(size_match.group(1))
+                i += 1
+            elif line.startswith('err                :') and current_labeled_marker is not None:
+                err_match = re.search(r'\[([-\d\.]+)\]', line)
+                if err_match:
+                    current_labeled_marker["Error"] = float(err_match.group(1))
+                i += 1
+            elif line.startswith('occluded           :') and current_labeled_marker is not None:
+                occluded_match = re.search(r'\[\s*(\d+)\]', line)
+                if occluded_match:
+                    current_labeled_marker["Occluded"] = int(occluded_match.group(1))
+                i += 1
+            elif line.startswith('point_cloud_solved :') and current_labeled_marker is not None:
+                solved_match = re.search(r'\[\s*(\d+)\]', line)
+                if solved_match:
+                    current_labeled_marker["PointCloudSolved"] = int(solved_match.group(1))
+                i += 1
+            elif line.startswith('model_solved       :') and current_labeled_marker is not None:
+                solved_match = re.search(r'\[\s*(\d+)\]', line)
+                if solved_match:
+                    current_labeled_marker["ModelSolved"] = int(solved_match.group(1))
+                i += 1
+            elif line.startswith('Force Plate Count:'):
+                frame_data["ForcePlateCount"] = int(line.split(':')[1].strip())
+                i += 1
+            elif line.startswith('Device Count:'):
+                frame_data["DeviceCount"] = int(line.split(':')[1].strip())
+                i += 1
+            elif line.startswith('Timecode:'):
+                frame_data["Timecode"] = line.split(':', 1)[1].strip()
+                i += 1
+            elif line.startswith('Timestamp '):
+                frame_data["Timestamp"] = float(line.split(':', 1)[1].strip())
+                i += 1
+            elif line.startswith('Mid-exposure timestamp'):
+                frame_data["MidExposureTimestamp"] = int(line.split(':', 1)[1].strip())
+                i += 1
+            elif line.startswith('Camera data received timestamp'):
+                frame_data["CameraDataReceivedTimestamp"] = int(line.split(':', 1)[1].strip())
+                i += 1
+            elif line.startswith('Transmit timestamp'):
+                frame_data["TransmitTimestamp"] = int(line.split(':', 1)[1].strip())
+                i += 1
+            else:
+                i += 1
+
+        frame_data["Time"] = int(time.time() * 1e9)
+        self.alljsondata.append(frame_data)
+        MoCapData.jsondata = frame_data
+        return frame_data
+
+    def write_to_file(self):
+        if not self.alljsondata:
+            print("No frames to write to file")
+            return
+        try:
+            print(f'Writing {len(self.alljsondata)} frames to: {self.output_file}')
+            with open(self.output_file, 'w') as log_file:
+                json.dump(self.alljsondata, log_file, indent=4)
+            print(f'Successfully wrote {len(self.alljsondata)} frames to: {self.output_file}')
+        except Exception as e:
+            print(f"Error writing to file: {e}")
 
 
-def generate_marker_set_description(set_num=0):
-    """generate_marker_set_description - Testing functions"""
-    marker_set_description = MarkerSetDescription()
-    marker_set_description.set_name("MarkerSetName%3.3d" % set_num)
-    marker_set_description.add_marker_name("MarkerName%3.3d_0" % set_num)
-    marker_set_description.add_marker_name("MarkerName%3.3d_1" % set_num)
-    marker_set_description.add_marker_name("MarkerName%3.3d_2" % set_num)
-    marker_set_description.add_marker_name("MarkerName%3.3d_3" % set_num)
-    return marker_set_description
+    def process_message(self, data: bytes, print_level=0):
+        # return message ID
+        MoCapData.jsondata = {}
+        major = self.get_major()
+        minor = self.get_minor()
 
+        trace("Begin Packet\n-----------------")
+        show_nat_net_version = True
+        if show_nat_net_version:
+            trace("NatNetVersion ", str(self.__nat_net_requested_version[0]), " " #type: ignore  # noqa E501
+                                  , str(self.__nat_net_requested_version[1]), " " #type: ignore  # noqa E501
+                                  , str(self.__nat_net_requested_version[2]), " " #type: ignore  # noqa E501
+                                  , str(self.__nat_net_requested_version[3]))
 
-def generate_rb_marker(marker_num=0):
-    """generate_rb_marker - Generate rigid body marker based on marker
-    number"""
-    marker_num_mod = marker_num % 4
-    marker_name = "RBMarker_%3.3d" % marker_num
-    marker_active_label = marker_num+10000
-    marker_pos = [1.0, 4.0, 9.0]
-    if marker_num_mod == 1:
-        marker_pos = [1.0, 8.0, 27.0]
-    elif marker_num_mod == 2:
-        marker_pos = [3.1, 4.1, 5.9]
-    elif marker_num_mod == 3:
-        marker_pos = [1.0, 3.0, 6.0]
+        message_id = get_message_id(data)
+        packet_size = int.from_bytes(data[2:4], byteorder='little', signed=True) #type: ignore  # noqa E501
+        offset = 4
+        if message_id == self.NAT_FRAMEOFDATA:
+            MoCapData.jsondata["Time"] = self.pkttime
+            offset_tmp, mocap_data = self.__unpack_mocap_data(data[offset:], packet_size, major, minor) #type: ignore  # noqa E501
+            offset += offset_tmp
+            print("MoCap Frame: %d\n" % (mocap_data.prefix_data.frame_number))
+            mocap_data_str = mocap_data.get_as_string()
+            self.__getjson(mocap_data_str)
+            self.alljsondata.append(MoCapData.jsondata)
 
-    return RBMarker(marker_name, marker_active_label, marker_pos)
+        elif message_id == self.NAT_MODELDEF:
+            trace("Message ID : %3.1d NAT_MODELDEF" % message_id)
+            trace("Packet Size: %d" % packet_size)
+            offset_tmp, data_descs = self.__unpack_data_descriptions(data[offset:], packet_size, major, minor) #type: ignore  # noqa E501
+            offset += offset_tmp
+            print("Data Descriptions:\n")
+            data_descs_str = data_descs.get_as_string()
+            if print_level > 0:
+                print(" %s\n" % (data_descs_str))
 
+        elif message_id == self.NAT_SERVERINFO:
+            trace("Message ID : %3.1d NAT_SERVERINFO" % message_id)
+            trace("Packet Size: ", packet_size)
+            offset += self.__unpack_server_info(data[offset:], packet_size, major, minor) #type: ignore  # noqa E501
 
-def generate_rigid_body_description(rbd_num=0):
-    """generate_rigid_body_description - Generate Rigid Body Description
-    Data"""
-    rbd = RigidBodyDescription()
-    rbd.set_name("rigidBodyDescription_%3.3d" % rbd_num)
-    rbd.set_id(3141)
-    rbd.set_parent_id(314)
-    rbd.set_pos(1, 4, 9)
-    rbd.add_rb_marker(generate_rb_marker(0))
-    rbd.add_rb_marker(generate_rb_marker(1))
-    rbd.add_rb_marker(generate_rb_marker(2))
+        elif message_id == self.NAT_RESPONSE:
+            trace("Message ID : %3.1d NAT_RESPONSE" % message_id)
+            trace("Packet Size: ", packet_size)
+            if packet_size == 4:
+                command_response = int.from_bytes(data[offset:offset+4], byteorder='little',  signed=True) #type: ignore  # noqa E501
+                trace("Command response: %d - %d %d %d %d" % (command_response,
+                                                              data[offset],
+                                                              data[offset+1],
+                                                              data[offset+2],
+                                                              data[offset+3]))
+                offset += 4
+            else:
+                show_remainder = False
+                message, separator, remainder = bytes(data[offset:]).partition(b'\0') #type: ignore  # noqa E501
+                if (len(message) < 30):
+                    tmpString = message.decode('utf-8')
+                    if (tmpString.startswith('Bitstream')):
+                        nn_version = self.__unpack_bitstream_info(data[offset:], packet_size, major, minor) #type: ignore  # noqa E501
+                        if (len(nn_version) > 1):
+                            for i in range(len(nn_version)):
+                                self.__nat_net_stream_version_server[i] = int(nn_version[i]) #type: ignore  # noqa E501
+                            for i in range(len(nn_version), 4):
+                                self.__nat_net_stream_version_server[i] = 0
+                offset += len(message) + 1
 
-    return rbd
+                if (show_remainder):
+                    trace("Command response:", message.decode('utf-8'),
+                          " separator:", separator, " remainder:", remainder)
+                else:
+                    trace("Command response:", message.decode('utf-8'))
+        elif message_id == self.NAT_UNRECOGNIZED_REQUEST:
+            trace("Message ID : %3.1d NAT_UNRECOGNIZED_REQUEST: " % message_id)
+            trace("Packet Size: ", packet_size)
+            trace("Received 'Unrecognized request' from server")
+        elif message_id == self.NAT_MESSAGESTRING:
+            trace("Message ID : %3.1d NAT_MESSAGESTRING" % message_id)
+            trace("Packet Size: ", packet_size)
+            message, separator, remainder = bytes(data[offset:]).partition(b'\0') #type: ignore  # noqa E501
+            offset += len(message) + 1
+            trace("Received message from server:", message.decode('utf-8'))
+        else:
+            trace("Message ID : %3.1d UNKNOWN" % message_id)
+            trace("Packet Size: ", packet_size)
+            trace("ERROR: Unrecognized packet type")
+        trace("End Packet\n-----------------")
+        return message_id
 
+    def send_request(self, in_socket, command, command_str, address):
+        packet_size = 0
+        if command == self.NAT_REQUEST_MODELDEF or command == self.NAT_REQUEST_FRAMEOFDATA: #type: ignore  # noqa E501
+            packet_size = 0
+            command_str = ""
+        elif command == self.NAT_REQUEST:
+            packet_size = len(command_str) + 1
+        elif command == self.NAT_CONNECT:
+            tmp_version = [4, 2, 0, 0]
+            print("NAT_CONNECT to Motive with %d %d %d %d\n" % (
+                tmp_version[0],
+                tmp_version[1],
+                tmp_version[2],
+                tmp_version[3]))
+            command_str = []
+            command_str = [0 for i in range(270)]
+            command_str[0] = 80
+            command_str[1] = 105
+            command_str[2] = 110
+            command_str[3] = 103
+            command_str[264] = 0
+            command_str[265] = tmp_version[0]
+            command_str[266] = tmp_version[1]
+            command_str[267] = tmp_version[2]
+            command_str[268] = tmp_version[3]
+            packet_size = len(command_str) + 1
+        elif command == self.NAT_KEEPALIVE:
+            packet_size = 0
+            command_str = ""
+        data = command.to_bytes(2, byteorder='little',  signed=True)
+        data += packet_size.to_bytes(2, byteorder='little',  signed=True)
+        if command == self.NAT_CONNECT:
+            data += bytearray(command_str)
+        else:
+            data += command_str.encode('utf-8')
+        data += b'\0'
+        return in_socket.sendto(data, address)
 
-def generate_skeleton_description(skeleton_num=0):
-    """generate_skeleton_description -Generate Test SkeletonDescription Data"""
-    skel_desc = SkeletonDescription(
-        "SkeletonDescription_%3.3d" % skeleton_num, skeleton_num)
-    # generate some rigid bodies to add
-    skel_desc.add_rigid_body_description(generate_rigid_body_description(0))
-    skel_desc.add_rigid_body_description(generate_rigid_body_description(1))
-    skel_desc.add_rigid_body_description(generate_rigid_body_description(2))
-    skel_desc.add_rigid_body_description(generate_rigid_body_description(3))
-    skel_desc.add_rigid_body_description(generate_rigid_body_description(5))
-    skel_desc.add_rigid_body_description(generate_rigid_body_description(7))
-    return skel_desc
+    def send_command(self, command_str):
+        nTries = 3
+        ret_val = -1
+        while nTries:
+            nTries -= 1
+            ret_val = self.send_request(self.command_socket, self.NAT_REQUEST,
+                                        command_str,  (self.server_ip_address, self.command_port))  #type: ignore  # noqa E501
+            if (ret_val != -1):
+                break
+        return ret_val
 
+    def send_commands(self, tmpCommands, print_results: bool = True):
+        for sz_command in tmpCommands:
+            return_code = self.send_command(sz_command)
+            if (print_results):
+                print("Command: %s - return_code: %d" % (sz_command, return_code)) #type: ignore  # noqa E501
 
-def generate_force_plate_description(force_plate_num=0):
-    """generate_force_plate_description - Generate Test ForcePlateDescription
-    Data"""
-    fp_id = force_plate_num
-    random.seed(force_plate_num)
+    def send_keep_alive(self, in_socket, server_ip_address, server_port):
+        return self.send_request(in_socket, self.NAT_KEEPALIVE, "", (server_ip_address, server_port)) #type: ignore  # noqa E501
 
-    serial_number = "S/N_%5.5d" % random.randint(0, 99999)
-    width = random.random()*10
-    length = random.random()*10
-    origin = [
-        (random.random()*100), (random.random()*100), (random.random() * 100)]
-    corners = [[0.0, 0.0, 0.0],
-               [0.0, 1.0, 0.0],
-               [1.0, 1.0, 0.0],
-               [1.0, 0.0, 0.0]]
+    def get_command_port(self):
+        return self.command_port
 
-    fp_desc = ForcePlateDescription(fp_id, serial_number)
-    fp_desc.set_dimensions(width, length)
-    fp_desc.set_origin(origin[0], origin[1], origin[2])
-    # fp_desc.set_cal_matrix(cal_matrix)
-    fp_desc.set_corners(corners)
-    for i in range(3):
-        fp_desc.add_channel_name("channel_%3.3d" % i)
-    return fp_desc
+    def refresh_configuration(self):
+        sz_command = "Bitstream"
+        return_code = self.send_command(sz_command) #type: ignore  # noqa F841
+        time.sleep(0.5)
 
+    def get_application_name(self):
+        return self.__application_name
 
-def generate_device_description(dev_num=0):
-    """generate_device_description- Generate Test DeviceDescription Data"""
-    new_id = 0
-    name = "Device%3.3d" % dev_num
-    serial_number = "SerialNumber%3.3d" % dev_num
-    device_type = dev_num % 4
-    channel_data_type = dev_num % 5
-    dev_desc = DeviceDescription(
-        new_id, name, serial_number, device_type, channel_data_type)
-    for i in range(channel_data_type+3):
-        dev_desc.add_channel_name("channel_name_%2.2d" % i)
-    return dev_desc
+    def get_nat_net_requested_version(self):
+        return self.__nat_net_requested_version
 
+    def get_nat_net_version_server(self):
+        return self.__nat_net_stream_version_server
 
-def generate_camera_description(cam_num=0):
-    """generate_camera_description - Generate Test CameraDescription data"""
-    pos_vec3 = [1, 2, 3]
-    orientation_quat = [1, 2, 3, 4]
-    return CameraDescription(
-        "Camera_%3.3d" % cam_num, pos_vec3, orientation_quat)
+    def get_server_version(self):
+        return self.__server_version
 
+    def run(self, thread_option):
+        # Create the data socket
+        self.data_socket = self.__create_data_socket()
+        if self.data_socket is None:
+            print("Could not open data channel")
+            return False
 
-# generate_data_descriptions - Generate Test DataDescriptions
-def generate_data_descriptions(data_desc_num=0):
-    """Generate data descriptions"""
-    data_descs = DataDescriptions()
+        # Create the command socket
+        self.command_socket = self.__create_command_socket()
+        if self.command_socket is None:
+            print("Could not open command channel")
+            return False
+        self.__is_locked = True
+        self.stop_threads = False
+        self.data_thread = Thread(target=self.__data_thread_function, args=(self.data_socket, lambda: self.stop_threads, lambda: self.print_level,)) #type: ignore  # noqa E501
+        self.command_thread = Thread(target=self.__command_thread_function, args=(self.command_socket, lambda: self.stop_threads, lambda: self.print_level, thread_option,)) #type: ignore  # noqa E501
+        if thread_option == 'd':
+            print("starting data thread")
+            self.command_thread.start()
+            if self.command_thread.is_alive():
+                self.data_thread.start()
+        if thread_option == 'c':
+            self.command_thread.start()
+        self.send_request(self.command_socket, self.NAT_CONNECT, "", (self.server_ip_address, self.command_port)) #type: ignore  # noqa E501
+        return True
 
-    data_descs.add_data(generate_marker_set_description(data_desc_num+0))
-    data_descs.add_data(generate_marker_set_description(data_desc_num+1))
-
-    data_descs.add_data(generate_rigid_body_description(data_desc_num+0))
-    data_descs.add_data(generate_rigid_body_description(data_desc_num+1))
-
-    data_descs.add_skeleton(generate_skeleton_description(data_desc_num+3))
-    data_descs.add_skeleton(generate_skeleton_description(data_desc_num+9))
-    data_descs.add_skeleton(generate_skeleton_description(data_desc_num+27))
-
-    data_descs.add_force_plate(
-        generate_force_plate_description(data_desc_num+123))
-    data_descs.add_force_plate(
-        generate_force_plate_description(data_desc_num+87))
-    data_descs.add_force_plate(
-        generate_force_plate_description(data_desc_num+21))
-
-    data_descs.add_device(generate_device_description(data_desc_num+0))
-    data_descs.add_device(generate_device_description(data_desc_num+2))
-    data_descs.add_device(generate_device_description(data_desc_num+4))
-
-    data_descs.add_camera(generate_camera_description(data_desc_num+0))
-    data_descs.add_camera(generate_camera_description(data_desc_num+10))
-    data_descs.add_camera(generate_camera_description(data_desc_num+3))
-    data_descs.add_camera(generate_camera_description(data_desc_num+7))
-    return data_descs
-
-
-# test_all - Test all the major classes
-def test_all(run_test=True):
-    """Test all the Data Description classes"""
-    totals = [0, 0, 0]
-    if run_test is True:
-        test_cases = [
-                    ["Test Markerset Description 0",
-                     "d918228cc347bd0dac69dd02b1a5375a4421364f",
-                     "generate_marker_set_description(0)", True],
-                    ["Test RB Marker 0",
-                     "df582ca7b764d889041b59ceb6a43251b68ca3be",
-                     "generate_rb_marker(0)",
-                     True],
-                    ["Test Rigid Body Description 0",
-                     "0ea7085657c391efe2fd349cc03f242247efbbe4",
-                     "generate_rigid_body_description(0)",
-                     True],
-                    ["Test Skeleton Description 0",
-                     "fa2a59e76f31c1d884f6554fe13e5cfcf31e703c",
-                     "generate_skeleton_description(0)",
-                     True],
-                    ["Test Force Plate Description 0",
-                     "798793a2fed302bc472b2636beff959901214be2",
-                     "generate_force_plate_description(0)",
-                     True],
-                    ["Test Device Description 0",
-                     "39b4fdda402bc73c0b1cd5c7f61599476aa9a926",
-                     "generate_device_description(0)",
-                     True],
-                    ["Test Camera Description 0",
-                     "614602c5d290bda3b288138d5e25516dd1e1e85a",
-                     "generate_camera_description(0)",
-                     True],
-                    ["Test Data Description 0",
-                     "b2fcffb251ae526e91ec9f65f5f2137f0d74db49",
-                     "generate_data_descriptions(0)",
-                     True],
-                    ]
-        num_tests = len(test_cases)
-        for i in range(num_tests):
-            data = eval(test_cases[i][2])
-            totals_tmp = test_hash2(
-                test_cases[i][0], test_cases[i][1], data,
-                test_cases[i][2], test_cases[i][3])
-            totals = add_lists(totals, totals_tmp)
-
-    print("--------------------")
-    print("[PASS] Count = %3.1d" % totals[0])
-    print("[FAIL] Count = %3.1d" % totals[1])
-    print("[SKIP] Count = %3.1d" % totals[2])
-
-    return totals
-
-
-if __name__ == "__main__":
-    test_all(True)
+    def shutdown(self):
+        print("shutdown called")
+        self.stop_threads = True
+        self.command_socket.close()
+        self.data_socket.close()
+        if self.command_thread.is_alive():
+            self.command_thread.join()
+        if self.data_thread.is_alive():
+            self.data_thread.join()
