@@ -1,36 +1,2335 @@
-PS C:\Users\rjk7lg\Downloads\toolchain_scripts_motive33\toolchain_scripts> ./convert_max_gt_from_mdf4_to_csv.bat Z:\Test_for_OT_30Hz_markers33_GPO_VH11_S000_SW54_HW33_20250822083841#p822083841df003da
-======================== Running conversions for Z:\Test_for_OT_30Hz_markers33_GPO_VH11_S000_SW54_HW33_20250822083841#p822083841df003da ========================
-======================== Step 1: extract .cap files ========================
-======================== Step 2: extract OptiTrack GT data ========================
-  File "C:\Users\rjk7lg\Downloads\toolchain_scripts_motive33\toolchain_scripts\max_ot_gt_extractor\PythonClient\PythonSample.py", line 183
-    try:
-IndentationError: unexpected indent
-======================== Step 4: convert OT and SEP jsons to csv ========================
-python: can't open file 'C:\\Users\\rjk7lg\\Downloads\\toolchain_scripts_motive33\\toolchain_scripts\\gt_json_to_csv_parser.py': [Errno 2] No such file or directory
+starting data thread
+NAT_CONNECT to Motive with 4 2 0 0
 
+Start processing Test_for_OT_30Hz_markers33_GPO_VH11_S000_SW54_HW33_20250822083841_sme1_001_EthOutput
+1755851927.944779000
+resetting requested version to 4 2 0 0 from 0 0 0 0
+1755851927.96833900055851927.944779000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.00217700055851927.968353000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.03654700055851928.002193000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.06920100055851928.036556000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.10314200055851928.069213000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.13681600055851928.103153000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.16982600055851928.136826000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.20263500055851928.169835000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.23937700055851928.202644000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.26814000055851928.239388000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.30164800055851928.268150000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.33470300055851928.301657000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.36793300055851928.334713000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.40212200055851928.367943000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.43610500055851928.402131000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.47225000055851928.436115000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.50222100055851928.472258000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.53481500055851928.502230000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.56765000055851928.534824000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.60203300055851928.567661000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.63438800055851928.602044000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.66965200055851928.634397000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.70489700055851928.669662000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.73784200055851928.704906000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.76875800055851928.737850000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.80193500055851928.768766000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.83673300055851928.801944000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.87102400055851928.836750000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.90080000055851928.871033000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.93507300055851928.900810000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851928.96896300055851928.935083000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.00144800055851928.968973000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.03465600055851929.001472000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.07169000055851929.034664000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.10555700055851929.071699000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.13492600055851929.105572000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.17142600055851929.134937000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.20544000055851929.171436000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.23589800055851929.205448000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.26928100055851929.235906000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.30153500055851929.269291000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.33593000055851929.301543000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.36930800055851929.335939000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.40264900055851929.369325000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.43504800055851929.402659000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.46839400055851929.435058000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.50155800055851929.468405000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.53454400055851929.501568000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.56789500055851929.534553000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.60207200055851929.567911000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.63668500055851929.602091000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.66841400055851929.636695000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.70154300055851929.668424000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.73749800055851929.701551000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.77184000055851929.737508000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.80142300055851929.771849000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.83557900055851929.801431000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.87024700055851929.835586000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.90170700055851929.870260000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.93789700055851929.901715000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851929.96902200055851929.937912000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.00168600055851929.969030000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.03475600055851930.001708000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.06830400055851930.034769000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.10150200055851930.068315000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.13502500055851930.101509000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.16903600055851930.135034000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.20356900055851930.169044000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.23610700055851930.203578000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.26868100055851930.236119000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.30150900055851930.268691000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.33630400055851930.301519000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.37005400055851930.336312000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.40129000055851930.370066000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.43438500055851930.401299000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.46910200055851930.434393000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.50169400055851930.469112000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.53483100055851930.501703000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.57019100055851930.534840000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.60176800055851930.570200000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.63437700055851930.601781000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.66798300055851930.634385000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.70167800055851930.667994000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.73521700055851930.701688000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.76886600055851930.735227000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.80177000055851930.768878000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.83703600055851930.801779000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.86947200055851930.837047000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.90358800055851930.869485000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.93708200055851930.903600000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851930.96771100055851930.937098000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.00211900055851930.967723000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.03466000055851931.002129000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.06770700055851931.034675000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.10100000055851931.067717000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.13428200055851931.101011000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.16798400055851931.134291000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.20113200055851931.167995000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.23565900055851931.201141000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.26765400055851931.235669000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.30197400055851931.267664000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.33465300055851931.301984000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.36861000055851931.334663000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.40171100055851931.368620000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.43534200055851931.401722000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.46822600055851931.435350000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.50122800055851931.468236000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.53480400055851931.501237000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.56827300055851931.534814000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.60162000055851931.568289000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.63712700055851931.601633000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.66857600055851931.637137000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.70213800055851931.668586000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.73609200055851931.702147000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.76863900055851931.736102000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.80099000055851931.768651000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.83470400055851931.800999000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.86847800055851931.834714000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.90172600055851931.868493000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.93468600055851931.901736000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851931.96864600055851931.934697000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.00126000055851931.968659000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.03782900055851932.001269000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.06913200055851932.037844000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.10149500055851932.069141000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.13679300055851932.101508000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.17118800055851932.136803000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.20568500055851932.171198000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.23648700055851932.205694000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.27318300055851932.236500000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.30567600055851932.273193000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.33457400055851932.305684000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.36801500055851932.334584000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.40195400055851932.368023000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.43671700055851932.401963000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.46947800055851932.436726000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.50549900055851932.469490000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.53790600055851932.505508000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.56800500055851932.537915000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.60085200055851932.568016000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.64021800055851932.600864000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.67123800055851932.640228000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.70306900055851932.671249000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.73812300055851932.703078000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.76861900055851932.738142000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.80275200055851932.768629000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.83605800055851932.802771000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.87211900055851932.836067000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.90461700055851932.872127000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.93489500055851932.904626000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851932.96784400055851932.934912000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.00093500055851932.967852000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.03509300055851933.000950000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.06983800055851933.035113000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.10236300055851933.069850000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.13655600055851933.102374000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.17121100055851933.136565000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.20288200055851933.171222000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.23774000055851933.202898000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.26792500055851933.237757000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.30161200055851933.267942000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.33715800055851933.301621000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.36821200055851933.337173000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.40185700055851933.368223000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.43539100055851933.401869000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.46864400055851933.435401000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.50141200055851933.468657000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.53528400055851933.501421000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.56858900055851933.535295000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.60329600055851933.568599000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.63496800055851933.603308000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.66866600055851933.634979000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.70414700055851933.668677000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.73715500055851933.704158000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.76822800055851933.737166000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.80213000055851933.768238000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.83586100055851933.802140000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.86835100055851933.835875000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.90210300055851933.868360000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.93555800055851933.902120000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851933.97035300055851933.935568000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.00424600055851933.970364000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.03517700055851934.004255000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.06801000055851934.035186000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.10090200055851934.068024000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.13440200055851934.100911000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.16934700055851934.134412000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.20098100055851934.169357000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.23699000055851934.200992000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.26930300055851934.236998000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.30181700055851934.269313000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.33476200055851934.301826000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.37154800055851934.334771000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.40573900055851934.371558000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.43548500055851934.405749000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.46786400055851934.435495000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.50113800055851934.467873000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.53903500055851934.501147000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.56807200055851934.539045000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.60500200055851934.568081000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.63542300055851934.605012000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.66764400055851934.635433000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.70145700055851934.667653000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.73608200055851934.701466000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.76796100055851934.736091000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.80204700055851934.767970000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.83610500055851934.802057000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.86931000055851934.836115000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.90133100055851934.869326000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.93497500055851934.901341000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851934.96842800055851934.934984000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.00174500055851934.968438000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.03492100055851935.001763000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.07012900055851935.034931000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.10425300055851935.070143000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.13800200055851935.104263000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.16801100055851935.138013000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.20423700055851935.168020000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.23691500055851935.204252000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.26805400055851935.236924000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.30192500055851935.268073000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.33642600055851935.301935000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.36952300055851935.336436000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.40533400055851935.369539000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.43775600055851935.405344000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.46875400055851935.437767000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.50092400055851935.468768000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.53658700055851935.500933000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.56891800055851935.536596000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.60162600055851935.568932000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.63486300055851935.601642000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.67045600055851935.634880000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.70285400055851935.670465000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.73603200055851935.702863000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.77059800055851935.736042000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.80395700055851935.770617000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.83490400055851935.803967000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.86935600055851935.834914000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.90180500055851935.869365000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.93478800055851935.901821000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851935.96776900055851935.934803000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.00341900055851935.967779000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.03757100055851936.003430000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.06821000055851936.037582000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.10316500055851936.068223000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.13507600055851936.103175000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.16857800055851936.135084000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.20634700055851936.168586000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.23812600055851936.206357000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.26899400055851936.238135000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.30185300055851936.269004000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.33667100055851936.301864000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.36916700055851936.336687000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.40094600055851936.369174000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.43503400055851936.400962000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.46819800055851936.435043000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.50295000055851936.468207000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.53759600055851936.502959000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.56959900055851936.537612000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.60257100055851936.569609000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.63495500055851936.602582000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.67231500055851936.634965000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.70430000055851936.672326000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.73553000055851936.704309000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.76896800055851936.735539000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.80137700055851936.768977000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.83491100055851936.801394000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.87084900055851936.834919000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.90439800055851936.870858000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.93585300055851936.904408000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851936.96928500055851936.935869000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.00129000055851936.969295000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.03433200055851937.001301000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.06830000055851937.034340000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.10735800055851937.068321000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.13621700055851937.107371000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.16949900055851937.136227000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.20267900055851937.169507000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.23691500055851937.202689000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.26804200055851937.236925000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.30451300055851937.268052000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.33540100055851937.304523000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.36877900055851937.335410000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.40206200055851937.368788000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.43600100055851937.402071000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.46815400055851937.436012000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.50195800055851937.468162000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.53510000055851937.501978000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.56780300055851937.535108000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.60098000055851937.567813000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.63673000055851937.600999000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.66855600055851937.636739000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.70555900055851937.668566000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.73630500055851937.705579000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.77010500055851937.736312000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.80264000055851937.770115000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.83849200055851937.802655000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.87025900055851937.838502000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.90208800055851937.870268000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.93535900055851937.902097000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851937.96922700055851937.935376000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.00435300055851937.969237000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.03446100055851938.004363000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.06775100055851938.034469000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.10412000055851938.067772000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.13536600055851938.104134000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.16839500055851938.135376000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.20197600055851938.168413000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.23566800055851938.201992000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.27049000055851938.235676000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.30258700055851938.270510000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.33743600055851938.302595000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.36887000055851938.337453000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.40171000055851938.368879000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.43599900055851938.401721000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.46823400055851938.436009000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.50562700055851938.468250000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.53896700055851938.505637000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.56912300055851938.538984000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.60226600055851938.569132000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.63478200055851938.602277000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.66786500055851938.634792000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.70218700055851938.667873000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.73715800055851938.702196000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.76897500055851938.737169000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.80137400055851938.768993000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.83484900055851938.801383000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.87219400055851938.834858000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.90438000055851938.872203000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.93806600055851938.904395000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851938.96933400055851938.938079000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.00431100055851938.969345000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.03486600055851939.004326000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.06983800055851939.034875000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.10243800055851939.069849000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.13769700055851939.102452000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.16842900055851939.137708000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.20345300055851939.168439000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.23758300055851939.203466000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.26973000055851939.237594000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.30128400055851939.269741000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.33479000055851939.301297000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.36870800055851939.334799000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.40258200055851939.368718000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.43531300055851939.402596000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.47020000055851939.435335000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.50328700055851939.470211000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.53484200055851939.503295000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.57198700055851939.534850000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.60397100055851939.572003000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.63495600055851939.603982000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.66894000055851939.634966000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.70182300055851939.668950000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.73588500055851939.701842000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.76926900055851939.735896000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.80249500055851939.769279000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.83556700055851939.802504000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.86885500055851939.835576000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.90096300055851939.868865000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.93493000055851939.900979000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851939.96895400055851939.934947000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851940.00222800055851939.968974000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851940.03459100055851940.002247000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851940.06794200055851940.034601000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851940.10166300055851940.067952000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851940.13496300055851940.101677000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851940.16814300055851940.134973000
+ Nieprawidłowy rozmiar danych: 0 bajtów przy offset=8
+Pozostałe bajty (HEX):
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851940.20168400055851940.168155000
+ Nieprawidłowy rozmiar danych: 7 bajtów przy offset=8
+Pozostałe bajty (HEX): 6666666666f0a3
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851940.23665500055851940.201702000
+ Nieprawidłowy rozmiar danych: 7 bajtów przy offset=8
+Pozostałe bajty (HEX): 7777777777f0a3
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851940.27001800055851940.236667000
+ Nieprawidłowy rozmiar danych: 7 bajtów przy offset=8
+Pozostałe bajty (HEX): 8888888888f0a3
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851940.30216500055851940.270028000
+ Nieprawidłowy rozmiar danych: 7 bajtów przy offset=8
+Pozostałe bajty (HEX): 9a99999999f0a3
+[!] Błąd przy przetwarzaniu pakietu: Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)
+1755851940.33462800055851940.302175000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851940.36904600055851940.334638000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851940.40525900055851940.369056000
+    frame_number= 76572 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 18 /timecode= 0 /timecode_sub= 0 /timestamp= 2552.4 /is_recording= False /tracked_models_changed= False /offset= 1457 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76572
 
+1
+2
+3
+4
+5
+1755851940.43555200055851940.405271000
+    frame_number= 76573 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 18 /timecode= 0 /timecode_sub= 0 /timestamp= 2552.4333333333334 /is_recording= False /tracked_models_changed= False /offset= 1457 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76573
 
+1
+2
+3
+4
+5
+1755851940.46872100055851940.435562000
+    frame_number= 76574 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 18 /timecode= 0 /timecode_sub= 0 /timestamp= 2552.4666666666667 /is_recording= False /tracked_models_changed= False /offset= 1457 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76574
 
+1
+2
+3
+4
+5
+1755851940.50139700055851940.468731000
+    frame_number= 76575 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 18 /timecode= 0 /timecode_sub= 0 /timestamp= 2552.5 /is_recording= False /tracked_models_changed= False /offset= 1457 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76575
 
-for gtfile in gtCapFiles:
-        filename, fileext = os.path.splitext(os.path.basename(gtfile))
-        print("Start processing {}".format(filename))
-        streaming_client.set_output_file(os.path.join(args.out_dir, filename + "_OptiTrack.json"))
-        streaming_client.set_all_jsondata([])
-        capreader = PcapReader(gtfile)
-        for pkt in capreader:
-            if 'UDP' in pkt and pkt['UDP'].dport in [streaming_client.data_port, streaming_client.data_port]:
-                print(pkt.time)
-                streaming_client.set_pkt_time(int(pkt.time * 1000000000))
-                pkt['UDP'].dport = 1511
-                #streaming_client.process_message(pkt[Raw].load)
-                 try:
-                    streaming_client.process_message(pkt[Raw].load)
-                except Exception as e:
-                    print(f"[!] Błąd przy przetwarzaniu pakietu: {e}")
-                    continue
-            print("Packet processed: {:>20}".format(pkt.time), end='\r')
-        streaming_client.write_to_file()
-    s.send(b"Stop")
-    streaming_client.shutdown()
-    print("exiting")
+1
+2
+3
+4
+5
+1755851940.53524400055851940.501407000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851940.56872300055851940.535254000
+    frame_number= 76577 /marker_set_count= 5 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 16 /timecode= 0 /timecode_sub= 0 /timestamp= 2552.5666666666666 /is_recording= False /tracked_models_changed= False /offset= 1417 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76577
+
+1
+2
+3
+4
+5
+1755851940.60485800055851940.568723000
+    frame_number= 76578 /marker_set_count= 5 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 16 /timecode= 0 /timecode_sub= 0 /timestamp= 2552.6 /is_recording= False /tracked_models_changed= False /offset= 1417 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76578
+
+1
+2
+3
+4
+5
+1755851940.63576100055851940.604858000
+    frame_number= 76579 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2552.633333333333 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76579
+
+1
+2
+3
+4
+5
+1755851940.67018900055851940.635761000
+    frame_number= 76580 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2552.6666666666665 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76580
+
+1
+2
+3
+4
+5
+1755851940.70465400055851940.670189000
+    frame_number= 76581 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2552.7 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76581
+
+1
+2
+3
+4
+5
+1755851940.73609600055851940.704654000
+    frame_number= 76582 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2552.733333333333 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76582
+
+1
+2
+3
+4
+5
+1755851940.77044600055851940.736096000
+    frame_number= 76583 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2552.7666666666664 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76583
+
+1
+2
+3
+4
+5
+1755851940.80212900055851940.770446000
+    frame_number= 76584 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2552.8 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76584
+
+1
+2
+3
+4
+5
+1755851940.83834000055851940.802129000
+    frame_number= 76585 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2552.8333333333335 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76585
+
+1
+2
+3
+4
+5
+1755851940.86890500055851940.838340000
+    frame_number= 76586 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2552.866666666667 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76586
+
+1
+2
+3
+4
+5
+1755851940.90141000055851940.868905000
+    frame_number= 76587 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2552.9 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76587
+
+1
+2
+3
+4
+5
+1755851940.93957900055851940.901410000
+    frame_number= 76588 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2552.9333333333334 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76588
+
+1
+2
+3
+4
+5
+1755851940.96912000055851940.939579000
+    frame_number= 76589 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2552.9666666666667 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76589
+
+1
+2
+3
+4
+5
+1755851941.00332200055851940.969120000
+    frame_number= 76590 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.0 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76590
+
+1
+2
+3
+4
+5
+1755851941.03570000055851941.003322000
+    frame_number= 76591 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.0333333333333 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76591
+
+1
+2
+3
+4
+5
+1755851941.06810200055851941.035700000
+    frame_number= 76592 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.0666666666666 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76592
+
+1
+2
+3
+4
+5
+1755851941.10101600055851941.068102000
+    frame_number= 76593 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.1 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76593
+
+1
+2
+3
+4
+5
+1755851941.13517800055851941.101016000
+    frame_number= 76594 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.133333333333 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76594
+
+1
+2
+3
+4
+5
+1755851941.17153400055851941.135178000
+    frame_number= 76595 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.1666666666665 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76595
+
+1
+2
+3
+4
+5
+1755851941.20374300055851941.171534000
+    frame_number= 76596 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.2 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76596
+
+1
+2
+3
+4
+5
+1755851941.23618600055851941.203743000
+    frame_number= 76597 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.233333333333 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76597
+
+1
+2
+3
+4
+5
+1755851941.26936100055851941.236186000
+    frame_number= 76598 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.2666666666664 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76598
+
+1
+2
+3
+4
+5
+1755851941.30455300055851941.269361000
+    frame_number= 76599 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.3 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76599
+
+1
+2
+3
+4
+5
+1755851941.33735200055851941.304553000
+    frame_number= 76600 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.3333333333335 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76600
+
+1
+2
+3
+4
+5
+1755851941.36827500055851941.337352000
+    frame_number= 76601 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.366666666667 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76601
+
+1
+2
+3
+4
+5
+1755851941.40471600055851941.368275000
+    frame_number= 76602 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.4 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76602
+
+1
+2
+3
+4
+5
+1755851941.43679200055851941.404716000
+    frame_number= 76603 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.4333333333334 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76603
+
+1
+2
+3
+4
+5
+1755851941.46911000055851941.436792000
+    frame_number= 76604 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.4666666666667 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76604
+
+1
+2
+3
+4
+5
+1755851941.50114200055851941.469110000
+    frame_number= 76605 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.5 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76605
+
+1
+2
+3
+4
+5
+1755851941.53494300055851941.501142000
+    frame_number= 76606 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.5333333333333 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76606
+
+1
+2
+3
+4
+5
+1755851941.56810200055851941.534943000
+    frame_number= 76607 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.5666666666666 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76607
+
+1
+2
+3
+4
+5
+1755851941.60091100055851941.568102000
+    frame_number= 76608 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.6 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76608
+
+1
+2
+3
+4
+5
+1755851941.63507500055851941.600911000
+    frame_number= 76609 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.633333333333 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76609
+
+1
+2
+3
+4
+5
+1755851941.66879200055851941.635075000
+    frame_number= 76610 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.6666666666665 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76610
+
+1
+2
+3
+4
+5
+1755851941.70234100055851941.668792000
+    frame_number= 76611 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.7 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76611
+
+1
+2
+3
+4
+5
+1755851941.73591500055851941.702341000
+    frame_number= 76612 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.733333333333 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76612
+
+1
+2
+3
+4
+5
+1755851941.77114300055851941.735915000
+    frame_number= 76613 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.7666666666664 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76613
+
+1
+2
+3
+4
+5
+1755851941.80492400055851941.771143000
+    frame_number= 76614 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.8 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76614
+
+1
+2
+3
+4
+5
+1755851941.83582500055851941.804924000
+    frame_number= 76615 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.8333333333335 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76615
+
+1
+2
+3
+4
+5
+1755851941.87093900055851941.835825000
+    frame_number= 76616 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.866666666667 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76616
+
+1
+2
+3
+4
+5
+1755851941.90362400055851941.870939000
+    frame_number= 76617 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.9 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76617
+
+1
+2
+3
+4
+5
+1755851941.93501600055851941.903624000
+    frame_number= 76618 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.9333333333334 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76618
+
+1
+2
+3
+4
+5
+1755851941.96857300055851941.935016000
+    frame_number= 76619 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2553.9666666666667 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76619
+
+1
+2
+3
+4
+5
+1755851942.00561300055851941.968573000
+    frame_number= 76620 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.0 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76620
+
+1
+2
+3
+4
+5
+1755851942.03514400055851942.005613000
+    frame_number= 76621 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.0333333333333 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76621
+
+1
+2
+3
+4
+5
+1755851942.06852100055851942.035144000
+    frame_number= 76622 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.0666666666666 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76622
+
+1
+2
+3
+4
+5
+1755851942.10306200055851942.068521000
+    frame_number= 76623 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.1 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76623
+
+1
+2
+3
+4
+5
+1755851942.13652700055851942.103062000
+    frame_number= 76624 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.133333333333 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76624
+
+1
+2
+3
+4
+5
+1755851942.16958400055851942.136527000
+    frame_number= 76625 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.1666666666665 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76625
+
+1
+2
+3
+4
+5
+1755851942.20253500055851942.169584000
+    frame_number= 76626 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.2 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76626
+
+1
+2
+3
+4
+5
+1755851942.23571600055851942.202535000
+    frame_number= 76627 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.233333333333 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76627
+
+1
+2
+3
+4
+5
+1755851942.26759300055851942.235716000
+    frame_number= 76628 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.2666666666664 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76628
+
+1
+2
+3
+4
+5
+1755851942.30255700055851942.267593000
+    frame_number= 76629 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.3 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76629
+
+1
+2
+3
+4
+5
+1755851942.33561800055851942.302557000
+    frame_number= 76630 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.3333333333335 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76630
+
+1
+2
+3
+4
+5
+1755851942.37064800055851942.335618000
+    frame_number= 76631 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.366666666667 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76631
+
+1
+2
+3
+4
+5
+1755851942.40164000055851942.370648000
+    frame_number= 76632 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.4 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76632
+
+1
+2
+3
+4
+5
+1755851942.43793300055851942.401640000
+    frame_number= 76633 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.4333333333334 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76633
+
+1
+2
+3
+4
+5
+1755851942.47012600055851942.437933000
+    frame_number= 76634 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.4666666666667 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76634
+
+1
+2
+3
+4
+5
+1755851942.50217000055851942.470126000
+    frame_number= 76635 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.5 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76635
+
+1
+2
+3
+4
+5
+1755851942.53505400055851942.502170000
+    frame_number= 76636 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.5333333333333 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76636
+
+1
+2
+3
+4
+5
+1755851942.56776500055851942.535054000
+    frame_number= 76637 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.5666666666666 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76637
+
+1
+2
+3
+4
+5
+1755851942.60429600055851942.567765000
+    frame_number= 76638 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.6 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76638
+
+1
+2
+3
+4
+5
+1755851942.63470500055851942.604296000
+    frame_number= 76639 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.633333333333 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76639
+
+1
+2
+3
+4
+5
+1755851942.67213000055851942.634705000
+    frame_number= 76640 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.6666666666665 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76640
+
+1
+2
+3
+4
+5
+1755851942.70302600055851942.672130000
+    frame_number= 76641 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.7 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76641
+
+1
+2
+3
+4
+5
+1755851942.73857600055851942.703026000
+    frame_number= 76642 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.733333333333 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76642
+
+1
+2
+3
+4
+5
+1755851942.76784900055851942.738576000
+    frame_number= 76643 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.7666666666664 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76643
+
+1
+2
+3
+4
+5
+1755851942.80109000055851942.767849000
+    frame_number= 76644 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.8 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76644
+
+1
+2
+3
+4
+5
+1755851942.83495900055851942.801090000
+    frame_number= 76645 /marker_set_count= 4 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 15 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.8333333333335 /is_recording= False /tracked_models_changed= False /offset= 1379 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76645
+
+1
+2
+3
+4
+5
+1755851942.86772200055851942.834959000
+    frame_number= 76646 /marker_set_count= 5 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 16 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.866666666667 /is_recording= False /tracked_models_changed= False /offset= 1417 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76646
+
+1
+2
+3
+4
+5
+1755851942.90172500055851942.867722000
+    frame_number= 76647 /marker_set_count= 6 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 17 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.9 /is_recording= False /tracked_models_changed= False /offset= 1455 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76647
+
+1
+2
+3
+4
+5
+1755851942.93447900055851942.901725000
+    frame_number= 76648 /marker_set_count= 6 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 17 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.9333333333334 /is_recording= False /tracked_models_changed= False /offset= 1455 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76648
+
+1
+2
+3
+4
+5
+1755851942.96892400055851942.934479000
+    frame_number= 76649 /marker_set_count= 6 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 17 /timecode= 0 /timecode_sub= 0 /timestamp= 2554.9666666666667 /is_recording= False /tracked_models_changed= False /offset= 1455 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76649
+
+1
+2
+3
+4
+5
+1755851943.00140100055851942.968924000
+    frame_number= 76650 /marker_set_count= 6 /unlabeled_markers_count= 0 /rigid_body_count= 5 /skeleton_count= 0 /asset_count= 0 /labeled_marker_count= 17 /timecode= 0 /timecode_sub= 0 /timestamp= 2555.0 /is_recording= False /tracked_models_changed= False /offset= 1455 /mocap_data= <MoCapData.MoCapData object at 0x0000025745E1B1B0> /
+MoCap Frame: 76650
+
+1
+2
+3
+4
+5
+1755851943.03500900055851943.001401000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.06786700055851943.035022000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.10154500055851943.067880000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.13462900055851943.101554000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.16827700055851943.134638000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.20220900055851943.168286000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.23527600055851943.202216000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.27216800055851943.235286000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.30357900055851943.272178000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.33490000055851943.303595000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.36895000055851943.334907000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.40258500055851943.368958000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.43595000055851943.402604000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.46837100055851943.435960000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.50745000055851943.468379000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.53661000055851943.507459000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.56792300055851943.536619000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.60489300055851943.567932000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.63601700055851943.604906000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.67011500055851943.636026000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.70334800055851943.670124000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.73971100055851943.703357000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.77005800055851943.739719000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.80506100055851943.770066000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.83476900055851943.805072000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.87150400055851943.834778000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.90207700055851943.871513000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.93502800055851943.902086000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851943.96931500055851943.935036000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.00176100055851943.969323000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.03771000055851944.001768000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.07152500055851944.037719000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.10343600055851944.071533000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.13552000055851944.103446000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.17267300055851944.135535000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.20239200055851944.172681000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.23661600055851944.202406000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.27142000055851944.236625000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.30250400055851944.271430000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.33771400055851944.302520000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.36912300055851944.337724000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.40602300055851944.369130000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.43755100055851944.406032000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.46925400055851944.437559000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.50124300055851944.469263000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.53456300055851944.501254000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.56796400055851944.534574000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.60349400055851944.567981000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.63809000055851944.603504000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.66814300055851944.638100000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.70437600055851944.668157000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.73458300055851944.704387000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.76788400055851944.734592000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.80176400055851944.767894000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.83787900055851944.801772000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.87039400055851944.837888000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.90211400055851944.870412000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.93607800055851944.902124000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851944.96871700055851944.936086000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851945.00649600055851944.968727000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851945.03541600055851945.006506000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851945.07005900055851945.035426000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851945.10451300055851945.070068000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851945.13851100055851945.104522000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851945.16895100055851945.138524000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+1755851945.20478700055851945.168961000
+[!] Błąd przy przetwarzaniu pakietu: unpack requires a buffer of 2 bytes
+Writing 156 frames to: Z:\Test_for_OT_30Hz_markers33_GPO_VH11_S000_SW54_HW33_20250822083841#p822083841df003da\Test_for_OT_30Hz_markers33_GPO_VH11_S000_SW54_HW33_20250822083841_sme1_001_EthOutput_OptiTrack.json
+Successfully wrote 156 frames to: Z:\Test_for_OT_30Hz_markers33_GPO_VH11_S000_SW54_HW33_20250822083841#p822083841df003da\Test_for_OT_30Hz_markers33_GPO_VH11_S000_SW54_HW33_20250822083841_sme1_001_EthOutput_OptiTrack.json
+shutdown called
+shutting down
+exiting
