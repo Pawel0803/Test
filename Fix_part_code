@@ -1,0 +1,32 @@
+NatNetClient to :
+timestamp, = DoubleValue.unpack(data[offset:offset+8])
+zamień na :
+if len(data[offset:]) < 8:
+    print(f" Nieprawidłowy rozmiar danych: {len(data[offset:])} bajtów przy offset={offset}")
+    print(f"Pozostałe bajty (HEX): {data[offset:].hex()}")
+    raise ValueError("Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)")
+
+timestamp, = DoubleValue.unpack(data[offset:offset+8])
+
+
+PyrthonSample/py to : 
+for pkt in capreader:
+    if 'UDP' in pkt and pkt['UDP'].dport in [streaming_client.data_port, streaming_client.data_port]:
+        print(pkt.time)
+        streaming_client.set_pkt_time(int(pkt.time * 1000000000))
+        pkt['UDP'].dport = 1511
+        streaming_client.process_message(pkt[Raw].load)
+        print("Packet processed: {:>20}".format(pkt.time), end='\r')
+
+Zamień na :
+for pkt in capreader:
+    if 'UDP' in pkt and pkt['UDP'].dport in [streaming_client.data_port, streaming_client.data_port]:
+        print(pkt.time)
+        streaming_client.set_pkt_time(int(pkt.time * 1000000000))
+        pkt['UDP'].dport = 1511
+        try:
+            streaming_client.process_message(pkt[Raw].load)
+        except Exception as e:
+            print(f"[!] Błąd przy przetwarzaniu pakietu: {e}")
+            continue
+        print("Packet processed: {:>20}".format(pkt.time), end='\r')
