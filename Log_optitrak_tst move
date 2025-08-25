@@ -1,0 +1,28 @@
+./convert_max_gt_from_mdf4_to_csv.bat Z:\Test_for_OT_30Hz_markers33_GPO_VH11_S000_SW54_HW33_20250822083841#p822083841df003da
+======================== Running conversions for Z:\Test_for_OT_30Hz_markers33_GPO_VH11_S000_SW54_HW33_20250822083841#p822083841df003da ========================
+======================== Step 1: extract .cap files ========================
+======================== Step 2: extract OptiTrack GT data ========================
+starting data thread
+NAT_CONNECT to Motive with 4 2 0 0
+ 
+Start processing Test_for_OT_30Hz_markers33_GPO_VH11_S000_SW54_HW33_20250822083841_sme1_001_EthOutput
+1755851927.944779000
+resetting requested version to 4 2 0 0 from 0 0 0 0
+1755851927.96833900055851927.944779000
+Traceback (most recent call last):
+  File "C:\Users\rjk7lg\Downloads\toolchain_scripts_motive33\toolchain_scripts\max_ot_gt_extractor\PythonClient\PythonSample.py", line 182, in <module>
+    streaming_client.process_message(pkt[Raw].load)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\rjk7lg\Downloads\toolchain_scripts_motive33\toolchain_scripts\max_ot_gt_extractor\PythonClient\NatNetClient.py", line 1784, in process_message
+    offset_tmp, mocap_data = self.__unpack_mocap_data(data[offset:], packet_size, major, minor) #type: ignore  # noqa E501
+                             ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rjk7lg\Downloads\toolchain_scripts_motive33\toolchain_scripts\max_ot_gt_extractor\PythonClient\NatNetClient.py", line 727, in __unpack_mocap_data
+    rel_offset, frame_suffix_data = self.__unpack_frame_suffix_data(data[offset:], (packet_size - offset), major, minor) #type: ignore  # noqa E501
+                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rjk7lg\Downloads\toolchain_scripts_motive33\toolchain_scripts\max_ot_gt_extractor\PythonClient\NatNetClient.py", line 664, in __unpack_frame_suffix_data
+    data, offset, frame_suffix_data, param = self.__unpack_frame_suffix_data_3_to_4(data, offset, frame_suffix_data, param) #type: ignore  # noqa E501
+                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rjk7lg\Downloads\toolchain_scripts_motive33\toolchain_scripts\max_ot_gt_extractor\PythonClient\NatNetClient.py", line 592, in __unpack_frame_suffix_data_3_to_4
+    timestamp, = DoubleValue.unpack(data[offset:offset+8])
+                 ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+struct.error: unpack requires a buffer of 8 bytes
