@@ -179,7 +179,12 @@ if __name__ == "__main__":
                 print(pkt.time)
                 streaming_client.set_pkt_time(int(pkt.time * 1000000000))
                 pkt['UDP'].dport = 1511
-                streaming_client.process_message(pkt[Raw].load)
+                #streaming_client.process_message(pkt[Raw].load)
+                try:
+                    streaming_client.process_message(pkt[Raw].load)
+                except Exception as e:
+                    print(f"[!] Błąd przy przetwarzaniu pakietu: {e}")
+                    continue
                 print("Packet processed: {:>20}".format(pkt.time), end='\r')
         streaming_client.write_to_file()
     s.send(b"Stop")
