@@ -1,4 +1,4 @@
-# =============================================================================
+﻿# =============================================================================
 # Copyright © 2025 NaturalPoint, Inc. All Rights Reserved.
 #
 # THIS SOFTWARE IS GOVERNED BY THE OPTITRACK PLUGINS EULA AVAILABLE AT
@@ -589,6 +589,11 @@ class NatNetClient:
 
     def __unpack_frame_suffix_data_3_to_4(self, data, offset, frame_suffix_data, param):  #type: ignore  # noqa E501
         """Unpacks frame suffix data inclusive from NatNet 3 to NatNet 4"""
+        if len(data[offset:]) < 8:
+            print(f" Nieprawidłowy rozmiar danych: {len(data[offset:])} bajtów przy offset={offset}")
+            print(f"Pozostałe bajty (HEX): {data[offset:].hex()}")
+            raise ValueError("Zbyt mało danych, aby odczytać timestamp (potrzeba 8 bajtów)")
+
         timestamp, = DoubleValue.unpack(data[offset:offset+8])
         offset += 8
         trace_mf("Timestamp: %3.2f" % timestamp)
@@ -1786,6 +1791,7 @@ class NatNetClient:
             print("MoCap Frame: %d\n" % (mocap_data.prefix_data.frame_number))
             mocap_data_str = mocap_data.get_as_string()
             self.__getjson(mocap_data_str)
+            MoCapData.jsondata["Epoch_time"] = self.pkttime
             self.alljsondata.append(MoCapData.jsondata)
 
         elif message_id == self.NAT_MODELDEF:
